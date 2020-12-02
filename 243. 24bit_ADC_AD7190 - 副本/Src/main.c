@@ -10,7 +10,7 @@
 /* 私有宏定义 ----------------------------------------------------------------*/
 /* 私有变量 ------------------------------------------------------------------*/
 __IO float weight;
-__IO int32_t weight_proportion=2654;  // 电压值与重量变换比例，这个需要实际测试计算才能得到
+__IO int32_t weight_proportion=2000;  // 电压值与重量变换比例，这个需要实际测试计算才能得到
 __IO int32_t weight_Zero_Data=0;   // 零值
 __IO float  weight_k=500;
 
@@ -118,7 +118,7 @@ int main(void)
       printf("zero:%d\n",weight_Zero_Data);
       cali_flag=1;
     }
-    if(KEY2_StateRead()==KEY_DOWN) // 校准：必须先按“清零”键，然后把20g砝码放在称上，按下校准键
+    if(KEY2_StateRead()==KEY_DOWN) // 校准：必须先按“清零”键，然后把500g砝码放在称上，按下校准键
     {
       if(cali_flag)
       {

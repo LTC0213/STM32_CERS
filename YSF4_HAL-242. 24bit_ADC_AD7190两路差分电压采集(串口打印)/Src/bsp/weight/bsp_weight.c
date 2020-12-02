@@ -478,5 +478,29 @@ void ad7190_bipolar_multichannel_conf(void)
   AD7190_Continuous_ReadData(1);
 }
 
+unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)
+{
+#if 0
+    unsigned int samplesAverage = 0x0;
+    unsigned char count = 0x0;
+
+    for(count = 0;count < sampleNumber;count ++)
+    {
+      AD7190_WaitRdyGoLow();
+      samplesAverage += (AD7190_GetRegisterValue(AD7190_REG_DATA, 3)>>4);
+    }
+    samplesAverage = samplesAverage / sampleNumber;
+    
+    return samplesAverage ;
+#else
+    unsigned int samplesValue = 0x0;
+    
+    AD7190_WaitRdyGoLow();
+    samplesValue = (AD7190_GetRegisterValue(AD7190_REG_DATA, 3)>>4);
+    
+    return samplesValue;
+#endif
+}
+
 /******************* (C) COPYRIGHT 2015-2020 硬石嵌入式开发团队 *****END OF FILE****/
 

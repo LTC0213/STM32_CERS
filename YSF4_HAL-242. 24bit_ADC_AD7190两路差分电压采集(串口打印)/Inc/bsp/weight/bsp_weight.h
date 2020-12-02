@@ -139,6 +139,8 @@ unsigned int AD7190_ContinuousReadAvg(unsigned char sampleNumber);
 unsigned int AD7190_TemperatureRead(void);
 void ad7190_unipolar_multichannel_conf(void);
 void ad7190_bipolar_multichannel_conf(void);
+unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber);
+
 
 
 #endif  /* __BSP_SPIWEIGHT_H__ */

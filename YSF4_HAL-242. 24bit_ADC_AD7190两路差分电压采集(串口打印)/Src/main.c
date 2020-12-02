@@ -21,6 +21,7 @@
 #include "led/bsp_led.h"
 #include "weight/bsp_weight.h"
 #include "beep/bsp_beep.h"
+#include "key/bsp_key.h"
 
 /* 私有类型定义 --------------------------------------------------------------*/
 /* 私有宏定义 ----------------------------------------------------------------*/
@@ -28,6 +29,12 @@
 float Voltage[4];
 __IO uint32_t ad7190_data[4];
 uint8_t flag=0;
+
+__IO float weight;
+__IO int32_t weight_proportion=2654;  // 电压值与重量变换比例，这个需要实际测试计算才能得到
+__IO int32_t weight_Zero_Data=0;   // 零值
+__IO float  weight_k=500;
+
 
 /* 扩展变量 ------------------------------------------------------------------*/
 
@@ -90,6 +97,9 @@ void SystemClock_Config(void)
   */
 int main(void)
 {
+  float data_temp;      
+  int32_t weight_count;  
+  uint8_t cali_flag=0;
   /* 复位所有外设，初始化Flash接口和系统滴答定时器 */
   HAL_Init();
   /* 配置系统时钟 */
@@ -97,10 +107,10 @@ int main(void)
 
   /* 初始化串口并配置串口中断优先级 */
   MX_DEBUG_USART_Init();
-
   /* 初始化LED */
   LED_GPIO_Init(); 
-
+  /* 初始化KEY */
+  KEY_GPIO_Init();
   /* 初始化BEEP */
   BEEP_GPIO_Init();
 
@@ -117,31 +127,55 @@ int main(void)
   printf("检测到  AD7190 !\n");
   ad7190_bipolar_multichannel_conf();
   flag=1;
+
+  HAL_Delay(500);
+  weight_Zero_Data = weight_ad7190_ReadAvg(6);
+  printf("zero:%d\n",weight_Zero_Data);
   
   /* 无限循环 */
   while (1)
   {  
-
+    weight_count=weight_ad7190_ReadAvg(3);
+    data_temp=weight_count-weight_Zero_Data;
+    weight=data_temp*1000/weight_proportion;
+    printf("重量：%d->%.2f\n",weight_count,weight);
+    HAL_Delay(50);
+    if(KEY1_StateRead()==KEY_DOWN)  // 清零
+    {      
+      weight_Zero_Data = weight_ad7190_ReadAvg(6);
+      printf("zero:%d\n",weight_Zero_Data);
+      cali_flag=1;
+    }
+    if(KEY2_StateRead()==KEY_DOWN) // 校准：必须先按“清零”键，然后把20g砝码放在称上，按下校准键
+    {
+      if(cali_flag)
+      {
+        weight_count = weight_ad7190_ReadAvg(6);
+        weight_proportion=(weight_count-weight_Zero_Data)*1000/weight_k;
+        printf("weight_proportion:%d\n",weight_proportion);
+      }
+      cali_flag=0;
+    }
     
   }
 }
 
-void HAL_SYSTICK_Callback(void)
-{
-  if((flag)&&(AD7190_RDY_STATE==0))
-  {
-    uint8_t sample[4]={0};
-    float data;
-    HAL_SPI_Receive(&hspi_weight,sample,4,0xFFFFFF); 
-    if((sample[3]&0x80)==0)
-    {
-      uint8_t temp=(sample[3]&0x07);
-      ad7190_data[temp]=(sample[0]<<16) | (sample[1]<<8) | (sample[2]);
-			data=((float)ad7190_data[temp]/0x800000-1)*2997;//万用表实测参考电压2997mV
-			printf("%d. 0x%08X->%0.1fmV\n",temp,ad7190_data[temp],data);
-    }
-  }
-}
+// void HAL_SYSTICK_Callback(void)
+// {
+//   if((flag)&&(AD7190_RDY_STATE==0))
+//   {
+//     uint8_t sample[4]={0};
+//     float data;
+//     HAL_SPI_Receive(&hspi_weight,sample,4,0xFFFFFF); 
+//     if((sample[3]&0x80)==0)
+//     {
+//       uint8_t temp=(sample[3]&0x07);
+//       ad7190_data[temp]=(sample[0]<<16) | (sample[1]<<8) | (sample[2]);
+// 			data=((float)ad7190_data[temp]/0x800000-1)*2997;//万用表实测参考电压2997mV
+// 			printf("%d. 0x%08X->%0.1fmV\n",temp,ad7190_data[temp],data);
+//     }
+//   }
+// }
 
 /******************* (C) COPYRIGHT 2015-2020 硬石嵌入式开发团队 *****END OF FILE****/
 
