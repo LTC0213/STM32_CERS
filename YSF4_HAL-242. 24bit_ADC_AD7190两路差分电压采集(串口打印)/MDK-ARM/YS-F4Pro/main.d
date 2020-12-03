@@ -82,4 +82,3 @@ ys-f4pro\main.o: ..\Inc\bsp\usart/bsp_debug_usart.h
 ys-f4pro\main.o: ..\Inc\bsp\led/bsp_led.h
 ys-f4pro\main.o: ..\Inc\bsp\weight/bsp_weight.h
 ys-f4pro\main.o: ..\Inc\bsp\beep/bsp_beep.h
-ys-f4pro\main.o: ..\Inc\bsp\key/bsp_key.h

@@ -1045,11 +1045,6 @@
               <FileType>1</FileType>
               <FilePath>..\Src\bsp\weight\bsp_weight.c</FilePath>
             </File>
-            <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\bsp\key\bsp_key.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

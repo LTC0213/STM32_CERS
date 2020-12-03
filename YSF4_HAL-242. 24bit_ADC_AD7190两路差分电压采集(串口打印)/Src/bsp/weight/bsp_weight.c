@@ -460,7 +460,7 @@ void ad7190_bipolar_multichannel_conf(void)
   AD7190_Calibrate(AD7190_MODE_CAL_INT_ZERO, AD7190_CH_AIN3P_AIN4M);
   
   /* Selects unipolar operation and ADC's input range to +-Vref/1. */
-  AD7190_RangeSetup(0, AD7190_CONF_GAIN_1);  
+  AD7190_RangeSetup(0, AD7190_CONF_GAIN_128);  
   /* Calibrates channel AIN1(+) - AIN2(-). */
   AD7190_Calibrate(AD7190_MODE_CAL_INT_FULL, AD7190_CH_AIN1P_AIN2M);
   /* Calibrates channel AIN3(+) - AIN4(-). */
@@ -476,30 +476,6 @@ void ad7190_bipolar_multichannel_conf(void)
   AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);  
   
   AD7190_Continuous_ReadData(1);
-}
-
-unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)
-{
-#if 0
-    unsigned int samplesAverage = 0x0;
-    unsigned char count = 0x0;
-
-    for(count = 0;count < sampleNumber;count ++)
-    {
-      AD7190_WaitRdyGoLow();
-      samplesAverage += (AD7190_GetRegisterValue(AD7190_REG_DATA, 3)>>4);
-    }
-    samplesAverage = samplesAverage / sampleNumber;
-    
-    return samplesAverage ;
-#else
-    unsigned int samplesValue = 0x0;
-    
-    AD7190_WaitRdyGoLow();
-    samplesValue = (AD7190_GetRegisterValue(AD7190_REG_DATA, 3)>>4);
-    
-    return samplesValue;
-#endif
 }
 
 /******************* (C) COPYRIGHT 2015-2020 硬石嵌入式开发团队 *****END OF FILE****/

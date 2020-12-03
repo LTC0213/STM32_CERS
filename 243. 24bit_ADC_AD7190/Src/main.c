@@ -6,22 +6,22 @@
 #include "beep/bsp_beep.h"
 #include "key/bsp_key.h"
 
-/* ç§æœ‰ç±»å‹å®šä¹‰ --------------------------------------------------------------*/
-/* ç§æœ‰å®å®šä¹‰ ----------------------------------------------------------------*/
-/* ç§æœ‰å˜é‡ ------------------------------------------------------------------*/
+/* Ë½ÓĞÀàĞÍ¶¨Òå --------------------------------------------------------------*/
+/* Ë½ÓĞºê¶¨Òå ----------------------------------------------------------------*/
+/* Ë½ÓĞ±äÁ¿ ------------------------------------------------------------------*/
 __IO float weight;
-__IO int32_t weight_proportion=2000;  // ç”µå‹å€¼ä¸é‡é‡å˜æ¢æ¯”ä¾‹ï¼Œè¿™ä¸ªéœ€è¦å®é™…æµ‹è¯•è®¡ç®—æ‰èƒ½å¾—åˆ°
-__IO int32_t weight_Zero_Data=0;   // é›¶å€¼
+__IO int32_t weight_proportion=2000;  // µçÑ¹ÖµÓëÖØÁ¿±ä»»±ÈÀı£¬Õâ¸öĞèÒªÊµ¼Ê²âÊÔ¼ÆËã²ÅÄÜµÃµ½
+__IO int32_t weight_Zero_Data=0;   // ÁãÖµ
 __IO float  weight_k=500;
 
-/* æ‰©å±•å˜é‡ ------------------------------------------------------------------*/
-/* ç§æœ‰å‡½æ•°åŸå½¢ --------------------------------------------------------------*/
-/* å‡½æ•°ä½“ --------------------------------------------------------------------*/
+/* À©Õ¹±äÁ¿ ------------------------------------------------------------------*/
+/* Ë½ÓĞº¯ÊıÔ­ĞÎ --------------------------------------------------------------*/
+/* º¯ÊıÌå --------------------------------------------------------------------*/
 /**
-  * å‡½æ•°åŠŸèƒ½: ç³»ç»Ÿæ—¶é’Ÿé…ç½®
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: ÏµÍ³Ê±ÖÓÅäÖÃ
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 void SystemClock_Config(void)
 {
@@ -29,69 +29,69 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
  
-  __HAL_RCC_PWR_CLK_ENABLE();                                     //ä½¿èƒ½PWRæ—¶é’Ÿ
+  __HAL_RCC_PWR_CLK_ENABLE();                                     //Ê¹ÄÜPWRÊ±ÖÓ
 
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //è®¾ç½®è°ƒå‹å™¨è¾“å‡ºç”µå‹çº§åˆ«1
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //ÉèÖÃµ÷Ñ¹Æ÷Êä³öµçÑ¹¼¶±ğ1
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // å¤–éƒ¨æ™¶æŒ¯ï¼Œ8MHz
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //æ‰“å¼€HSE 
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //æ‰“å¼€PLL
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLLæ—¶é’Ÿæºé€‰æ‹©HSE
-  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8åˆ†é¢‘MHz
-  RCC_OscInitStruct.PLL.PLLN = 336;                               //336å€é¢‘
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2åˆ†é¢‘ï¼Œå¾—åˆ°168MHzä¸»æ—¶é’Ÿ
-  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/éšæœºæ•°äº§ç”Ÿå™¨ç­‰çš„ä¸»PLLåˆ†é¢‘ç³»æ•°
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // Íâ²¿¾§Õñ£¬8MHz
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //´ò¿ªHSE 
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //´ò¿ªPLL
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLLÊ±ÖÓÔ´Ñ¡ÔñHSE
+  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8·ÖÆµMHz
+  RCC_OscInitStruct.PLL.PLLN = 336;                               //336±¶Æµ
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2·ÖÆµ£¬µÃµ½168MHzÖ÷Ê±ÖÓ
+  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/Ëæ»úÊı²úÉúÆ÷µÈµÄÖ÷PLL·ÖÆµÏµÊı
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // ç³»ç»Ÿæ—¶é’Ÿï¼š168MHz
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHBæ—¶é’Ÿï¼š 168MHz
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1æ—¶é’Ÿï¼š42MHz
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2æ—¶é’Ÿï¼š84MHz
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // ÏµÍ³Ê±ÖÓ£º168MHz
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHBÊ±ÖÓ£º 168MHz
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1Ê±ÖÓ£º42MHz
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2Ê±ÖÓ£º84MHz
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
-  HAL_RCC_EnableCSS();                                            // ä½¿èƒ½CSSåŠŸèƒ½ï¼Œä¼˜å…ˆä½¿ç”¨å¤–éƒ¨æ™¶æŒ¯ï¼Œå†…éƒ¨æ—¶é’Ÿæºä¸ºå¤‡ç”¨
+  HAL_RCC_EnableCSS();                                            // Ê¹ÄÜCSS¹¦ÄÜ£¬ÓÅÏÈÊ¹ÓÃÍâ²¿¾§Õñ£¬ÄÚ²¿Ê±ÖÓÔ´Îª±¸ÓÃ
   
- 	// HAL_RCC_GetHCLKFreq()/1000    1msä¸­æ–­ä¸€æ¬¡
-	// HAL_RCC_GetHCLKFreq()/100000	 10usä¸­æ–­ä¸€æ¬¡
-	// HAL_RCC_GetHCLKFreq()/1000000 1usä¸­æ–­ä¸€æ¬¡
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // é…ç½®å¹¶å¯åŠ¨ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨
-  /* ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨æ—¶é’Ÿæº */
+ 	// HAL_RCC_GetHCLKFreq()/1000    1msÖĞ¶ÏÒ»´Î
+	// HAL_RCC_GetHCLKFreq()/100000	 10usÖĞ¶ÏÒ»´Î
+	// HAL_RCC_GetHCLKFreq()/1000000 1usÖĞ¶ÏÒ»´Î
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // ÅäÖÃ²¢Æô¶¯ÏµÍ³µÎ´ğ¶¨Ê±Æ÷
+  /* ÏµÍ³µÎ´ğ¶¨Ê±Æ÷Ê±ÖÓÔ´ */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨ä¸­æ–­ä¼˜å…ˆçº§é…ç½® */
+  /* ÏµÍ³µÎ´ğ¶¨Ê±Æ÷ÖĞ¶ÏÓÅÏÈ¼¶ÅäÖÃ */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
 /**
-  * å‡½æ•°åŠŸèƒ½: ä¸»å‡½æ•°.
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: Ö÷º¯Êı.
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 int main(void)
 {
   float data_temp;      
   int32_t weight_count;  
   uint8_t cali_flag=0;
-  /* å¤ä½æ‰€æœ‰å¤–è®¾ï¼Œåˆå§‹åŒ–Flashæ¥å£å’Œç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨ */
+  /* ¸´Î»ËùÓĞÍâÉè£¬³õÊ¼»¯Flash½Ó¿ÚºÍÏµÍ³µÎ´ğ¶¨Ê±Æ÷ */
   HAL_Init();
-  /* é…ç½®ç³»ç»Ÿæ—¶é’Ÿ */
+  /* ÅäÖÃÏµÍ³Ê±ÖÓ */
   SystemClock_Config();
 
-  /* åˆå§‹åŒ–ä¸²å£å¹¶é…ç½®ä¸²å£ä¸­æ–­ä¼˜å…ˆçº§ */
+  /* ³õÊ¼»¯´®¿Ú²¢ÅäÖÃ´®¿ÚÖĞ¶ÏÓÅÏÈ¼¶ */
   MX_DEBUG_USART_Init();
-  /* åˆå§‹åŒ–LED */
+  /* ³õÊ¼»¯LED */
   LED_GPIO_Init(); 
   
   KEY_GPIO_Init();
-  /* åˆå§‹åŒ–BEEP */
+  /* ³õÊ¼»¯BEEP */
   BEEP_GPIO_Init();
   
   if(AD7190_Init()==0)
   {
-    printf("è·å–ä¸åˆ° AD7190 !\n");
+    printf("»ñÈ¡²»µ½ AD7190 !\n");
     while(1)
     {
       HAL_Delay(1000);
@@ -99,7 +99,7 @@ int main(void)
         break;
     }
   }
-  printf("æ£€æµ‹åˆ°  AD7190 !\n");
+  printf("¼ì²âµ½  AD7190 !\n");
   weight_ad7190_conf();
   
   HAL_Delay(500);
@@ -110,15 +110,15 @@ int main(void)
     weight_count=weight_ad7190_ReadAvg(3);
     data_temp=weight_count-weight_Zero_Data;
     weight=data_temp*1000/weight_proportion;
-    printf("é‡é‡ï¼š%d->%.2f\n",weight_count,weight);
+    printf("ÖØÁ¿£º%d->%.2f\n",weight_count,weight);
     HAL_Delay(50);
-    if(KEY1_StateRead()==KEY_DOWN)  // æ¸…é›¶
+    if(KEY1_StateRead()==KEY_DOWN)  // ÇåÁã
     {      
       weight_Zero_Data = weight_ad7190_ReadAvg(6);
       printf("zero:%d\n",weight_Zero_Data);
       cali_flag=1;
     }
-    if(KEY2_StateRead()==KEY_DOWN) // æ ¡å‡†ï¼šå¿…é¡»å…ˆæŒ‰â€œæ¸…é›¶â€é”®ï¼Œç„¶åæŠŠ500gç ç æ”¾åœ¨ç§°ä¸Šï¼ŒæŒ‰ä¸‹æ ¡å‡†é”®
+    if(KEY2_StateRead()==KEY_DOWN) // Ğ£×¼£º±ØĞëÏÈ°´¡°ÇåÁã¡±¼ü£¬È»ºó°Ñ500gíÀÂë·ÅÔÚ³ÆÉÏ£¬°´ÏÂĞ£×¼¼ü
     {
       if(cali_flag)
       {
