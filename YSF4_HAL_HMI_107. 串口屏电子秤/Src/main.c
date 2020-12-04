@@ -41,7 +41,7 @@ __IO uint8_t  usart_rx_flag;
 __IO uint16_t timer_count=0;
 __IO uint16_t pwm_data=0;
 
-__IO uint8_t  weight_Zero_IsInit=0; //0: 零值未获取  1：已获取零值
+__IO uint8_t  weight_Zero_IsInit=0; //1: 零值未获取  2：已获取零值
 __IO int32_t  weight_Zero_Data=0;   // [0]:无重物零值  [1]:有外皮重物零值
 
 __IO uint8_t Is_thres_stamp=0;  //是否有阀值设定
@@ -50,11 +50,11 @@ __IO int32_t Record_weight1;    //皮重记录值（用于每次称重前记录皮重）
 __IO int32_t Record_weight2;    //皮重记录值（用于每次称重前记录皮重） 
 __IO int32_t cali_weight;       //校准使用
 __IO int32_t weight_Zero_Data;  //皮重初始值
-__IO int32_t weight_proportion; //换算值记录
+__IO int32_t weight_proportion; //换算值记录 比例系数
 __IO int32_t weight_current;    //皮重记录值
-__IO int32_t second_count;      
-__IO int32_t third_count;
-__IO uint8_t Process_Step=0;
+__IO int32_t second_count;      //皮重记录值
+__IO int32_t third_count;       //皮重记录值
+__IO uint8_t Process_Step=0;   // 0未检测到物体 1检测到有物品 2有重物 并且达到皮重要求 3测皮重 4皮重基础上 加了重物 5
 
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
@@ -184,7 +184,7 @@ int main(void)
   while (1)
   {  
     timecount++;
-    if(timecount>=10)
+    if(timecount>=10) //延时时间
     {
 
       if(weight_Zero_IsInit==1)
@@ -196,15 +196,15 @@ int main(void)
       {
         
         int32_t data_temp,temp;
-        int32_t weight_count;        
+        int32_t weight_count;   //带皮读数     
         
         weight_count=weight_ad7190_ReadAvg(1);
         data_temp=weight_count-weight_Zero_Data;
         temp=data_temp*100000/weight_proportion;
         weight_current=temp; 
-//        printf("weight_current=%d\n",weight_current); 
+        printf("weight_current=%d\n",weight_current); 
         printf("Process_Step=%d\n",Process_Step); 
-        if(Is_thres_stamp==1)  //如果有超出预设值，那么蜂鸣器响
+        if(Is_thres_stamp==1)  //如果有超出预设值，那么蜂鸣器响 后期可以加语音模块
         {
           if((weight_current-Record_weight1)>=Compa_value)
           {
@@ -218,7 +218,7 @@ int main(void)
           Record_weight2=Record_weight1-weight_current;
           if(Record_weight2>15)   
           {
-            Record_weight1=0;
+            Record_weight1=0; 
             Record_weight2=0;
             Is_tare_stamp=0;
             Process_Step=0;
@@ -243,7 +243,7 @@ int main(void)
               weight_count=0;
             }
           break;          
-          case 1:  //检测到有物品
+          case 1:  //检测到有物品 并且达到皮重要求
             if(int_abs(weight_count,weight_Zero_Data)>10)
             {
               Process_Step=2;
@@ -326,7 +326,7 @@ int main(void)
         timecount=0;         
       }         
     }
-    HAL_Delay(10);
+    HAL_Delay(10); //延时
       
     if(HMI_RX_flag==2)
     {

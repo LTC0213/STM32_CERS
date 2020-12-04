@@ -364,7 +364,7 @@ void weight_ad7190_conf(void)
 
 unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)
 {
-#if 0
+#if 1
     unsigned int samplesAverage = 0x0;
     unsigned char count = 0x0;
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [YS-F4Pro\YS-F4Pro.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image YS-F4Pro\YS-F4Pro.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Dec 03 16:03:41 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Dec 04 15:22:12 2020
 <BR><P>
 <H3>Maximum Stack Usage =        176 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -835,8 +835,8 @@ Global Symbols
 <P><STRONG><a name="[95]"></a>HAL_UART_Transmit</STRONG> (Thumb, 220 bytes, Stack size 32 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_Transmit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
-<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fputc
 </UL>
@@ -1105,7 +1105,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 1304 bytes, Stack size 8 bytes, main.o(i.main))
+<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 1332 bytes, Stack size 8 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = main &rArr; weight_ad7190_conf &rArr; AD7190_RangeSetup &rArr; AD7190_GetRegisterValue &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_CheckFlag_BSY &rArr; SPI_WaitFlagStateUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;weight_ad7190_conf
@@ -1131,8 +1131,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[b7]"></a>weight_ad7190_ReadAvg</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, bsp_spiweight.o(i.weight_ad7190_ReadAvg))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = weight_ad7190_ReadAvg &rArr; AD7190_GetRegisterValue &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_CheckFlag_BSY &rArr; SPI_WaitFlagStateUntilTimeout
+<P><STRONG><a name="[b7]"></a>weight_ad7190_ReadAvg</STRONG> (Thumb, 42 bytes, Stack size 16 bytes, bsp_spiweight.o(i.weight_ad7190_ReadAvg))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = weight_ad7190_ReadAvg &rArr; AD7190_GetRegisterValue &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_CheckFlag_BSY &rArr; SPI_WaitFlagStateUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AD7190_WaitRdyGoLow
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AD7190_GetRegisterValue
