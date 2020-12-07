@@ -343,23 +343,62 @@ unsigned int AD7190_TemperatureRead(void)
     return temperature;
 }
 
-void weight_ad7190_conf(void)
+// void weight_ad7190_conf(void)
+// {
+//   unsigned int command = 0x0;
+//   /* Calibrates channel AIN1(+) - AIN2(-). */
+//   AD7190_Calibrate(AD7190_MODE_CAL_INT_ZERO, AD7190_CH_AIN1P_AIN2M);
+//   /* Selects unipolar operation and ADC's input range to +-Vref/1. */
+//   AD7190_RangeSetup(0, AD7190_CONF_GAIN_128);
+//   AD7190_Calibrate(AD7190_MODE_CAL_INT_FULL,AD7190_CH_AIN1P_AIN2M);
+//   /* Performs a single conversion. */
+//   AD7190_ChannelSelect(AD7190_CH_AIN1P_AIN2M);    
+//   command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) |\
+//             AD7190_MODE_RATE(384)|AD7190_MODE_SINC3;
+//   AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
+//   AD7190_WaitRdyGoLow();
+//   AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+//   AD7190_WaitRdyGoLow();
+//   AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+// }
+
+unsigned int weight_ad7190_conf(unsigned int channel)
 {
   unsigned int command = 0x0;
-  /* Calibrates channel AIN1(+) - AIN2(-). */
-  AD7190_Calibrate(AD7190_MODE_CAL_INT_ZERO, AD7190_CH_AIN1P_AIN2M);
-  /* Selects unipolar operation and ADC's input range to +-Vref/1. */
-  AD7190_RangeSetup(0, AD7190_CONF_GAIN_128);
-  AD7190_Calibrate(AD7190_MODE_CAL_INT_FULL,AD7190_CH_AIN1P_AIN2M);
-  /* Performs a single conversion. */
-  AD7190_ChannelSelect(AD7190_CH_AIN1P_AIN2M);    
-  command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) |\
-            AD7190_MODE_RATE(384)|AD7190_MODE_SINC3;
-  AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
-  AD7190_WaitRdyGoLow();
-  AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
-  AD7190_WaitRdyGoLow();
-  AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+    if (channel == 1)
+    {
+    /* Calibrates channel AIN1(+) - AIN2(-). */
+    AD7190_Calibrate(AD7190_MODE_CAL_INT_ZERO, AD7190_CH_AIN1P_AIN2M);
+    /* Selects unipolar operation and ADC's input range to +-Vref/1. */
+    AD7190_RangeSetup(0, AD7190_CONF_GAIN_128);
+    AD7190_Calibrate(AD7190_MODE_CAL_INT_FULL,AD7190_CH_AIN1P_AIN2M);
+    /* Performs a single conversion. */
+    AD7190_ChannelSelect(AD7190_CH_AIN1P_AIN2M);    
+    command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) |\
+                AD7190_MODE_RATE(1023)|AD7190_MODE_SINC3;
+    AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
+    AD7190_WaitRdyGoLow();
+    AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+    AD7190_WaitRdyGoLow();
+    AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+    }
+    if (channel == 2)
+    {
+    /* Calibrates channel AIN3(+) - AIN4(-). */
+    AD7190_Calibrate(AD7190_MODE_CAL_INT_ZERO, AD7190_CH_AIN3P_AIN4M);
+    /* Selects unipolar operation and ADC's input range to +-Vref/1. */
+    AD7190_RangeSetup(0, AD7190_CONF_GAIN_128);
+    AD7190_Calibrate(AD7190_MODE_CAL_INT_FULL,AD7190_CH_AIN3P_AIN4M);
+    /* Performs a single conversion. */
+    AD7190_ChannelSelect(AD7190_CH_AIN3P_AIN4M);    
+    command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) |\
+                AD7190_MODE_RATE(384)|AD7190_MODE_SINC3;
+    AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
+    AD7190_WaitRdyGoLow();
+    AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+    AD7190_WaitRdyGoLow();
+    AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
+    }
 }
 
 unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)

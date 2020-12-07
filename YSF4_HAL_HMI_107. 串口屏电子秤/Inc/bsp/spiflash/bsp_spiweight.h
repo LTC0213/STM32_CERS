@@ -1,11 +1,11 @@
 #ifndef __BSP_SPIWEIGHT_H__
 #define __BSP_SPIWEIGHT_H__
 
-/* ∞¸∫¨Õ∑Œƒº˛ ----------------------------------------------------------------*/
+/* ÂåÖÂê´Â§¥Êñá‰ª∂ ----------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
-/* ¿‡–Õ∂®“Â ------------------------------------------------------------------*/
-/* ∫Í∂®“Â --------------------------------------------------------------------*/
+/* Á±ªÂûãÂÆö‰πâ ------------------------------------------------------------------*/
+/* ÂÆèÂÆö‰πâ --------------------------------------------------------------------*/
 #define WEIGHT_SPIx                 SPI1
 #define WEIGHT_SPIx_CLK_ENABLE()    __HAL_RCC_SPI1_CLK_ENABLE()
 #define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();} 
@@ -124,10 +124,10 @@
 #define AD7190_GPOCON_P0DAT     (1 << 0) // P0 state
 
 
-/* ¿©’π±‰¡ø ------------------------------------------------------------------*/
+/* Êâ©Â±ïÂèòÈáè ------------------------------------------------------------------*/
 extern SPI_HandleTypeDef hspi_weight;
 
-/* ∫Ø ˝…˘√˜ ------------------------------------------------------------------*/
+/* ÂáΩÊï∞Â£∞Êòé ------------------------------------------------------------------*/
 
 unsigned char AD7190_Init(void);
 void AD7190_SetPower(unsigned char pwrMode);
@@ -137,10 +137,11 @@ void AD7190_RangeSetup(unsigned char polarity, unsigned char range);
 unsigned int AD7190_SingleConversion(void);
 unsigned int AD7190_ContinuousReadAvg(unsigned char sampleNumber);
 unsigned int AD7190_TemperatureRead(void);
-void weight_ad7190_conf(void);
+unsigned int weight_ad7190_conf(unsigned int channel);
+// void weight_ad7190_conf(void);
 unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber);
 
 
 #endif  /* __BSP_SPIWEIGHT_H__ */
 
-/******************* (C) COPYRIGHT 2015-2020 ”≤ Ø«∂»Î Ωø™∑¢Õ≈∂” *****END OF FILE****/
+/******************* (C) COPYRIGHT 2015-2020 Á°¨Áü≥ÂµåÂÖ•ÂºèÂºÄÂèëÂõ¢Èòü *****END OF FILE****/
