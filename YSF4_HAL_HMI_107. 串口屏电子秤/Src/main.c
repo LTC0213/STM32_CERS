@@ -38,7 +38,7 @@ __IO uint8_t  HMI_Rx_buf[HMI_RX_BUFFER_SIZE]={0};
 __IO uint8_t  HMI_RX_flag=0;       //0:未接收到数据头  1：已经接收到数据头  2：一帧接收完毕
 __IO uint8_t  usart_rx_flag;
 
-__IO uint8_t  channelx=1;
+__IO uint8_t  channelx=1;         //通道选择
 
 __IO uint16_t timer_count=0;
 __IO uint16_t pwm_data=0;
@@ -182,7 +182,7 @@ int main(void)
   if(AD7190_Init())
   {
     printf("检测到  AD7190 !\n");
-    weight_ad7190_conf(channelx);
+    // weight_ad7190_conf(channelx);
   }
   /* 无限循环 */
   while (1)
