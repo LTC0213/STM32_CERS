@@ -188,7 +188,7 @@ int main(void)
   while (1)
   {  
     timecount++;
-    if(timecount>=10) //延时时间
+    if(timecount>=1) //延时时间
     {
 
       if(weight_Zero_IsInit==1)
@@ -199,14 +199,15 @@ int main(void)
       else if(weight_Zero_IsInit==2)
       {
         
-        int32_t data_temp,temp;
-        int32_t weight_count;   //带皮读数     
+        int64_t data_temp,temp;
+        int64_t weight_count;   //带皮读数     
         
         weight_count=weight_ad7190_ReadAvg(1);
         data_temp=weight_count-weight_Zero_Data;
         temp=data_temp*100000/weight_proportion;
         weight_current=temp; 
-        printf("weight_current=%d\n",weight_current/10); 
+        printf("weight_current=%d\n",weight_current/100);
+        HMI_value_setting("page0.curve.val",weight_current/10000); 
         printf("Process_Step=%d\n",Process_Step); 
         if(Is_thres_stamp==1)  //如果有超出预设值，那么蜂鸣器响 后期可以加语音模块
         {
@@ -261,7 +262,7 @@ int main(void)
           case 2:  //测量皮重
             HAL_Delay(100);
             second_count=weight_ad7190_ReadAvg(3);
-            if(int_abs(second_count,weight_count)<50) //根据测试情况更改
+            if(int_abs(second_count,weight_count)<500) //根据测试情况更改
             {
               HAL_Delay(10);
               weight_count=weight_ad7190_ReadAvg(3);
@@ -272,7 +273,7 @@ int main(void)
               printf("Record_weight1=%d\n",Record_weight1); 
               weight_current=temp;            
               Is_tare_stamp=1;
-              HMI_value_setting("page0.gross.val",weight_current/10); 
+              HMI_value_setting("page0.gross.val",weight_current/100); 
               Process_Step=3;             
             }
             else 
@@ -308,7 +309,7 @@ int main(void)
               data_temp=weight_count-third_count;              
               temp=data_temp*100000/weight_proportion;
               weight_current=temp; 
-              HMI_value_setting("page0.net.val",weight_current/10);              
+              HMI_value_setting("page0.net.val",weight_current/100);              
             }
             else
             {
@@ -330,7 +331,7 @@ int main(void)
         timecount=0;         
       }         
     }
-    HAL_Delay(10); //延时
+    // HAL_Delay(10); //延时
       
     if(HMI_RX_flag==2)
     {
