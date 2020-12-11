@@ -44,7 +44,9 @@ void MX_WEIGHT_SPI_Init(void)
   /**SPI1 GPIO Configuration    
   PA5     ------> SPI1_SCK
   PB4     ------> SPI1_MISO
-  PB5     ------> SPI1_MOSI 
+  PB5     ------> SPI1_MOSI
+  PC13     ------> SPI1_CSx
+  PH10     ------> SPI1_CSy
   */    
   GPIO_InitStruct.Pin = WEIGHT_SCK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -60,11 +62,17 @@ void MX_WEIGHT_SPI_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
   HAL_GPIO_Init(WEIGHT_MISO_GPIO_Port, &GPIO_InitStruct);
   
-  GPIO_InitStruct.Pin = WEIGHT_CS_Pin;
+  GPIO_InitStruct.Pin = WEIGHT_CSx_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(WEIGHT_CS_GPIO_Port, &GPIO_InitStruct);  
+  HAL_GPIO_Init(WEIGHT_CSx_GPIO_Port, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = WEIGHT_CSy_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(WEIGHT_CSy_GPIO_Port, &GPIO_InitStruct);  
   
   
   hspi_weight.Instance = WEIGHT_SPIx;
@@ -249,10 +257,10 @@ void AD7190_Calibrate(unsigned char mode, unsigned char channel)
     oldRegValue = AD7190_GetRegisterValue(AD7190_REG_MODE, 3);
     oldRegValue &= ~AD7190_MODE_SEL(0x7);
     newRegValue = oldRegValue | AD7190_MODE_SEL(mode);
-//    WEIGHT_CS_ENABLE(); 
+    // WEIGHT_CSx_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, newRegValue, 3); // CS is not modified.
     AD7190_WaitRdyGoLow();
-//    WEIGHT_CS_DISABLE();
+    // WEIGHT_CSx_DISABLE();
 }
 
 /***************************************************************************//**
@@ -288,11 +296,11 @@ unsigned int AD7190_SingleConversion(void)
     unsigned int regData = 0x0;
  
     command = AD7190_MODE_SEL(AD7190_MODE_SINGLE) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) | AD7190_MODE_RATE(0x060);    
-//    WEIGHT_CS_ENABLE(); 
+    // WEIGHT_CSx_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3); // CS is not modified.
     AD7190_WaitRdyGoLow();
     regData = AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
-//    WEIGHT_CS_DISABLE();
+    // WEIGHT_CSx_DISABLE();
     
     return regData;
 }
@@ -309,14 +317,14 @@ unsigned int AD7190_ContinuousReadAvg(unsigned char sampleNumber)
     unsigned int command = 0x0;
     
     command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) | AD7190_MODE_RATE(0x060);
-//    WEIGHT_CS_ENABLE(); 
+    // WEIGHT_CSx_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
     for(count = 0;count < sampleNumber;count ++)
     {
         AD7190_WaitRdyGoLow();
         samplesAverage += AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
     }
-//    WEIGHT_CS_DISABLE();
+    // WEIGHT_CSx_DISABLE();
     samplesAverage = samplesAverage / sampleNumber;
     
     return samplesAverage ;
@@ -392,7 +400,8 @@ unsigned int weight_ad7190_conf(unsigned int channel)
     /* Performs a single conversion. */
     AD7190_ChannelSelect(AD7190_CH_AIN3P_AIN4M);    
     command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) |\
-                AD7190_MODE_RATE(384)|AD7190_MODE_SINC3;
+                // AD7190_MODE_RATE(384)|AD7190_MODE_SINC3;
+                AD7190_MODE_RATE(1023)|AD7190_MODE_SINC3;
     AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
     AD7190_WaitRdyGoLow();
     AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
@@ -403,7 +412,7 @@ unsigned int weight_ad7190_conf(unsigned int channel)
 
 unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)
 {
-#if 1
+#if 0
     unsigned int samplesAverage = 0x0;
     unsigned char count = 0x0;
 

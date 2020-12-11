@@ -264,7 +264,7 @@ int main(void)
             second_count=weight_ad7190_ReadAvg(3);
             if(int_abs(second_count,weight_count)<500) //根据测试情况更改
             {
-              HAL_Delay(10);
+              HAL_Delay(10); 
               weight_count=weight_ad7190_ReadAvg(3);
               third_count=weight_count;
               data_temp=weight_count-weight_Zero_Data;
@@ -365,7 +365,8 @@ int main(void)
           Tx_Buffer[2]=weight_proportion%100;          
           SPI_FLASH_SectorErase(HMI_SECTOR_ADDREE);        
           SPI_FLASH_BufferWrite(Tx_Buffer,HMI_SECTOR_ADDREE,sizeof(Tx_Buffer));       
-          printf("第二步\n");         
+          printf("第二步\n"); 
+          printf("weight_proportion=%d\n",weight_proportion);         
         }
         break;
         case 0x04:
@@ -396,25 +397,37 @@ int main(void)
         case 0x11:
           printf("通道1选择\n");
           channelx=1;
-          weight_proportion = 1950; 
+          weight_proportion = 2050; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSx_ENABLE();
           weight_ad7190_conf(channelx);       
         break;
         case 0x12:
           printf("通道2选择\n");
           channelx=2;
-          weight_proportion = 1750; 
-          weight_ad7190_conf(channelx);       
+          weight_proportion = 1760;
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSx_ENABLE();  
+          weight_ad7190_conf(channelx);      
         break;
         case 0x13:
           printf("通道3选择\n");
-          channelx=3; 
-          weight_proportion = 2000;  
+          channelx=1; 
+          weight_proportion = 1700; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSy_ENABLE(); 
           weight_ad7190_conf(channelx);     
         break;
         case 0x14:
           printf("通道4选择\n");
-          channelx=4;
-          weight_proportion = 2000; 
+          channelx=2;
+          weight_proportion = 1744; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSy_ENABLE();
           weight_ad7190_conf(channelx);       
         break;
         case 0x20:

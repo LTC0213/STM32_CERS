@@ -249,10 +249,10 @@ void AD7190_Calibrate(unsigned char mode, unsigned char channel)
     oldRegValue = AD7190_GetRegisterValue(AD7190_REG_MODE, 3);
     oldRegValue &= ~AD7190_MODE_SEL(0x7);
     newRegValue = oldRegValue | AD7190_MODE_SEL(mode);
-//    WEIGHT_CS_ENABLE(); 
+   WEIGHT_CS_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, newRegValue, 3); // CS is not modified.
     AD7190_WaitRdyGoLow();
-//    WEIGHT_CS_DISABLE();
+   WEIGHT_CS_DISABLE();
 }
 
 /***************************************************************************//**
@@ -288,11 +288,11 @@ unsigned int AD7190_SingleConversion(void)
     unsigned int regData = 0x0;
  
     command = AD7190_MODE_SEL(AD7190_MODE_SINGLE) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) | AD7190_MODE_RATE(0x060);    
-//    WEIGHT_CS_ENABLE(); 
+    WEIGHT_CS_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3); // CS is not modified.
     AD7190_WaitRdyGoLow();
     regData = AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
-//    WEIGHT_CS_DISABLE();
+    WEIGHT_CS_DISABLE();
     
     return regData;
 }
@@ -309,14 +309,14 @@ unsigned int AD7190_ContinuousReadAvg(unsigned char sampleNumber)
     unsigned int command = 0x0;
     
     command = AD7190_MODE_SEL(AD7190_MODE_CONT) | AD7190_MODE_CLKSRC(AD7190_CLK_INT) | AD7190_MODE_RATE(0x060);
-//    WEIGHT_CS_ENABLE(); 
+    WEIGHT_CS_ENABLE(); 
     AD7190_SetRegisterValue(AD7190_REG_MODE, command, 3);
     for(count = 0;count < sampleNumber;count ++)
     {
         AD7190_WaitRdyGoLow();
         samplesAverage += AD7190_GetRegisterValue(AD7190_REG_DATA, 3);
     }
-//    WEIGHT_CS_DISABLE();
+    WEIGHT_CS_DISABLE();
     samplesAverage = samplesAverage / sampleNumber;
     
     return samplesAverage ;
@@ -403,7 +403,7 @@ unsigned int weight_ad7190_conf(unsigned int channel)
 
 unsigned int weight_ad7190_ReadAvg(unsigned char sampleNumber)
 {
-#if 1
+#if 0
     unsigned int samplesAverage = 0x0;
     unsigned char count = 0x0;
 

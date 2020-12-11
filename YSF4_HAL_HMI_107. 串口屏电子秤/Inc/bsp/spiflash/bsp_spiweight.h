@@ -4,22 +4,31 @@
 /* 包含头文件 ----------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
+
 /* 类型定义 ------------------------------------------------------------------*/
 /* 宏定义 --------------------------------------------------------------------*/
 #define WEIGHT_SPIx                 SPI1
 #define WEIGHT_SPIx_CLK_ENABLE()    __HAL_RCC_SPI1_CLK_ENABLE()
-#define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();} 
-#define WEIGHT_CS_Pin              GPIO_PIN_13
-#define WEIGHT_CS_GPIO_Port        GPIOC
+#define WEIGHT_GPIO_CLK_ENABLE()   {__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOC_CLK_ENABLE();__HAL_RCC_GPIOH_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE();} 
+#define WEIGHT_CSx_Pin              GPIO_PIN_13
+#define WEIGHT_CSx_GPIO_Port        GPIOC
+#define WEIGHT_CSy_Pin              GPIO_PIN_10
+#define WEIGHT_CSy_GPIO_Port        GPIOH
 #define WEIGHT_SCK_Pin             GPIO_PIN_5
 #define WEIGHT_SCK_GPIO_Port       GPIOA
 #define WEIGHT_MISO_Pin            GPIO_PIN_4
 #define WEIGHT_MISO_GPIO_Port      GPIOB
 #define WEIGHT_MOSI_Pin            GPIO_PIN_5
 #define WEIGHT_MOSI_GPIO_Port      GPIOB
-#define WEIGHT_CS_ENABLE()         WEIGHT_CS_GPIO_Port->BRR = WEIGHT_CS_Pin
-#define WEIGHT_CS_DISABLE()        WEIGHT_CS_GPIO_Port->BSRR = WEIGHT_CS_Pin
-
+// #define WEIGHT_CSx_ENABLE()         WEIGHT_CSx_GPIO_Port->BRR = WEIGHT_CSx_Pin
+#define WEIGHT_CSx_ENABLE()         HAL_GPIO_WritePin(WEIGHT_CSx_GPIO_Port, WEIGHT_CSx_Pin,GPIO_PIN_RESET) 
+// #define WEIGHT_CSx_DISABLE()        WEIGHT_CSx_GPIO_Port->BSRR = WEIGHT_CSx_Pin
+#define WEIGHT_CSx_DISABLE()        HAL_GPIO_WritePin(WEIGHT_CSx_GPIO_Port, WEIGHT_CSx_Pin,GPIO_PIN_SET)        
+// #define WEIGHT_CSy_ENABLE()         WEIGHT_CSy_GPIO_Port->BRR = WEIGHT_CSy_Pin
+// #define WEIGHT_CSy_ENABLE()         WEIGHT_CSy_GPIO_Port->BSRR = WEIGHT_CSy_Pin
+// #define WEIGHT_CSy_DISABLE()        WEIGHT_CSy_GPIO_Port->BSRR = WEIGHT_CSy_Pin
+#define WEIGHT_CSy_ENABLE()         HAL_GPIO_WritePin(WEIGHT_CSy_GPIO_Port, WEIGHT_CSy_Pin,GPIO_PIN_RESET)
+#define WEIGHT_CSy_DISABLE()        HAL_GPIO_WritePin(WEIGHT_CSy_GPIO_Port, WEIGHT_CSy_Pin,GPIO_PIN_SET)
 
 
 /* AD7190 GPIO */
