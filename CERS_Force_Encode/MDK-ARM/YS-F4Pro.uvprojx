@@ -1026,11 +1026,6 @@
           <GroupName>bsp</GroupName>
           <Files>
             <File>
-              <FileName>bsp_debug_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\bsp\usart\bsp_debug_usart.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\bsp\led\bsp_led.c</FilePath>
@@ -1054,6 +1049,11 @@
               <FileName>bsp_beep.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\bsp\beep\bsp_beep.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usartx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\bsp\usart\bsp_usartx.c</FilePath>
             </File>
           </Files>
         </Group>

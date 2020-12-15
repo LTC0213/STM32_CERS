@@ -1,31 +1,32 @@
 /**
   ******************************************************************************
-  * æ–‡ä»¶åç¨‹: main.c 
-  * ä½œ    è€…: ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿ
-  * ç‰ˆ    æœ¬: V1.0
-  * ç¼–å†™æ—¥æœŸ: 2017-03-30
-  * åŠŸ    èƒ½: ä¸²å£å±ç”µå­ç§¤
+  * ÎÄ¼şÃû³Ì: main.c 
+  * ×÷    Õß: Ó²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶Ó
+  * °æ    ±¾: V1.0
+  * ±àĞ´ÈÕÆÚ: 2017-03-30
+  * ¹¦    ÄÜ: ´®¿ÚÆÁµç×Ó³Ó
   ******************************************************************************
-  * è¯´æ˜ï¼š
-  * æœ¬ä¾‹ç¨‹é…å¥—ç¡¬çŸ³stm32å¼€å‘æ¿YS-F4Proä½¿ç”¨ã€‚
+  * ËµÃ÷£º
+  * ±¾Àı³ÌÅäÌ×Ó²Ê¯stm32¿ª·¢°åYS-F4ProÊ¹ÓÃ¡£
   * 
-  * æ·˜å®ï¼š
-  * è®ºå›ï¼šhttp://www.ing10bbs.com
-  * ç‰ˆæƒå½’ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿæ‰€æœ‰ï¼Œè¯·å‹¿å•†ç”¨ã€‚
+  * ÌÔ±¦£º
+  * ÂÛÌ³£ºhttp://www.ing10bbs.com
+  * °æÈ¨¹éÓ²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶ÓËùÓĞ£¬ÇëÎğÉÌÓÃ¡£
   ******************************************************************************
   */
-/* åŒ…å«å¤´æ–‡ä»¶ ----------------------------------------------------------------*/
+/* °üº¬Í·ÎÄ¼ş ----------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "string.h"
-#include "usart/bsp_debug_usart.h"
+// #include "usart/bsp_debug_usart.h"
 #include "led/bsp_led.h"
 #include "HMI/bsp_usartx_HMI.h"
 #include "spiflash/bsp_spiweight.h"
 #include "spiflash/bsp_spiflash.h"
 #include "beep/bsp_beep.h"
+#include "usart/bsp_usartx.h"
 
-/* ç§æœ‰ç±»å‹å®šä¹‰ --------------------------------------------------------------*/
-/* ç§æœ‰å®å®šä¹‰ ----------------------------------------------------------------*/
+/* Ë½ÓĞÀàĞÍ¶¨Òå --------------------------------------------------------------*/
+/* Ë½ÓĞºê¶¨Òå ----------------------------------------------------------------*/
 #define HMI_RX_BUFFER_SIZE       30
 
 #define  FLASH_WriteAddress      0x0000
@@ -33,30 +34,31 @@
 
 #define HMI_SECTOR_ADDREE       4096*2
 
-/* ç§æœ‰å˜é‡ ------------------------------------------------------------------*/
+/* Ë½ÓĞ±äÁ¿ ------------------------------------------------------------------*/
 __IO uint8_t  HMI_Rx_buf[HMI_RX_BUFFER_SIZE]={0};
-__IO uint8_t  HMI_RX_flag=0;       //0:æœªæ¥æ”¶åˆ°æ•°æ®å¤´  1ï¼šå·²ç»æ¥æ”¶åˆ°æ•°æ®å¤´  2ï¼šä¸€å¸§æ¥æ”¶å®Œæ¯•
+__IO uint8_t  HMI_RX_flag=0;       //0:Î´½ÓÊÕµ½Êı¾İÍ·  1£ºÒÑ¾­½ÓÊÕµ½Êı¾İÍ·  2£ºÒ»Ö¡½ÓÊÕÍê±Ï
 __IO uint8_t  usart_rx_flag;
 
-__IO uint8_t  channelx=1;         //é€šé“é€‰æ‹©
+__IO uint8_t  channelx=1;         //Í¨µÀÑ¡Ôñ
+__IO uint8_t  modelchannelx=0;         //¹¦ÄÜÑ¡Ôñ
 
 __IO uint16_t timer_count=0;
 __IO uint16_t pwm_data=0;
 
-__IO uint8_t  weight_Zero_IsInit=0; //1: é›¶å€¼æœªè·å–  2ï¼šå·²è·å–é›¶å€¼
-__IO int32_t  weight_Zero_Data=0;   // [0]:æ— é‡ç‰©é›¶å€¼  [1]:æœ‰å¤–çš®é‡ç‰©é›¶å€¼
+__IO uint8_t  weight_Zero_IsInit=0; //1: ÁãÖµÎ´»ñÈ¡  2£ºÒÑ»ñÈ¡ÁãÖµ
+__IO int32_t  weight_Zero_Data=0;   // [0]:ÎŞÖØÎïÁãÖµ  [1]:ÓĞÍâÆ¤ÖØÎïÁãÖµ
 
-__IO uint8_t Is_thres_stamp=0;  //æ˜¯å¦æœ‰é˜€å€¼è®¾å®š
-__IO uint8_t Is_tare_stamp=0;   //æ˜¯å¦æœ‰çš®é‡æ ‡å¿—
-__IO int32_t Record_weight1;    //çš®é‡è®°å½•å€¼ï¼ˆç”¨äºæ¯æ¬¡ç§°é‡å‰è®°å½•çš®é‡ï¼‰ 
-__IO int32_t Record_weight2;    //çš®é‡è®°å½•å€¼ï¼ˆç”¨äºæ¯æ¬¡ç§°é‡å‰è®°å½•çš®é‡ï¼‰ 
-__IO int32_t cali_weight;       //æ ¡å‡†ä½¿ç”¨
-__IO int32_t weight_Zero_Data;  //çš®é‡åˆå§‹å€¼
-__IO int32_t weight_proportion = 1950; //æ¢ç®—å€¼è®°å½• æ¯”ä¾‹ç³»æ•°
-__IO int32_t weight_current;    //çš®é‡è®°å½•å€¼
-__IO int32_t second_count;      //çš®é‡è®°å½•å€¼
-__IO int32_t third_count;       //çš®é‡è®°å½•å€¼
-__IO uint8_t Process_Step=0;   // 0æœªæ£€æµ‹åˆ°ç‰©ä½“ 1æ£€æµ‹åˆ°æœ‰ç‰©å“ 2æœ‰é‡ç‰© å¹¶ä¸”è¾¾åˆ°çš®é‡è¦æ±‚ 3æµ‹çš®é‡ 4çš®é‡åŸºç¡€ä¸Š åŠ äº†é‡ç‰© 5
+__IO uint8_t Is_thres_stamp=0;  //ÊÇ·ñÓĞ·§ÖµÉè¶¨
+__IO uint8_t Is_tare_stamp=0;   //ÊÇ·ñÓĞÆ¤ÖØ±êÖ¾
+__IO int32_t Record_weight1;    //Æ¤ÖØ¼ÇÂ¼Öµ£¨ÓÃÓÚÃ¿´Î³ÆÖØÇ°¼ÇÂ¼Æ¤ÖØ£© 
+__IO int32_t Record_weight2;    //Æ¤ÖØ¼ÇÂ¼Öµ£¨ÓÃÓÚÃ¿´Î³ÆÖØÇ°¼ÇÂ¼Æ¤ÖØ£© 
+__IO int32_t cali_weight;       //Ğ£×¼Ê¹ÓÃ
+__IO int32_t weight_Zero_Data;  //Æ¤ÖØ³õÊ¼Öµ
+__IO int32_t weight_proportion = 1950; //»»ËãÖµ¼ÇÂ¼ ±ÈÀıÏµÊı
+__IO int32_t weight_current;    //Æ¤ÖØ¼ÇÂ¼Öµ
+__IO int32_t second_count;      //Æ¤ÖØ¼ÇÂ¼Öµ
+__IO int32_t third_count;       //Æ¤ÖØ¼ÇÂ¼Öµ
+__IO uint8_t Process_Step=0;   // 0Î´¼ì²âµ½ÎïÌå 1¼ì²âµ½ÓĞÎïÆ· 2ÓĞÖØÎï ²¢ÇÒ´ïµ½Æ¤ÖØÒªÇó 3²âÆ¤ÖØ 4Æ¤ÖØ»ù´¡ÉÏ ¼ÓÁËÖØÎï 5
 
 
 
@@ -68,19 +70,19 @@ uint8_t Rx_Buffer[3] = {0};
 
 int32_t Result_data=0;
 
-/* æ‰©å±•å˜é‡ ------------------------------------------------------------------*/
+/* À©Õ¹±äÁ¿ ------------------------------------------------------------------*/
 
 
-/* ç§æœ‰å‡½æ•°åŸå½¢ --------------------------------------------------------------*/
+/* Ë½ÓĞº¯ÊıÔ­ĞÎ --------------------------------------------------------------*/
 void HMI_value_setting(const char *val_str,uint32_t value);
 void HMI_string_setting(const char *val_str,int32_t value);
 
-/* å‡½æ•°ä½“ --------------------------------------------------------------------*/
+/* º¯ÊıÌå --------------------------------------------------------------------*/
 /**
-  * å‡½æ•°åŠŸèƒ½: ç³»ç»Ÿæ—¶é’Ÿé…ç½®
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: ÏµÍ³Ê±ÖÓÅäÖÃ
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 void SystemClock_Config(void)
 {
@@ -88,38 +90,38 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
  
-  __HAL_RCC_PWR_CLK_ENABLE();                                     //ä½¿èƒ½PWRæ—¶é’Ÿ
+  __HAL_RCC_PWR_CLK_ENABLE();                                     //Ê¹ÄÜPWRÊ±ÖÓ
 
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //è®¾ç½®è°ƒå‹å™¨è¾“å‡ºç”µå‹çº§åˆ«1
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //ÉèÖÃµ÷Ñ¹Æ÷Êä³öµçÑ¹¼¶±ğ1
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // å¤–éƒ¨æ™¶æŒ¯ï¼Œ8MHz
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //æ‰“å¼€HSE 
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //æ‰“å¼€PLL
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLLæ—¶é’Ÿæºé€‰æ‹©HSE
-  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8åˆ†é¢‘MHz
-  RCC_OscInitStruct.PLL.PLLN = 336;                               //336å€é¢‘
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2åˆ†é¢‘ï¼Œå¾—åˆ°168MHzä¸»æ—¶é’Ÿ
-  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/éšæœºæ•°äº§ç”Ÿå™¨ç­‰çš„ä¸»PLLåˆ†é¢‘ç³»æ•°
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // Íâ²¿¾§Õñ£¬8MHz
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //´ò¿ªHSE 
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //´ò¿ªPLL
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLLÊ±ÖÓÔ´Ñ¡ÔñHSE
+  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8·ÖÆµMHz
+  RCC_OscInitStruct.PLL.PLLN = 336;                               //336±¶Æµ
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2·ÖÆµ£¬µÃµ½168MHzÖ÷Ê±ÖÓ
+  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/Ëæ»úÊı²úÉúÆ÷µÈµÄÖ÷PLL·ÖÆµÏµÊı
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // ç³»ç»Ÿæ—¶é’Ÿï¼š168MHz
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHBæ—¶é’Ÿï¼š 168MHz
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1æ—¶é’Ÿï¼š42MHz
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2æ—¶é’Ÿï¼š84MHz
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // ÏµÍ³Ê±ÖÓ£º168MHz
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHBÊ±ÖÓ£º 168MHz
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1Ê±ÖÓ£º42MHz
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2Ê±ÖÓ£º84MHz
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
-  HAL_RCC_EnableCSS();                                            // ä½¿èƒ½CSSåŠŸèƒ½ï¼Œä¼˜å…ˆä½¿ç”¨å¤–éƒ¨æ™¶æŒ¯ï¼Œå†…éƒ¨æ—¶é’Ÿæºä¸ºå¤‡ç”¨
+  HAL_RCC_EnableCSS();                                            // Ê¹ÄÜCSS¹¦ÄÜ£¬ÓÅÏÈÊ¹ÓÃÍâ²¿¾§Õñ£¬ÄÚ²¿Ê±ÖÓÔ´Îª±¸ÓÃ
   
- 	// HAL_RCC_GetHCLKFreq()/1000    1msä¸­æ–­ä¸€æ¬¡
-	// HAL_RCC_GetHCLKFreq()/100000	 10usä¸­æ–­ä¸€æ¬¡
-	// HAL_RCC_GetHCLKFreq()/1000000 1usä¸­æ–­ä¸€æ¬¡
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // é…ç½®å¹¶å¯åŠ¨ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨
-  /* ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨æ—¶é’Ÿæº */
+ 	// HAL_RCC_GetHCLKFreq()/1000    1msÖĞ¶ÏÒ»´Î
+	// HAL_RCC_GetHCLKFreq()/100000	 10usÖĞ¶ÏÒ»´Î
+	// HAL_RCC_GetHCLKFreq()/1000000 1usÖĞ¶ÏÒ»´Î
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // ÅäÖÃ²¢Æô¶¯ÏµÍ³µÎ´ğ¶¨Ê±Æ÷
+  /* ÏµÍ³µÎ´ğ¶¨Ê±Æ÷Ê±ÖÓÔ´ */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨ä¸­æ–­ä¼˜å…ˆçº§é…ç½® */
+  /* ÏµÍ³µÎ´ğ¶¨Ê±Æ÷ÖĞ¶ÏÓÅÏÈ¼¶ÅäÖÃ */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
@@ -132,10 +134,10 @@ int32_t int_abs(int32_t value1,int32_t value2)
 }
 
 /**
-  * å‡½æ•°åŠŸèƒ½: ä¸»å‡½æ•°.
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: Ö÷º¯Êı.
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 int main(void)
 {
@@ -143,21 +145,22 @@ int main(void)
   int32_t weight_first;
   uint32_t tmp[2];
   int32_t Compa_value;
-  /* å¤ä½æ‰€æœ‰å¤–è®¾ï¼Œåˆå§‹åŒ–Flashæ¥å£å’Œç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨ */
+  /* ¸´Î»ËùÓĞÍâÉè£¬³õÊ¼»¯Flash½Ó¿ÚºÍÏµÍ³µÎ´ğ¶¨Ê±Æ÷ */
   HAL_Init();
-  /* é…ç½®ç³»ç»Ÿæ—¶é’Ÿ */
+  /* ÅäÖÃÏµÍ³Ê±ÖÓ */
   SystemClock_Config();
 
-  /* åˆå§‹åŒ–ä¸²å£å¹¶é…ç½®ä¸²å£ä¸­æ–­ä¼˜å…ˆçº§ */
-  MX_DEBUG_USART_Init();
+  /* ³õÊ¼»¯´®¿Ú²¢ÅäÖÃ´®¿ÚÖĞ¶ÏÓÅÏÈ¼¶ */
+  // MX_DEBUG_USART_Init();
+  MX_USARTx_Init();
   HMI_USARTx_Init();
-  /* åˆå§‹åŒ–LED */
+  /* ³õÊ¼»¯LED */
   LED_GPIO_Init(); 
   
   __HAL_UART_ENABLE_IT(&husartx_HMI, UART_IT_RXNE);
-  /* åˆå§‹åŒ–SPI */
+  /* ³õÊ¼»¯SPI */
   MX_SPIFlash_Init();
-  /* åˆå§‹åŒ–BEEP */
+  /* ³õÊ¼»¯BEEP */
   BEEP_GPIO_Init();
   /* Get SPI Flash Device ID */
 	DeviceID = SPI_FLASH_ReadDeviceID();
@@ -168,7 +171,7 @@ int main(void)
   printf("FlashID is 0x%X,  Manufacturer Device ID is 0x%X\n", FlashID, DeviceID);
 	if (FlashID == SPI_FLASH_ID)  /* #define  sFLASH_ID  0XEF4018 */
 	{	
-		printf("æ£€æµ‹åˆ°åé‚¦ä¸²è¡Œflash W25Q128 !\n");
+		printf("¼ì²âµ½»ª°î´®ĞĞflash W25Q128 !\n");
     SPI_FLASH_BufferRead(Rx_Buffer,HMI_SECTOR_ADDREE,sizeof(Rx_Buffer));
     Result_data=Rx_Buffer[0]*10000+Rx_Buffer[1]*100+Rx_Buffer[2];
     printf("Result_data=%d\n",Result_data);		
@@ -181,14 +184,16 @@ int main(void)
   }  	  
   if(AD7190_Init())
   {
-    printf("æ£€æµ‹åˆ°  AD7190 !\n");
+    printf("¼ì²âµ½  AD7190 !\n");
     // weight_ad7190_conf(channelx);
   }
-  /* æ— é™å¾ªç¯ */
+  /* ÎŞÏŞÑ­»· */
   while (1)
   {  
     timecount++;
-    if(timecount>=1) //å»¶æ—¶æ—¶é—´
+    if(modelchannelx==1)
+    {
+      if(timecount>=1) //ÑÓÊ±Ê±¼ä
     {
 
       if(weight_Zero_IsInit==1)
@@ -200,7 +205,7 @@ int main(void)
       {
         
         int64_t data_temp,temp;
-        int64_t weight_count;   //å¸¦çš®è¯»æ•°     
+        int64_t weight_count;   //´øÆ¤¶ÁÊı     
         
         weight_count=weight_ad7190_ReadAvg(1);
         data_temp=weight_count-weight_Zero_Data;
@@ -209,7 +214,7 @@ int main(void)
         printf("weight_current=%d\n",weight_current/100);
         HMI_value_setting("page0.curve.val",weight_current/10000); 
         printf("Process_Step=%d\n",Process_Step); 
-        if(Is_thres_stamp==1)  //å¦‚æœæœ‰è¶…å‡ºé¢„è®¾å€¼ï¼Œé‚£ä¹ˆèœ‚é¸£å™¨å“ åæœŸå¯ä»¥åŠ è¯­éŸ³æ¨¡å—
+        if(Is_thres_stamp==1)  //Èç¹ûÓĞ³¬³öÔ¤ÉèÖµ£¬ÄÇÃ´·äÃùÆ÷Ïì ºóÆÚ¿ÉÒÔ¼ÓÓïÒôÄ£¿é
         {
           if((weight_current-Record_weight1)>=Compa_value)
           {
@@ -218,7 +223,7 @@ int main(void)
             BEEP_OFF;
           }        
         }        
-        if(Is_tare_stamp==1)   //å¦‚æœæœ‰æ¸…é›¶æŒ‰é’®æŒ‰ä¸‹
+        if(Is_tare_stamp==1)   //Èç¹ûÓĞÇåÁã°´Å¥°´ÏÂ
         {
           Record_weight2=Record_weight1-weight_current;
           if(Record_weight2>15)   
@@ -231,11 +236,11 @@ int main(void)
             HMI_value_setting("page0.net.val",0); 
           }           
         }
-        //è¿›è¡Œç§°é‡ï¼Œè¿‡ç¨‹æ˜¯ï¼Œç¬¬ä¸€ä»¶æ”¾å…¥çš„ç‰©å“éƒ½ä¼šè¢«å½“æˆçš®é‡ï¼Œç¬¬äºŒæ¬¡æ”¾å…¥çš„æ‰æ˜¯å®é™…é‡é‡
-        //æœ¬ç¨‹åºå°±æ˜¯è¿™æ ·ï¼Œå¦‚æœéœ€è¦å…¶ä»–åŠŸèƒ½ï¼Œå¯ä»¥åœ¨æ­¤åŸºç¡€ä¸Šè¿›è¡Œä¿®æ”¹
+        //½øĞĞ³ÆÖØ£¬¹ı³ÌÊÇ£¬µÚÒ»¼ş·ÅÈëµÄÎïÆ·¶¼»á±»µ±³ÉÆ¤ÖØ£¬µÚ¶ş´Î·ÅÈëµÄ²ÅÊÇÊµ¼ÊÖØÁ¿
+        //±¾³ÌĞò¾ÍÊÇÕâÑù£¬Èç¹ûĞèÒªÆäËû¹¦ÄÜ£¬¿ÉÒÔÔÚ´Ë»ù´¡ÉÏ½øĞĞĞŞ¸Ä
         switch(Process_Step)  
         {
-          case 0:  //æ£€æµ‹åˆ°æœ‰ç‰©å“
+          case 0:  //¼ì²âµ½ÓĞÎïÆ·
             if(weight_count>weight_Zero_Data)
             {
               Process_Step=1;
@@ -248,7 +253,7 @@ int main(void)
               weight_count=0;
             }
           break;          
-          case 1:  //æ£€æµ‹åˆ°æœ‰ç‰©å“ å¹¶ä¸”è¾¾åˆ°çš®é‡è¦æ±‚
+          case 1:  //¼ì²âµ½ÓĞÎïÆ· ²¢ÇÒ´ïµ½Æ¤ÖØÒªÇó
             if(int_abs(weight_count,weight_Zero_Data)>10)
             {
               Process_Step=2;
@@ -259,17 +264,17 @@ int main(void)
               Process_Step=0;
             }
           break;
-          case 2:  //æµ‹é‡çš®é‡
+          case 2:  //²âÁ¿Æ¤ÖØ
             HAL_Delay(100);
             second_count=weight_ad7190_ReadAvg(3);
-            if(int_abs(second_count,weight_count)<500) //æ ¹æ®æµ‹è¯•æƒ…å†µæ›´æ”¹
+            if(int_abs(second_count,weight_count)<500) //¸ù¾İ²âÊÔÇé¿ö¸ü¸Ä
             {
               HAL_Delay(10); 
               weight_count=weight_ad7190_ReadAvg(3);
               third_count=weight_count;
               data_temp=weight_count-weight_Zero_Data;
               temp=data_temp*100000/weight_proportion;
-              Record_weight1=temp; //æ¯æ¬¡æ¢çš®é‡æ—¶èµ‹å€¼
+              Record_weight1=temp; //Ã¿´Î»»Æ¤ÖØÊ±¸³Öµ
               printf("Record_weight1=%d\n",Record_weight1); 
               weight_current=temp;            
               Is_tare_stamp=1;
@@ -281,7 +286,7 @@ int main(void)
               Process_Step=0;
             } 
           break; 
-          case 3:  //çš®é‡çš„åŸºç¡€ä¸ŠåŠ ç‰©å“
+          case 3:  //Æ¤ÖØµÄ»ù´¡ÉÏ¼ÓÎïÆ·
             if(weight_count>third_count)
             {
              if(int_abs(weight_count,third_count)>10)
@@ -298,7 +303,7 @@ int main(void)
             }
            
           break; 
-          case 4:  //æµ‹é‡å¢åŠ ç‰©å“çš„é‡é‡
+          case 4:  //²âÁ¿Ôö¼ÓÎïÆ·µÄÖØÁ¿
             HAL_Delay(100);  
             second_count=weight_ad7190_ReadAvg(3);
             if(second_count>third_count)
@@ -331,18 +336,24 @@ int main(void)
         timecount=0;         
       }         
     }
-    // HAL_Delay(10); //å»¶æ—¶
+    // HAL_Delay(10); //ÑÓÊ±
+    }
+
+    if(modelchannelx==2)
+    {
       
+    }
+       
     if(HMI_RX_flag==2)
     {
       HMI_RX_flag=0;    
       switch(HMI_Rx_buf[1])
       {
         case 0x01:
-          printf("ç”µå­ç§¤æ ¡å‡†\n");
+          printf("µç×Ó³ÓĞ£×¼\n");
         break;
         case 0x02:
-          printf("ç¬¬ä¸€æ­¥\n");         
+          printf("µÚÒ»²½\n");         
           tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2];
           cali_weight= tmp[0]%10000;
           weight_Zero_Data = weight_ad7190_ReadAvg(4);       
@@ -365,19 +376,19 @@ int main(void)
           Tx_Buffer[2]=weight_proportion%100;          
           SPI_FLASH_SectorErase(HMI_SECTOR_ADDREE);        
           SPI_FLASH_BufferWrite(Tx_Buffer,HMI_SECTOR_ADDREE,sizeof(Tx_Buffer));       
-          printf("ç¬¬äºŒæ­¥\n"); 
+          printf("µÚ¶ş²½\n"); 
           printf("weight_proportion=%d\n",weight_proportion);         
         }
         break;
         case 0x04:
-          printf("æ ¡å‡†å®Œæˆ\n");
+          printf("Ğ£×¼Íê³É\n");
           Process_Step=0;
           weight_Zero_IsInit=1;   
           HMI_value_setting("page0.gross.val",0);
           HMI_value_setting("page0.net.val",0);           
         break;
         case 0x05:
-          printf("æ¸…é›¶\n");
+          printf("ÇåÁã\n");
           Process_Step=0;
           Is_tare_stamp=0;
           weight_Zero_IsInit=1;
@@ -395,7 +406,7 @@ int main(void)
           printf("Compa_value=%d\n",Compa_value);
         break;  
         case 0x11:
-          printf("é€šé“1é€‰æ‹©\n");
+          printf("Í¨µÀ1Ñ¡Ôñ\n");
           channelx=1;
           weight_proportion = 2050; 
           WEIGHT_CSx_DISABLE();
@@ -404,7 +415,7 @@ int main(void)
           weight_ad7190_conf(channelx);       
         break;
         case 0x12:
-          printf("é€šé“2é€‰æ‹©\n");
+          printf("Í¨µÀ2Ñ¡Ôñ\n");
           channelx=2;
           weight_proportion = 1760;
           WEIGHT_CSx_DISABLE();
@@ -413,7 +424,7 @@ int main(void)
           weight_ad7190_conf(channelx);      
         break;
         case 0x13:
-          printf("é€šé“3é€‰æ‹©\n");
+          printf("Í¨µÀ3Ñ¡Ôñ\n");
           channelx=1; 
           weight_proportion = 1700; 
           WEIGHT_CSx_DISABLE();
@@ -422,7 +433,7 @@ int main(void)
           weight_ad7190_conf(channelx);     
         break;
         case 0x14:
-          printf("é€šé“4é€‰æ‹©\n");
+          printf("Í¨µÀ4Ñ¡Ôñ\n");
           channelx=2;
           weight_proportion = 1744; 
           WEIGHT_CSx_DISABLE();
@@ -430,9 +441,22 @@ int main(void)
           WEIGHT_CSy_ENABLE();
           weight_ad7190_conf(channelx);       
         break;
-        case 0x20:
-          printf("é€šé“é€‰æ‹©ç•Œé¢\n");        
-        break;           
+        case 0x15:
+          printf("Á¦Í¨µÀÑ¡Ôñ½çÃæ\n");
+          modelchannelx=1;        
+        break;
+        case 0x16:
+          printf("¹¦ÄÜÑ¡Ôñ½çÃæ\n");
+          modelchannelx=0;        
+        break;  
+        case 0x17:
+          printf("Á¦Í¨µÀÑ¡Ôñ½çÃæ\n"); 
+          modelchannelx=1;       
+        break;
+        case 0x18:
+          printf("½Ç¶ÈÍ¨µÀÑ¡Ôñ½çÃæ\n"); 
+          modelchannelx=2;       
+        break;         
       }
     }
     
@@ -440,10 +464,10 @@ int main(void)
 }
 
 /**
-  * å‡½æ•°åŠŸèƒ½: ä¸²å£å±ä¸­æ–­å¤„ç†å‡½æ•°
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: ´®¿ÚÆÁÖĞ¶Ï´¦Àíº¯Êı
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 void HMI_USARTx_IRQHANDLER(void)
 {
@@ -484,10 +508,10 @@ void HMI_USARTx_IRQHANDLER(void)
 }
 
 /**
-  * å‡½æ•°åŠŸèƒ½: å‘ä¸²å£å±å‘é€æ•°æ®
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: Ïò´®¿ÚÆÁ·¢ËÍÊı¾İ
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 void HMI_value_setting(const char *val_str,uint32_t value)
 {
@@ -509,10 +533,10 @@ void HMI_value_setting(const char *val_str,uint32_t value)
 }
 
 /**
-  * å‡½æ•°åŠŸèƒ½: å‘ä¸²å£å±å‘é€æµ®ç‚¹æ•°æ®
-  * è¾“å…¥å‚æ•°: æ— 
-  * è¿” å› å€¼: æ— 
-  * è¯´    æ˜: æ— 
+  * º¯Êı¹¦ÄÜ: Ïò´®¿ÚÆÁ·¢ËÍ¸¡µãÊı¾İ
+  * ÊäÈë²ÎÊı: ÎŞ
+  * ·µ »Ø Öµ: ÎŞ
+  * Ëµ    Ã÷: ÎŞ
   */
 void HMI_string_setting(const char *val_str,int32_t value)
 {
@@ -537,5 +561,5 @@ void HMI_string_setting(const char *val_str,int32_t value)
 
 
 
-/******************* (C) COPYRIGHT 2015-2020 ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿ *****END OF FILE****/
+/******************* (C) COPYRIGHT 2015-2020 Ó²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶Ó *****END OF FILE****/
 

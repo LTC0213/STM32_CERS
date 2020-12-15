@@ -78,9 +78,9 @@ ys-f4pro\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spdifrx.h
 ys-f4pro\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dfsdm.h
 ys-f4pro\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_lptim.h
 ys-f4pro\main.o: E:\ZYAPP\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-ys-f4pro\main.o: ..\Inc\bsp\usart/bsp_debug_usart.h
 ys-f4pro\main.o: ..\Inc\bsp\led/bsp_led.h
 ys-f4pro\main.o: ..\Inc\bsp\HMI/bsp_usartx_HMI.h
 ys-f4pro\main.o: ..\Inc\bsp\spiflash/bsp_spiweight.h
 ys-f4pro\main.o: ..\Inc\bsp\spiflash/bsp_spiflash.h
 ys-f4pro\main.o: ..\Inc\bsp\beep/bsp_beep.h
+ys-f4pro\main.o: ..\Inc\bsp\usart/bsp_usartx.h

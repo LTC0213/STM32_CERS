@@ -90,12 +90,12 @@
 "ys-f4pro\stm32f4xx_ll_usb.o"
 "ys-f4pro\stm32f4xx_ll_utils.o"
 "ys-f4pro\system_stm32f4xx.o"
-"ys-f4pro\bsp_debug_usart.o"
 "ys-f4pro\bsp_led.o"
 "ys-f4pro\bsp_usartx_hmi.o"
 "ys-f4pro\bsp_spiweight.o"
 "ys-f4pro\bsp_spiflash.o"
 "ys-f4pro\bsp_beep.o"
+"ys-f4pro\bsp_usartx.o"
 --library_type=microlib --strict --scatter "YS-F4Pro\YS-F4Pro.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
