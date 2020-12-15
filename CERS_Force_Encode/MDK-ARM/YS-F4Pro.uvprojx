@@ -1055,6 +1055,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\bsp\usart\bsp_usartx.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\bsp\encoder\bsp_encoder.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

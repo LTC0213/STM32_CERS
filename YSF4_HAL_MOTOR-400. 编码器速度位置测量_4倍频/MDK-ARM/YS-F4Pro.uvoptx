@@ -165,22 +165,6 @@
           <ExecCommand></ExecCommand>
           <Expression>\\YS_F4Pro\../Src/main.c\109</Expression>
         </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>114</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134228378</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>F:\Project\STM32\STM32_CERS\YSF4_HAL_MOTOR-400. 缂栫爜鍣ㄩ€熷害浣嶇疆娴嬮噺_4鍊嶉\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\YS_F4Pro\../Src/main.c\114</Expression>
-        </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
@@ -192,6 +176,11 @@
           <count>1</count>
           <WinNumber>1</WinNumber>
           <ItemText>CaptureNumber</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>uwTick</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

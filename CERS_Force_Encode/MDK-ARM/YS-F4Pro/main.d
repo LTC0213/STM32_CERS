@@ -84,3 +84,4 @@ ys-f4pro\main.o: ..\Inc\bsp\spiflash/bsp_spiweight.h
 ys-f4pro\main.o: ..\Inc\bsp\spiflash/bsp_spiflash.h
 ys-f4pro\main.o: ..\Inc\bsp\beep/bsp_beep.h
 ys-f4pro\main.o: ..\Inc\bsp\usart/bsp_usartx.h
+ys-f4pro\main.o: ..\Inc\bsp\encoder/bsp_encoder.h

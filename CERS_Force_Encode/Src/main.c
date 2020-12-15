@@ -23,7 +23,9 @@
 #include "spiflash/bsp_spiweight.h"
 #include "spiflash/bsp_spiflash.h"
 #include "beep/bsp_beep.h"
+
 #include "usart/bsp_usartx.h"
+#include "encoder/bsp_encoder.h"
 
 /* 私有类型定义 --------------------------------------------------------------*/
 /* 私有宏定义 ----------------------------------------------------------------*/
@@ -59,8 +61,14 @@ __IO int32_t weight_current;    //皮重记录值
 __IO int32_t second_count;      //皮重记录值
 __IO int32_t third_count;       //皮重记录值
 __IO uint8_t Process_Step=0;   // 0未检测到物体 1检测到有物品 2有重物 并且达到皮重要求 3测皮重 4皮重基础上 加了重物 5
+__IO int8_t  in0=0;
+__IO int8_t  in1=0;
+__IO int8_t  in2=0;
+__IO int8_t  in3=0;
 
-
+__IO int32_t CaptureNumber = 0;     // 输入捕获数
+__IO int32_t LastCapNum = 0;     // 上一次输入捕获数
+__IO int32_t Speed = 0;     // 上一次输入捕获数
 
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
@@ -71,7 +79,8 @@ uint8_t Rx_Buffer[3] = {0};
 int32_t Result_data=0;
 
 /* 扩展变量 ------------------------------------------------------------------*/
-
+extern __IO uint32_t uwTick;
+extern int32_t OverflowCount ;//定时器溢出次数 
 
 /* 私有函数原形 --------------------------------------------------------------*/
 void HMI_value_setting(const char *val_str,uint32_t value);
@@ -141,7 +150,6 @@ int32_t int_abs(int32_t value1,int32_t value2)
   */
 int main(void)
 {
-  static int16_t timecount=0;  
   int32_t weight_first;
   uint32_t tmp[2];
   int32_t Compa_value;
@@ -162,6 +170,12 @@ int main(void)
   MX_SPIFlash_Init();
   /* 初始化BEEP */
   BEEP_GPIO_Init();
+
+  /* 编码器初始化及使能编码器模式 */
+  ENCODER_TIMx_Init();
+  HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+  printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+
   /* Get SPI Flash Device ID */
 	DeviceID = SPI_FLASH_ReadDeviceID();
   
@@ -187,13 +201,13 @@ int main(void)
     printf("检测到  AD7190 !\n");
     // weight_ad7190_conf(channelx);
   }
+
   /* 无限循环 */
   while (1)
   {  
-    timecount++;
     if(modelchannelx==1)
     {
-      if(timecount>=1) //延时时间
+      if(uwTick % 10 ==0) //延时时间
     {
 
       if(weight_Zero_IsInit==1)
@@ -211,9 +225,17 @@ int main(void)
         data_temp=weight_count-weight_Zero_Data;
         temp=data_temp*100000/weight_proportion;
         weight_current=temp; 
+        in1=in0+(weight_current/10000-in0)/4;
+        in2=in0+2*(weight_current/10000-in0)/4;
+        in3=in0+3*(weight_current/10000-in0)/4;
+        in0=weight_current/10000;
         printf("weight_current=%d\n",weight_current/100);
-        HMI_value_setting("page0.curve.val",weight_current/10000); 
+        HMI_value_setting("page0.in1.val",in1);
+        HMI_value_setting("page0.in2.val",in2);
+        HMI_value_setting("page0.in3.val",in3);
+        HMI_value_setting("page0.in0.val",in0);
         printf("Process_Step=%d\n",Process_Step); 
+        
         if(Is_thres_stamp==1)  //如果有超出预设值，那么蜂鸣器响 后期可以加语音模块
         {
           if((weight_current-Record_weight1)>=Compa_value)
@@ -332,8 +354,7 @@ int main(void)
             }            
           break;         
              
-        }
-        timecount=0;         
+        }        
       }         
     }
     // HAL_Delay(10); //延时
@@ -341,7 +362,19 @@ int main(void)
 
     if(modelchannelx==2)
     {
-      
+      if(uwTick % 10 ==0)  // 10ms
+      {
+        /* 读取编码器计数值 */
+        CaptureNumber = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
+        Speed = CaptureNumber - LastCapNum;   //得到100ms内的捕获值
+        LastCapNum = CaptureNumber;
+        
+        /* 计算速度位置(圈数r) */
+        printf("输入捕获值：%d \n",CaptureNumber);
+        printf("行程：%.3f r \n",(float)((float)CaptureNumber/ENCODER_RESOLUTION));
+        /* 速度单位是r/s, */
+        printf("速度：%.3f r/s \n",(float)((float)Speed/ENCODER_RESOLUTION *10));
+      }
     }
        
     if(HMI_RX_flag==2)
