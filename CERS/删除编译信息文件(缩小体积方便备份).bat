@@ -29,16 +29,12 @@ del *.plg /s
 del *.rpt /s
 del *.tmp /s
 del *.__i /s
-del *.pbi /s
-del *.cout /s
-del *.pbd /s
-del *.browse /s
 rd /q /s MDK-ARM\DebugConfig
 rd /q /s MDK-ARM\RTE
 
-del YS-F1Pro.dep /s
-rd /q /s EWARM\YS-F1Pro\List
-rd /q /s EWARM\YS-F1Pro\Obj
+del YS-F4Pro.dep /s
+rd /q /s EWARM\YS-F4Pro\List
+rd /q /s EWARM\YS-F4Pro\Obj
 ::rd /q /s EWARM\settings
 
 exit

@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "D:\3. 软件设计之电机例程\6. 硬石光栅尺和编码器读取例程\2. 编码器\YSF4_HAL-360. 编码器速度位置测量_4倍频\EWARM\settings\YS-F4Pro.YS-F4Pro.general.xcl" --backend -f "D:\3. 软件设计之电机例程\6. 硬石光栅尺和编码器读取例程\2. 编码器\YSF4_HAL-360. 编码器速度位置测量_4倍频\EWARM\settings\YS-F4Pro.YS-F4Pro.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "H:\BaiduNetdiskDownload\修改TXT文件\F4基于HAL库程序\3. 程序资料\8. 软件设计之人机界面触摸屏\HMI串口屏\YSF4_HAL_HMI_007. 串口屏电子秤\EWARM\settings\YS-F4Pro.YS-F4Pro.general.xcl" --backend -f "H:\BaiduNetdiskDownload\修改TXT文件\F4基于HAL库程序\3. 程序资料\8. 软件设计之人机界面触摸屏\HMI串口屏\YSF4_HAL_HMI_007. 串口屏电子秤\EWARM\settings\YS-F4Pro.YS-F4Pro.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "D:\3. 软件设计之电机例程\6. 硬石光栅尺和编码器读取例程\2. 编码器\YSF4_HAL-360. 编码器速度位置测量_4倍频\EWARM\settings\YS-F4Pro.YS-F4Pro.general.xcl" "--debug_file=%~1" --backend -f "D:\3. 软件设计之电机例程\6. 硬石光栅尺和编码器读取例程\2. 编码器\YSF4_HAL-360. 编码器速度位置测量_4倍频\EWARM\settings\YS-F4Pro.YS-F4Pro.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "H:\BaiduNetdiskDownload\修改TXT文件\F4基于HAL库程序\3. 程序资料\8. 软件设计之人机界面触摸屏\HMI串口屏\YSF4_HAL_HMI_007. 串口屏电子秤\EWARM\settings\YS-F4Pro.YS-F4Pro.general.xcl" "--debug_file=%~1" --backend -f "H:\BaiduNetdiskDownload\修改TXT文件\F4基于HAL库程序\3. 程序资料\8. 软件设计之人机界面触摸屏\HMI串口屏\YSF4_HAL_HMI_007. 串口屏电子秤\EWARM\settings\YS-F4Pro.YS-F4Pro.driver.xcl" 
 
 @echo off 
 :end

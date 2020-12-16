@@ -1,14 +1,14 @@
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\bin\armproc.dll" 
+"C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\bin\armproc.dll" 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\bin\armstlink2.dll" 
+"C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\bin\armstlink2.dll" 
 
-"D:\3. 软件设计之电机例程\6. 硬石光栅尺和编码器读取例程\2. 编码器\YSF4_HAL-360. 编码器速度位置测量_4倍频\EWARM\YS-F4Pro\Exe\YS-F4Pro.out" 
+"H:\BaiduNetdiskDownload\修改TXT文件\F4基于HAL库程序\3. 程序资料\8. 软件设计之人机界面触摸屏\HMI串口屏\YSF4_HAL_HMI_007. 串口屏电子秤\EWARM\YS-F4Pro\Exe\YS-F4Pro.out" 
 
---plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\bin\armbat.dll" 
+--plugin "C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\bin\armbat.dll" 
 
---device_macro "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\config\debugger\ST\STM32F4xx.dmac" 
+--device_macro "C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\config\debugger\ST\STM32F4xx.dmac" 
 
---flash_loader "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\arm\config\flashloader\ST\FlashSTM32F4xxx.board" 
+--flash_loader "C:\Program Files\IAR Systems\Embedded Workbench 7.2\arm\config\flashloader\ST\FlashSTM32F4xxx.board" 
 
 
 

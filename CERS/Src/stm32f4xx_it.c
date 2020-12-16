@@ -35,8 +35,9 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_it.h"
 
+
 /* USER CODE BEGIN 0 */
-#include "encoder/bsp_encoder.h" 
+
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -53,7 +54,6 @@ void NMI_Handler(void)
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
-  HAL_RCC_NMI_IRQHandler();
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
   /* USER CODE END NonMaskableInt_IRQn 1 */
@@ -184,16 +184,24 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
 
+/**
+* @brief This function handles RCC global interrupt.
+*/
+void RCC_IRQHandler(void)
+{
+  /* USER CODE BEGIN RCC_IRQn 0 */
+
+  /* USER CODE END RCC_IRQn 0 */
+  /* USER CODE BEGIN RCC_IRQn 1 */
+
+  /* USER CODE END RCC_IRQn 1 */
+}
+
+/**
+* @brief This function handles USART1 global interrupt.
+*/
+
+
 /* USER CODE BEGIN 1 */
-void XENCODER_TIM_IRQHANDLER(void)
-{
-  HAL_TIM_IRQHandler(&xhtimx_Encoder);
-}
-
-void YENCODER_TIM_IRQHANDLER(void)
-{
-  HAL_TIM_IRQHandler(&yhtimx_Encoder);
-}
-
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

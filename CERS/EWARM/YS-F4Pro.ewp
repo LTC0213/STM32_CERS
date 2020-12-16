@@ -132,7 +132,7 @@
         </option>
         <option>
           <name>OGUseCmsis</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>OGUseCmsisDspLib</name>
@@ -247,7 +247,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>11111110</state>
+          <state>00000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -275,7 +275,7 @@
         </option>
         <option>
           <name>CCSignedPlainChar</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCRequirePrototypes</name>
@@ -315,7 +315,7 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\..\Inc</state>
+          <state>$PROJ_DIR$/../Inc</state>
           <state>$PROJ_DIR$/../Drivers/STM32F4xx_HAL_Driver/Inc</state>
           <state>$PROJ_DIR$/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Device/ST/STM32F4xx/Include</state>
@@ -340,7 +340,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -349,7 +349,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>1</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -604,7 +604,7 @@
         <option>
           <name>OOCOutputFormat</name>
           <version>3</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCOutputOverride</name>
@@ -612,7 +612,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>Project.srec</state>
+          <state>YS-F4Pro.hex</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -620,7 +620,7 @@
         </option>
         <option>
           <name>OOCObjCopyEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -971,32 +971,50 @@
         <name>$PROJ_DIR$\startup_stm32f407xx.s</name>
       </file>
     </group>
+    <group>
+      <name>User</name>
+      <file>
+        <name>$PROJ_DIR$\..\Src\main.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_assert.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_hal_msp.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_it.c</name>
+      </file>
+    </group>
   </group>
   <group>
     <name>bsp</name>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\DCMotor\bsp_BDCMotor.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\beep\bsp_beep.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\encoder\bsp_encoder.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\usart\bsp_debug_usart.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\key\bsp_key.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\GeneralTIM\bsp_GeneralTIM.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\usart\bsp_usartx.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\led\bsp_led.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\spiflash\bsp_spiflash.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\spiflash\bsp_spiweight.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\HMI\bsp_usartx_HMI.c</name>
     </file>
   </group>
   <group>
     <name>Drivers</name>
     <group>
       <name>CMSIS</name>
-      <file>
-        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c</name>
-      </file>
       <file>
         <name>$PROJ_DIR$\..\Src\system_stm32f4xx.c</name>
       </file>
@@ -1187,6 +1205,30 @@
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_rtc_alarm_template.c</name>
+        <excluded>
+          <configuration>YS-F4Pro</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_rtc_wakeup_template.c</name>
+        <excluded>
+          <configuration>YS-F4Pro</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_tim_template.c</name>
+        <excluded>
+          <configuration>YS-F4Pro</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_wwdg.c</name>
       </file>
       <file>
@@ -1258,21 +1300,6 @@
     <name>Readme</name>
     <file>
       <name>$PROJ_DIR$\..\Readme\01.&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x8BF4;&#x660e;.txt</name>
-    </file>
-  </group>
-  <group>
-    <name>User</name>
-    <file>
-      <name>$PROJ_DIR$\..\Src\main.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_assert.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_hal_msp.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_it.c</name>
     </file>
   </group>
 </project>

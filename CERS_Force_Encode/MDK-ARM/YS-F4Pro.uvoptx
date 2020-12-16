@@ -158,12 +158,12 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>timecount</ItemText>
+          <ItemText>uwTick</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CaptureNumber</ItemText>
+          <ItemText>weight_current</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

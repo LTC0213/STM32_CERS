@@ -1056,32 +1056,50 @@
         <name>$PROJ_DIR$\startup_stm32f407xx.s</name>
       </file>
     </group>
+    <group>
+      <name>User</name>
+      <file>
+        <name>$PROJ_DIR$\..\Src\main.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_assert.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_hal_msp.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\stm32f4xx_it.c</name>
+      </file>
+    </group>
   </group>
   <group>
     <name>bsp</name>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\DCMotor\bsp_BDCMotor.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\beep\bsp_beep.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\encoder\bsp_encoder.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\usart\bsp_debug_usart.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\key\bsp_key.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\GeneralTIM\bsp_GeneralTIM.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Src\bsp\usart\bsp_usartx.c</name>
+      <name>$PROJ_DIR$\..\Src\bsp\led\bsp_led.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\spiflash\bsp_spiflash.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\spiflash\bsp_spiweight.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Src\bsp\HMI\bsp_usartx_HMI.c</name>
     </file>
   </group>
   <group>
     <name>Drivers</name>
     <group>
       <name>CMSIS</name>
-      <file>
-        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c</name>
-      </file>
       <file>
         <name>$PROJ_DIR$\..\Src\system_stm32f4xx.c</name>
       </file>
@@ -1272,6 +1290,21 @@
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_rtc_alarm_template.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_rtc_wakeup_template.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_timebase_tim_template.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_wwdg.c</name>
       </file>
       <file>
@@ -1343,21 +1376,6 @@
     <name>Readme</name>
     <file>
       <name>$PROJ_DIR$\..\Readme\01.&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x8BF4;&#x660e;.txt</name>
-    </file>
-  </group>
-  <group>
-    <name>User</name>
-    <file>
-      <name>$PROJ_DIR$\..\Src\main.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_assert.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_hal_msp.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Src\stm32f4xx_it.c</name>
     </file>
   </group>
 </project>

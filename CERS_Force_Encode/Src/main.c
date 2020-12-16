@@ -229,7 +229,7 @@ int main(void)
         in2=in0+2*(weight_current/10000-in0)/4;
         in3=in0+3*(weight_current/10000-in0)/4;
         in0=weight_current/10000;
-        printf("weight_current=%d\n",weight_current/100);
+        printf("weight_current=%d\n",weight_current/1000); //0.1N
         HMI_value_setting("page0.in1.val",in1);
         HMI_value_setting("page0.in2.val",in2);
         HMI_value_setting("page0.in3.val",in3);

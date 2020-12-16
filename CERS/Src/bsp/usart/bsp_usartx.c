@@ -1,46 +1,46 @@
 /**
   ******************************************************************************
-  * ÎÄ¼þÃû³Ì: bsp_usartx.c 
-  * ×÷    Õß: Ó²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶Ó
-  * °æ    ±¾: V1.0
-  * ±àÐ´ÈÕÆÚ: 2017-03-30
-  * ¹¦    ÄÜ: °åÔØ´®¿Úµ×²ãÇý¶¯³ÌÐò
+  * æ–‡ä»¶åç¨‹: bsp_usartx.c 
+  * ä½œ    è€…: ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿ
+  * ç‰ˆ    æœ¬: V1.0
+  * ç¼–å†™æ—¥æœŸ: 2017-03-30
+  * åŠŸ    èƒ½: æ¿è½½ä¸²å£åº•å±‚é©±åŠ¨ç¨‹åº
   ******************************************************************************
-  * ËµÃ÷£º
-  * ±¾Àý³ÌÅäÌ×Ó²Ê¯stm32¿ª·¢°åYS-F4ProÊ¹ÓÃ¡£
+  * è¯´æ˜Žï¼š
+  * æœ¬ä¾‹ç¨‹é…å¥—ç¡¬çŸ³stm32å¼€å‘æ¿YS-F4Proä½¿ç”¨ã€‚
   * 
-  * ÌÔ±¦£º
-  * ÂÛÌ³£ºhttp://www.ing10bbs.com
-  * °æÈ¨¹éÓ²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶ÓËùÓÐ£¬ÇëÎðÉÌÓÃ¡£
+  * æ·˜å®ï¼š
+  * è®ºå›ï¼šhttp://www.ing10bbs.com
+  * ç‰ˆæƒå½’ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿæ‰€æœ‰ï¼Œè¯·å‹¿å•†ç”¨ã€‚
   ******************************************************************************
   */
 
-/* °üº¬Í·ÎÄ¼þ ----------------------------------------------------------------*/
+/* åŒ…å«å¤´æ–‡ä»¶ ----------------------------------------------------------------*/
 #include "usart/bsp_usartx.h"
 
-/* Ë½ÓÐÀàÐÍ¶¨Òå --------------------------------------------------------------*/
-/* Ë½ÓÐºê¶¨Òå ----------------------------------------------------------------*/
-/* Ë½ÓÐ±äÁ¿ ------------------------------------------------------------------*/
+/* ç§æœ‰ç±»åž‹å®šä¹‰ --------------------------------------------------------------*/
+/* ç§æœ‰å®å®šä¹‰ ----------------------------------------------------------------*/
+/* ç§æœ‰å˜é‡ ------------------------------------------------------------------*/
 UART_HandleTypeDef husartx;
 
-/* À©Õ¹±äÁ¿ ------------------------------------------------------------------*/
-/* Ë½ÓÐº¯ÊýÔ­ÐÎ --------------------------------------------------------------*/
-/* º¯ÊýÌå --------------------------------------------------------------------*/
+/* æ‰©å±•å˜é‡ ------------------------------------------------------------------*/
+/* ç§æœ‰å‡½æ•°åŽŸå½¢ --------------------------------------------------------------*/
+/* å‡½æ•°ä½“ --------------------------------------------------------------------*/
 
 /**
-  * º¯Êý¹¦ÄÜ: ´®¿ÚÓ²¼þ³õÊ¼»¯ÅäÖÃ
-  * ÊäÈë²ÎÊý: huart£º´®¿Ú¾ä±úÀàÐÍÖ¸Õë
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷: ¸Ãº¯Êý±»HAL¿âÄÚ²¿µ÷ÓÃ
+  * å‡½æ•°åŠŸèƒ½: ä¸²å£ç¡¬ä»¶åˆå§‹åŒ–é…ç½®
+  * è¾“å…¥å‚æ•°: huartï¼šä¸²å£å¥æŸ„ç±»åž‹æŒ‡é’ˆ
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Ž: è¯¥å‡½æ•°è¢«HALåº“å†…éƒ¨è°ƒç”¨
   */
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
   GPIO_InitTypeDef GPIO_InitStruct;
   if(huart == &husartx)
   {
-    /* Ê¹ÄÜ´®¿Ú¹¦ÄÜÒý½ÅGPIOÊ±ÖÓ */
+    /* ä½¿èƒ½ä¸²å£åŠŸèƒ½å¼•è„šGPIOæ—¶é’Ÿ */
     USARTx_GPIO_ClK_ENABLE();
-    /* ´®¿ÚÍâÉè¹¦ÄÜGPIOÅäÖÃ */
+    /* ä¸²å£å¤–è®¾åŠŸèƒ½GPIOé…ç½® */
     GPIO_InitStruct.Pin = USARTx_Tx_GPIO_PIN|USARTx_Rx_GPIO_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -48,7 +48,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     GPIO_InitStruct.Alternate = USARTx_AFx;
     HAL_GPIO_Init(USARTx_Tx_GPIO, &GPIO_InitStruct);
 #ifdef _RS485_
-    /* 485Ê¹ÄÜÒý½Å */
+    /* 485ä½¿èƒ½å¼•è„š */
     RS485_REDE_GPIO_ClK_ENABLE();
     
     GPIO_InitStruct.Pin = RS485_REDE_PIN;
@@ -62,32 +62,32 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 }
 
 /**
-  * º¯Êý¹¦ÄÜ: ´®¿ÚÓ²¼þ·´³õÊ¼»¯ÅäÖÃ
-  * ÊäÈë²ÎÊý: huart£º´®¿Ú¾ä±úÀàÐÍÖ¸Õë
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷: ¸Ãº¯Êý±»HAL¿âÄÚ²¿µ÷ÓÃ
+  * å‡½æ•°åŠŸèƒ½: ä¸²å£ç¡¬ä»¶ååˆå§‹åŒ–é…ç½®
+  * è¾“å…¥å‚æ•°: huartï¼šä¸²å£å¥æŸ„ç±»åž‹æŒ‡é’ˆ
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Ž: è¯¥å‡½æ•°è¢«HALåº“å†…éƒ¨è°ƒç”¨
   */
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
   if(huart == &husartx)
   {
-    /* ´®¿ÚÍâÉèÊ±ÖÓ½ûÓÃ */
+    /* ä¸²å£å¤–è®¾æ—¶é’Ÿç¦ç”¨ */
     USART_RCC_CLK_DISABLE();
   
-    /* ´®¿ÚÍâÉè¹¦ÄÜGPIOÅäÖÃ */
+    /* ä¸²å£å¤–è®¾åŠŸèƒ½GPIOé…ç½® */
     HAL_GPIO_DeInit(USARTx_Tx_GPIO, USARTx_Tx_GPIO_PIN);
     HAL_GPIO_DeInit(USARTx_Rx_GPIO, USARTx_Rx_GPIO_PIN);
     
-    /* ´®¿ÚÖÐ¶Ï½ûÓÃ */
+    /* ä¸²å£ä¸­æ–­ç¦ç”¨ */
     HAL_NVIC_DisableIRQ(USARTx_IRQn);
   }
 }
 
 /**
-  * º¯Êý¹¦ÄÜ: NVICÅäÖÃ
-  * ÊäÈë²ÎÊý: ÎÞ
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷: ÎÞ
+  * å‡½æ•°åŠŸèƒ½: NVICé…ç½®
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Ž: æ— 
   */
 static void MX_NVIC_USARTx_Init(void)
 {
@@ -97,14 +97,14 @@ static void MX_NVIC_USARTx_Init(void)
 }
 
 /**
-  * º¯Êý¹¦ÄÜ: ´®¿Ú²ÎÊýÅäÖÃ.
-  * ÊäÈë²ÎÊý: ÎÞ
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷£ºÎÞ
+  * å‡½æ•°åŠŸèƒ½: ä¸²å£å‚æ•°é…ç½®.
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Žï¼šæ— 
   */
 void MX_USARTx_Init(void)
 {
-  /* ´®¿ÚÍâÉèÊ±ÖÓÊ¹ÄÜ */
+  /* ä¸²å£å¤–è®¾æ—¶é’Ÿä½¿èƒ½ */
   USART_RCC_CLK_ENABLE();
   
   husartx.Instance = USARTx;
@@ -117,15 +117,15 @@ void MX_USARTx_Init(void)
   husartx.Init.OverSampling = UART_OVERSAMPLING_16;
   HAL_UART_Init(&husartx);
   
-  /* ÅäÖÃ´®¿ÚÖÐ¶Ï²¢Ê¹ÄÜ£¬ÐèÒª·ÅÔÚHAL_UART_Initº¯ÊýºóÖ´ÐÐÐÞ¸Ä²ÅÓÐÐ§ */
+  /* é…ç½®ä¸²å£ä¸­æ–­å¹¶ä½¿èƒ½ï¼Œéœ€è¦æ”¾åœ¨HAL_UART_Initå‡½æ•°åŽæ‰§è¡Œä¿®æ”¹æ‰æœ‰æ•ˆ */
   MX_NVIC_USARTx_Init();
 }
 
 /**
-  * º¯Êý¹¦ÄÜ: ÖØ¶¨Ïòc¿âº¯Êýprintfµ½DEBUG_USARTx
-  * ÊäÈë²ÎÊý: ÎÞ
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷£ºÎÞ
+  * å‡½æ•°åŠŸèƒ½: é‡å®šå‘cåº“å‡½æ•°printfåˆ°DEBUG_USARTx
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Žï¼šæ— 
   */
 int fputc(int ch, FILE *f)
 {
@@ -138,10 +138,10 @@ int fputc(int ch, FILE *f)
 }
 
 /**
-  * º¯Êý¹¦ÄÜ: ÖØ¶¨Ïòc¿âº¯Êýgetchar,scanfµ½DEBUG_USARTx
-  * ÊäÈë²ÎÊý: ÎÞ
-  * ·µ »Ø Öµ: ÎÞ
-  * Ëµ    Ã÷£ºÎÞ
+  * å‡½æ•°åŠŸèƒ½: é‡å®šå‘cåº“å‡½æ•°getchar,scanfåˆ°DEBUG_USARTx
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å›ž å€¼: æ— 
+  * è¯´    æ˜Žï¼šæ— 
   */
 int fgetc(FILE * f)
 {
@@ -152,4 +152,4 @@ int fgetc(FILE * f)
   while(HAL_UART_Receive(&husartx,&ch, 1, 0xffff)!=HAL_OK);
   return ch;
 }
-/******************* (C) COPYRIGHT 2015-2020 Ó²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶Ó *****END OF FILE****/
+/******************* (C) COPYRIGHT 2015-2020 ç¡¬çŸ³åµŒå…¥å¼å¼€å‘å›¢é˜Ÿ *****END OF FILE****/

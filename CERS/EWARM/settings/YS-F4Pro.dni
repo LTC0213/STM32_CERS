@@ -10,15 +10,15 @@ LimitSize=0
 ByteLimit=50
 [StLinkDriver]
 CStepIntDis=_ 0
-stlinkserialNo=B3E5C55A
+stlinkserialNo=B6CCF0DC
 stlinkfoundProbes=
 [DebugChecksum]
-Checksum=-533783492
-[CodeCoverage]
-Enabled=_ 0
+Checksum=-1560976873
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
+[CodeCoverage]
+Enabled=_ 0
 [CallStack]
 ShowArgs=0
 [Disassembly]
