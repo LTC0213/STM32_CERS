@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * Êñá‰ª∂ÂêçÁ®ã: main.c 
-  * ‰Ωú    ËÄÖ: LTC
-  * Áâà    Êú¨: V1.0
-  * ÁºñÂÜôÊó•Êúü: 2020-12-16
-  * Âäü    ËÉΩ: CERSÂäüËÉΩÂÆûÁé∞
+  * Œƒº˛√˚≥Ã: main.c 
+  * ◊˜    ’ﬂ: ¿ÓÃÏÂ∑
+  * ∞Ê    ±æ: V1.0
+  * ±‡–¥»’∆⁄: 2020-12-17
+  * π¶    ƒ‹: CERSπ¶ƒ‹ µœ÷
   ******************************************************************************
-  * ËØ¥ÊòéÔºö
-  * Êú¨‰æãÁ®ãÈÖçÂ•óÁ°¨Áü≥stm32ÂºÄÂèëÊùøYS-F4Pro‰ΩøÁî®„ÄÇ
+  * Àµ√˜£∫
+  * ±æ¿˝≥Ã≈‰Ã◊”≤ Østm32ø™∑¢∞ÂYS-F4Pro π”√°£
   ******************************************************************************
   */
-/* ÂåÖÂê´Â§¥Êñá‰ª∂ ----------------------------------------------------------------*/
+/* ∞¸∫¨Õ∑Œƒº˛ ----------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "string.h"
 // #include "usart/bsp_debug_usart.h"
@@ -19,70 +19,79 @@
 #include "spiflash/bsp_spiweight.h"
 #include "spiflash/bsp_spiflash.h"
 #include "beep/bsp_beep.h"
+
 #include "usart/bsp_usartx.h"
 #include "encoder/bsp_encoder.h"
-/* ÁßÅÊúâÁ±ªÂûãÂÆö‰πâ --------------------------------------------------------------*/
-/* ÁßÅÊúâÂÆèÂÆö‰πâ ----------------------------------------------------------------*/
+
+/* ÀΩ”–¿‡–Õ∂®“Â --------------------------------------------------------------*/
+/* ÀΩ”–∫Í∂®“Â ----------------------------------------------------------------*/
 #define HMI_RX_BUFFER_SIZE       30
+
 #define  FLASH_WriteAddress      0x0000
 #define  FLASH_SectorToErase    FLASH_WriteAddress
+
 #define HMI_SECTOR_ADDREE       4096*2
-/* ÁßÅÊúâÂèòÈáè ------------------------------------------------------------------*/
-/* ‰∏≤Âè£ÂèòÈáè ------------------------------------------------------------------*/
+
+/* ÀΩ”–±‰¡ø ------------------------------------------------------------------*/
+/* HMI¥Æø⁄±‰¡ø ------------------------------------------------------------------*/
 __IO uint8_t  HMI_Rx_buf[HMI_RX_BUFFER_SIZE]={0};
-__IO uint8_t  HMI_RX_flag=0;       //0:Êú™Êé•Êî∂Âà∞Êï∞ÊçÆÂ§¥  1ÔºöÂ∑≤ÁªèÊé•Êî∂Âà∞Êï∞ÊçÆÂ§¥  2Ôºö‰∏ÄÂ∏ßÊé•Êî∂ÂÆåÊØï
+__IO uint8_t  HMI_RX_flag=0;       //0:Œ¥Ω” ’µΩ ˝æ›Õ∑  1£∫“—æ≠Ω” ’µΩ ˝æ›Õ∑  2£∫“ª÷°Ω” ’ÕÍ±œ
 __IO uint8_t  usart_rx_flag;
+
 __IO uint16_t timer_count=0;
 __IO uint16_t pwm_data=0;
-/* ÈÄöÈÅìÈÄâÊã©ÂèòÈáè ------------------------------------------------------------------*/
-__IO uint8_t  model_channelx=0;         //Ê®°ÂºèÂäüËÉΩÈÄâÊã©
-__IO uint8_t  force_channelx=0;         //Âäõ‰º†ÊÑüÂô®ÈÄâÊã©
-__IO uint8_t  encode_channelx=0;        //ÁºñÁ†ÅÂô®ÈÄâÊã©
-/* ÂäõÊ£ÄÊµãÂèòÈáè ------------------------------------------------------------------*/
-__IO uint8_t  weight_Zero_IsInit=0;     // 1:Èõ∂ÂÄºÊú™Ëé∑Âèñ  2ÔºöÂ∑≤Ëé∑ÂèñÈõ∂ÂÄº
-__IO int32_t  weight_Zero_Data=0;       // Êó†ÊñΩÂä†ÂäõÊó∂Èõ∂ÂÄºËÆ∞ÂΩïÂÄº
-__IO uint8_t  Is_thres_stamp=0;         //ÊòØÂê¶ÊúâÈòÄÂÄºËÆæÂÆö
-__IO uint8_t  Is_tare_stamp=0;          //ÊòØÂê¶ËÆ∞ÂΩïÈõ∂ÂÄº
-__IO uint8_t  Is_start_stamp=0;          //ÂºÄÂßãÊµãËØï
-__IO int32_t  Record_weight;           //È¢ÑÁ¥ßÂäõÂÄº
-__IO int32_t  Record_weight1;           //È¢ÑÁ¥ßÂäõËÆ∞ÂΩïÂÄºÔºàÁî®‰∫éÊØèÊ¨°ÊµãÂäõÂâçËÆ∞ÂΩïÈõ∂ÂÄºÔºâ 
-__IO int32_t  Record_weight2;           //È¢ÑÁ¥ßÂäõËÆ∞ÂΩïÂÄºÔºàÁî®‰∫éÊØèÊ¨°ÊµãÂäõÂâçËÆ∞ÂΩïÈõ∂ÂÄº Ôºâ 
-__IO int32_t  cali_weight;              //Ê†°ÂáÜ‰ΩøÁî®
-__IO int32_t  weight_proportion = 1950; //Êç¢ÁÆóÂÄºËÆ∞ÂΩï ÊØî‰æãÁ≥ªÊï∞
-__IO int32_t  weight_current;           //Êç¢ÁÆóÊîæÂ§ßÂêéÂäõÊï∞ÂÄº
-__IO int32_t  second_count;             //ÁöÆÈáçËÆ∞ÂΩïÂÄº
-__IO int32_t  third_count;              //ÁöÆÈáçËÆ∞ÂΩïÂÄº
-__IO uint8_t  Process_Step=0;   // 0Êú™Ê£ÄÊµãÂà∞Áâ©‰Ωì 1Ê£ÄÊµãÂà∞ÊúâÁâ©ÂìÅ 2ÊúâÈáçÁâ© Âπ∂‰∏îËææÂà∞ÁöÆÈáçË¶ÅÊ±Ç 3ÊµãÁöÆÈáç 4ÁöÆÈáçÂü∫Á°Ä‰∏ä Âä†‰∫ÜÈáçÁâ© 5
-/* ÊèíË°•ÂáΩÊï∞ÂèòÈáè ------------------------------------------------------------------*/
-__IO int8_t  in0=0;
-__IO int8_t  in1=0;
-__IO int8_t  in2=0;
-__IO int8_t  in3=0;
-/* ËßíÂ∫¶Ê£ÄÊµãÂèòÈáè ------------------------------------------------------------------*/
-__IO int32_t CaptureNumber = 0;     // ËæìÂÖ•ÊçïËé∑Êï∞
-__IO int32_t LastCapNum = 0;     // ‰∏ä‰∏ÄÊ¨°ËæìÂÖ•ÊçïËé∑Êï∞
-__IO int32_t Speed = 0;     // ‰∏ä‰∏ÄÊ¨°ËæìÂÖ•ÊçïËé∑Êï∞
-/* SPI flashÂèòÈáè ------------------------------------------------------------------*/
+/* Õ®µ¿—°‘Ò±‰¡ø ------------------------------------------------------------------*/
+__IO uint8_t  model_channelx=0;         //ƒ£ Ωπ¶ƒ‹—°‘Ò
+__IO uint8_t  force_channelx=0;         //¡¶¥´∏–∆˜—°‘Ò
+__IO uint8_t  encode_channelx=0;        //±‡¬Î∆˜—°‘Ò
+/* ¡¶ºÏ≤‚±‰¡ø ------------------------------------------------------------------*/
+__IO uint8_t  weight_Zero_IsInit=0;     // 0£∫Õ£÷π ˝æ›≤…ºØ 1:¡„÷µŒ¥ªÒ»°  2£∫“—ªÒ»°¡„÷µ
+__IO int32_t  weight_Zero_Data=0;       // Œﬁ ©º”¡¶ ±¡„÷µº«¬º÷µ
+__IO uint8_t  Is_thres_stamp=0;         // «∑Ò”–∑ß÷µ…Ë∂®
+__IO uint8_t  Is_tare_stamp=0;          // «∑Òº«¬º¡„÷µ
+__IO uint8_t  Is_start_stamp=0;          //ø™ º≤‚ ‘
+__IO int32_t  Record_weight = 0;           //‘§ΩÙ¡¶÷µ
+__IO int32_t  Record_weight1;           //‘§ΩÙ¡¶º«¬º÷µ£®”√”⁄√ø¥Œ≤‚¡¶«∞º«¬º¡„÷µ£© 
+__IO int32_t  Record_weight2;           //‘§ΩÙ¡¶º«¬º÷µ£®”√”⁄√ø¥Œ≤‚¡¶«∞º«¬º¡„÷µ £© 
+__IO int32_t  cali_weight;              //–£◊º π”√
+__IO int32_t  weight_proportion = 1950; //ªªÀ„÷µº«¬º ±»¿˝œµ ˝
+__IO int32_t  weight_current;           //ªªÀ„∑≈¥Û∫Û¡¶ ˝÷µ
+__IO int32_t  second_count;             //∆§÷ÿº«¬º÷µ
+__IO int32_t  third_count;              //∆§÷ÿº«¬º÷µ
+__IO uint8_t  Force_Process_Step=0;   // 0Œ¥ºÏ≤‚µΩŒÔÃÂ 1ºÏ≤‚µΩ”–ŒÔ∆∑ 2”–÷ÿŒÔ ≤¢«“¥ÔµΩ∆§÷ÿ“™«Û 3≤‚∆§÷ÿ 4∆§÷ÿª˘¥°…œ º”¡À÷ÿŒÔ 5
+__IO uint8_t  Test_Step=0;
+/* ≤Â≤π∫Ø ˝±‰¡ø ------------------------------------------------------------------*/
+__IO int32_t  in0=0;
+__IO int32_t  in1=0;
+__IO int32_t  in2=0;
+__IO int32_t  in3=0;
+__IO int32_t  in4=0;
+/* Ω«∂»ºÏ≤‚±‰¡ø ------------------------------------------------------------------*/
+__IO int32_t CaptureNumber = 0;     //  ‰»Î≤∂ªÒ ˝
+__IO int32_t LastCapNum = 0;     // …œ“ª¥Œ ‰»Î≤∂ªÒ ˝
+__IO int32_t Speed = 0;     // …œ“ª¥Œ ‰»Î≤∂ªÒ ˝
+/* SPI flash±‰¡ø ------------------------------------------------------------------*/
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
 uint8_t Tx_Buffer[3] = {0};
 uint8_t Rx_Buffer[3] = {0};
 int32_t Result_data=0;
 
-/* Êâ©Â±ïÂèòÈáè ------------------------------------------------------------------*/
-extern __IO uint32_t uwTick;  //Êó∂ÈíüËÆ°Êï∞
-extern int32_t OverflowCount ;//ÂÆöÊó∂Âô®Ê∫¢Âá∫Ê¨°Êï∞ 
+__IO uint32_t timecount = 0;
+/* ¿©’π±‰¡ø ------------------------------------------------------------------*/
+extern __IO uint32_t uwTick;  // ±÷”º∆ ˝
+extern int32_t OverflowCount ;//∂® ±∆˜“Á≥ˆ¥Œ ˝ 
 
-/* ÁßÅÊúâÂáΩÊï∞ÂéüÂΩ¢ --------------------------------------------------------------*/
+/* ÀΩ”–∫Ø ˝‘≠–Œ --------------------------------------------------------------*/
 void HMI_value_setting(const char *val_str,uint32_t value);
 void HMI_string_setting(const char *val_str,int32_t value);
 
-/* ÂáΩÊï∞‰Ωì --------------------------------------------------------------------*/
+/* ∫Ø ˝ÃÂ --------------------------------------------------------------------*/
 /**
-  * ÂáΩÊï∞ÂäüËÉΩ: Á≥ªÁªüÊó∂ÈíüÈÖçÁΩÆ
-  * ËæìÂÖ•ÂèÇÊï∞: Êó†
-  * Ëøî Âõû ÂÄº: Êó†
-  * ËØ¥    Êòé: Êó†
+  * ∫Ø ˝π¶ƒ‹: œµÕ≥ ±÷”≈‰÷√
+  *  ‰»Î≤Œ ˝: Œﬁ
+  * ∑µ ªÿ ÷µ: Œﬁ
+  * Àµ    √˜: Œﬁ
   */
 void SystemClock_Config(void)
 {
@@ -90,38 +99,38 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
  
-  __HAL_RCC_PWR_CLK_ENABLE();                                     //‰ΩøËÉΩPWRÊó∂Èíü
+  __HAL_RCC_PWR_CLK_ENABLE();                                     // πƒ‹PWR ±÷”
 
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //ËÆæÁΩÆË∞ÉÂéãÂô®ËæìÂá∫ÁîµÂéãÁ∫ßÂà´1
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);  //…Ë÷√µ˜—π∆˜ ‰≥ˆµÁ—πº∂±1
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // Â§ñÈÉ®Êô∂ÊåØÔºå8MHz
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //ÊâìÂºÄHSE 
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //ÊâìÂºÄPLL
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLLÊó∂ÈíüÊ∫êÈÄâÊã©HSE
-  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8ÂàÜÈ¢ëMHz
-  RCC_OscInitStruct.PLL.PLLN = 336;                               //336ÂÄçÈ¢ë
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2ÂàÜÈ¢ëÔºåÂæóÂà∞168MHz‰∏ªÊó∂Èíü
-  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/ÈöèÊú∫Êï∞‰∫ßÁîüÂô®Á≠âÁöÑ‰∏ªPLLÂàÜÈ¢ëÁ≥ªÊï∞
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;      // Õ‚≤øæß’Ò£¨8MHz
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                        //¥Úø™HSE 
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                    //¥Úø™PLL
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;            //PLL ±÷”‘¥—°‘ÒHSE
+  RCC_OscInitStruct.PLL.PLLM = 8;                                 //8∑÷∆µMHz
+  RCC_OscInitStruct.PLL.PLLN = 336;                               //336±∂∆µ
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;                     //2∑÷∆µ£¨µ√µΩ168MHz÷˜ ±÷”
+  RCC_OscInitStruct.PLL.PLLQ = 7;                                 //USB/SDIO/ÀÊª˙ ˝≤˙…˙∆˜µ»µƒ÷˜PLL∑÷∆µœµ ˝
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // Á≥ªÁªüÊó∂ÈíüÔºö168MHz
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHBÊó∂ÈíüÔºö 168MHz
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1Êó∂ÈíüÔºö42MHz
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2Êó∂ÈíüÔºö84MHz
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       // œµÕ≥ ±÷”£∫168MHz
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;              // AHB ±÷”£∫ 168MHz
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;               // APB1 ±÷”£∫42MHz
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;               // APB2 ±÷”£∫84MHz
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
-  HAL_RCC_EnableCSS();                                            // ‰ΩøËÉΩCSSÂäüËÉΩÔºå‰ºòÂÖà‰ΩøÁî®Â§ñÈÉ®Êô∂ÊåØÔºåÂÜÖÈÉ®Êó∂ÈíüÊ∫ê‰∏∫Â§áÁî®
+  HAL_RCC_EnableCSS();                                            //  πƒ‹CSSπ¶ƒ‹£¨”≈œ» π”√Õ‚≤øæß’Ò£¨ƒ⁄≤ø ±÷”‘¥Œ™±∏”√
   
- 	// HAL_RCC_GetHCLKFreq()/1000    1ms‰∏≠Êñ≠‰∏ÄÊ¨°
-	// HAL_RCC_GetHCLKFreq()/100000	 10us‰∏≠Êñ≠‰∏ÄÊ¨°
-	// HAL_RCC_GetHCLKFreq()/1000000 1us‰∏≠Êñ≠‰∏ÄÊ¨°
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // ÈÖçÁΩÆÂπ∂ÂêØÂä®Á≥ªÁªüÊª¥Á≠îÂÆöÊó∂Âô®
-  /* Á≥ªÁªüÊª¥Á≠îÂÆöÊó∂Âô®Êó∂ÈíüÊ∫ê */
+ 	// HAL_RCC_GetHCLKFreq()/1000    1ms÷–∂œ“ª¥Œ
+	// HAL_RCC_GetHCLKFreq()/100000	 10us÷–∂œ“ª¥Œ
+	// HAL_RCC_GetHCLKFreq()/1000000 1us÷–∂œ“ª¥Œ
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);                // ≈‰÷√≤¢∆Ù∂ØœµÕ≥µŒ¥∂® ±∆˜
+  /* œµÕ≥µŒ¥∂® ±∆˜ ±÷”‘¥ */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* Á≥ªÁªüÊª¥Á≠îÂÆöÊó∂Âô®‰∏≠Êñ≠‰ºòÂÖàÁ∫ßÈÖçÁΩÆ */
+  /* œµÕ≥µŒ¥∂® ±∆˜÷–∂œ”≈œ»º∂≈‰÷√ */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
@@ -134,37 +143,37 @@ int32_t int_abs(int32_t value1,int32_t value2)
 }
 
 /**
-  * ÂáΩÊï∞ÂäüËÉΩ: ‰∏ªÂáΩÊï∞.
-  * ËæìÂÖ•ÂèÇÊï∞: Êó†
-  * Ëøî Âõû ÂÄº: Êó†
-  * ËØ¥    Êòé: Êó†
+  * ∫Ø ˝π¶ƒ‹: ÷˜∫Ø ˝.
+  *  ‰»Î≤Œ ˝: Œﬁ
+  * ∑µ ªÿ ÷µ: Œﬁ
+  * Àµ    √˜: Œﬁ
   */
 int main(void)
 {
   int32_t weight_first;
   uint32_t tmp[2];
-  int32_t Compa_value;//ÈòàÂÄºÈ¢ÑËÆæÂÄº
+  int32_t Compa_value;//„–÷µ‘§…Ë÷µ
 
-  /* Â§ç‰ΩçÊâÄÊúâÂ§ñËÆæÔºåÂàùÂßãÂåñFlashÊé•Âè£ÂíåÁ≥ªÁªüÊª¥Á≠îÂÆöÊó∂Âô® */
+  /* ∏¥ŒªÀ˘”–Õ‚…Ë£¨≥ı ºªØFlashΩ”ø⁄∫ÕœµÕ≥µŒ¥∂® ±∆˜ */
   HAL_Init();
-  /* ÈÖçÁΩÆÁ≥ªÁªüÊó∂Èíü */
+  /* ≈‰÷√œµÕ≥ ±÷” */
   SystemClock_Config();
-  /* ÂàùÂßãÂåñ‰∏≤Âè£Âπ∂ÈÖçÁΩÆ‰∏≤Âè£‰∏≠Êñ≠‰ºòÂÖàÁ∫ß */
+  /* ≥ı ºªØ¥Æø⁄≤¢≈‰÷√¥Æø⁄÷–∂œ”≈œ»º∂ */
   // MX_DEBUG_USART_Init();
   MX_USARTx_Init();
   HMI_USARTx_Init();
   __HAL_UART_ENABLE_IT(&husartx_HMI, UART_IT_RXNE);
-  /* ÂàùÂßãÂåñLED */
+  /* ≥ı ºªØLED */
   LED_GPIO_Init();
-  /* ÂàùÂßãÂåñSPI */
+  /* ≥ı ºªØSPI */
   MX_SPIFlash_Init();
-  /* ÂàùÂßãÂåñBEEP */
+  /* ≥ı ºªØBEEP */
   BEEP_GPIO_Init();
 
-  /* ÁºñÁ†ÅÂô®ÂàùÂßãÂåñÂèä‰ΩøËÉΩÁºñÁ†ÅÂô®Ê®°Âºè */
+  /* ±‡¬Î∆˜≥ı ºªØº∞ πƒ‹±‡¬Î∆˜ƒ£ Ω */
   ENCODER_TIMx_Init();
   HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
-  printf("--> ÁºñÁ†ÅÂô®Êé•Âè£4ÂÄçÈ¢ë,‰∏ä‰∏ãËæπÊ≤øÈÉΩËÆ°Êï∞<-- \n");
+  printf("--> ±‡¬Î∆˜Ω”ø⁄4±∂∆µ,…œœ¬±ﬂ—ÿ∂ºº∆ ˝<-- \n");
 
   /* Get SPI Flash Device ID */
 	DeviceID = SPI_FLASH_ReadDeviceID();
@@ -174,7 +183,7 @@ int main(void)
   
   if (FlashID == SPI_FLASH_ID)  /* #define  sFLASH_ID  0XEF4018 */
 	{	
-		printf("Ê£ÄÊµãÂà∞ÂçéÈÇ¶‰∏≤Ë°åflash W25Q128 !\n");
+		printf("ºÏ≤‚µΩª™∞Ó¥Æ––flash W25Q128 !\n");
     SPI_FLASH_BufferRead(Rx_Buffer,HMI_SECTOR_ADDREE,sizeof(Rx_Buffer));
     Result_data=Rx_Buffer[0]*10000+Rx_Buffer[1]*100+Rx_Buffer[2];
     printf("Result_data=%d\n",Result_data);		
@@ -182,53 +191,57 @@ int main(void)
     if((Result_data>30550)&&(Result_data<30950)) 
     {
       weight_proportion=Result_data;
-      weight_Zero_IsInit=1; //ÂºÄÂßãÊé•Êî∂Èõ∂ÂÄº
+      weight_Zero_IsInit=1; //ø™ ºΩ” ’¡„÷µ
     }      
   }  	  
   if(AD7190_Init())
   {
-    printf("Ê£ÄÊµãÂà∞  AD7190 !\n");
+    printf("ºÏ≤‚µΩ  AD7190 !\n");
     // weight_ad7190_conf(channelx);
   }
 
-  /* Êó†ÈôêÂæ™ÁéØ */
+  /* Œﬁœﬁ—≠ª∑ */
   while(1)
   {
-    switch(model_channelx)
-    case 0: //Êú™Ê®°ÂºèÈÄâÊã© ÂèØËÉΩÂä†Â§ç‰Ωç‰ΩøËÉΩÊìç‰Ωú
-    break;
-    case 1:
+    //Œ¥ƒ£ Ω—°‘Ò ø…ƒ‹º”∏¥Œª πƒ‹≤Ÿ◊˜
+
+    //≤‚¡¶ƒ£ Ω
+    if(model_channelx==1)
+    {
       if(uwTick % 10 == 0)
       {
-        if(weight_Zero_IsInit == 1) //Êú™Ëé∑ÂèñÈõ∂ÂÄº
+        if(weight_Zero_IsInit == 1) //Œ¥ªÒ»°¡„÷µ
         {
           weight_Zero_Data = weight_ad7190_ReadAvg(4);
           weight_Zero_IsInit = 2;
         }
-        else if(weight_Zero_IsInit == 2) //Èõ∂ÂÄºÂ∑≤ÁªèËÆ∞ÂΩïÊàêÂäü
+        else if(weight_Zero_IsInit == 2) //¡„÷µ“—æ≠º«¬º≥…π¶
         {
-          int64_t data_temp;
-          int64_t temp,weight_read;
+          int64_t data_temp,temp;
+          int64_t weight_read;
 
           weight_read = weight_ad7190_ReadAvg(1);
-          date_temp = weight_read - weight_Zero_Data;
-          temp = date_temp * 100000 /weight_proportion;
+          data_temp = weight_read - weight_Zero_Data;
+          temp = data_temp * 100000 /weight_proportion;
           weight_current = temp;
           printf("weight*10=%d\n",weight_current/1000); //0.1N 
+          printf("Force_Process_Step=%d\n",Force_Process_Step);
 
-          //ÊèíË°•ÂáΩÊï∞Ë°•ÂÖÖ
+          //≤Â≤π∫Ø ˝≤π≥‰
 
-          if(Is_thres_stamp==1)  //Â¶ÇÊûúÊúâË∂ÖÂá∫È¢ÑËÆæÂÄºÔºåÈÇ£‰πàËúÇÈ∏£Âô®Âìç ÂêéÊúüÂèØ‰ª•Âä†ËØ≠Èü≥Ê®°Âùó
+          //≥¨≥ˆ‘§æØ„–÷µ±®æØ
+          if(Is_thres_stamp==1)  //»Áπ˚”–≥¨≥ˆ‘§…Ë÷µ£¨ƒ«√¥∑‰√˘∆˜œÏ ∫Û∆⁄ø…“‘º””Ô“Ùƒ£øÈ
           {
-            if((weight_current-Record_weight1)>=Compa_value)
+            if((weight_current-Record_weight)>=Compa_value)
             {
               BEEP_ON;
-              HAL_Delay(200);
+              HAL_Delay(100);
               BEEP_OFF;
             }        
           }
 
-          if(Is_tare_stamp==1)   //Â¶ÇÊûúÊúâÊ∏ÖÈõ∂ÊåâÈíÆÊåâ‰∏ã ÂØπÂ∫îÊåâÈíÆ ÂäõÈÄöÈÅìÈÄâÊã© Ê∏ÖÈõ∂ ÂºÄÂßãÊµãËØï 
+          //«Â¡„∞¥≈•≈–∂œ ”√”⁄“Ï≥£œ˚≥˝ Œ¬∆Ø—œ÷ÿ ±
+          if(Is_tare_stamp==1)   //»Áπ˚”–«Â¡„∞¥≈•∞¥œ¬ ∂‘”¶∞¥≈• ¡¶Õ®µ¿—°‘Ò «Â¡„ ø™ º≤‚ ‘ 
           {
             Record_weight2=Record_weight1-weight_current;
             if(Record_weight2>15)   
@@ -236,102 +249,385 @@ int main(void)
               Record_weight1=0; 
               Record_weight2=0;
               Is_tare_stamp=0;
-              Process_Step=0;
+              Force_Process_Step=0;
               HMI_value_setting("force1.gross.val",0);
               HMI_value_setting("force1.net.val",0); 
             }           
           }
 
-          //
-          switch (Process_Step)
+          ///¡¶ºÏ≤‚¡˜≥Ã
+          switch (Force_Process_Step)   
           {
-            case 0://Ê£ÄÊµãÂà∞ÊúâÁâ©ÂìÅ
+            case 0://ºÏ≤‚µΩ”–ŒÔ∆∑
               if(weight_read>weight_Zero_Data)
               {
-                Process_Step = 1;
+                Force_Process_Step = 1;
                 weight_read = 0;
               }
               else
               {
                 HMI_value_setting("force1.gross.val",0);
-                Process_Step = 0;
+                Force_Process_Step = 0;
                 weight_read = 0;
               }
             break;
             case 1:
               if(int_abs(weight_read,weight_Zero_Data)>10)
               {
-                Process_Step=2;
+                Force_Process_Step=2;
               }
               else 
               {
                 HMI_value_setting("force1.gross.val",0);
-                Process_Step=0;
+                Force_Process_Step=0;
               }
             break;
-            case 2://Ê£ÄÊµãÈ¢ÑÁ¥ßÂäõ
+            case 2://ºÏ≤‚‘§ΩÙ¡¶
               HAL_Delay(100);
               second_count=weight_ad7190_ReadAvg(1);
-              if(int_abs(second_count,weight_read)<1000) //Ê†πÊçÆÊµãËØïÊÉÖÂÜµÊõ¥Êîπ
+              if(int_abs(second_count,weight_read)<1000) //∏˘æ›≤‚ ‘«Èøˆ∏¸∏ƒ
               {
                 HAL_Delay(10);
                 weight_read = weight_ad7190_ReadAvg(4);
                 third_count = weight_read;
-                date_temp = weight_read - weight_Zero_Data;
+                data_temp = weight_read - weight_Zero_Data;
                 temp=data_temp*100000/weight_proportion;
-                Record_weight1=temp; //ÊØèÊ¨°Êç¢ÁöÆÈáçÊó∂ËµãÂÄº
-                printf("Record_weight1=%d\n",Record_weight1/10000); 
-                weight_read=temp;            
-                Is_tare_stamp=1;
-                HMI_value_setting("force1.gross.val",weight_read/1000); //0.1N
-                Process_Step=3;
-              }
-              else
-              {
-                Process_Step = 2;
+                Record_weight1=temp; //√ø¥Œªª∆§÷ÿ ±∏≥÷µ
+                printf("Record_weight1*10=%d N\n",Record_weight1/1000); //0.1N
+                weight_current=temp;            
+                //Is_tare_stamp=1;
+                HMI_value_setting("force1.gross.val",weight_current/1000); //0.1N
+                Force_Process_Step=3;
               }
             break;
-            case 3://ÂºÄÂßãÊµãËØï ÈîÅÂÆöÈ¢ÑÁ¥ßÂäõ
-              if(Is_start_stamp==1)
+            case 3://ø™ º≤‚ ‘ À¯∂®‘§ΩÙ¡¶
+              if(Is_start_stamp==1)   //ø™ º≤‚ ‘∞¥≈•
               {
                 Record_weight=Record_weight1;
-                HMI_value_setting("force1.gross.val",weight_read/1000); //0.1N
-                printf("Record_weight*10=%d\n",Record_weight/1000); //0.1N
-                Process_Step = 4;
-                //ÂêéÁª≠ÊõøÊç¢ÊàêËØ≠Èü≥
+                HMI_value_setting("force1.gross.val",Record_weight/1000); //0.1N
+                printf("Record_weight*10=%d N\n",Record_weight/1000); //0.1N
+                Force_Process_Step = 4;
+                //∫Û–¯ÃÊªª≥…”Ô“Ù
                 BEEP_ON;
-                HAL_Delay(300);
+                HAL_Delay(1000);
                 BEEP_OFF;
               }
               else
               {
-                Process_Step = 2;
+                Force_Process_Step = 2;
               }
             break;
-            case 4://ÂäõÊµãËØï ÂºÄÂßãÂà§Êñ≠
-              if(weight_read>Record_weight)//ÊñΩÂä†ÂäõÂ§ß‰∫éÈ¢ÑÁ¥ßÂäõ
+            case 4://¡¶≤‚ ‘ ø™ º≈–∂œ
+              if (Test_Step>=3)
               {
-                if(int_abs(weight_read,Record_weight)>5000) //ÂàùÂßãÊñΩÂä†ÂäõÂ§ß‰∫é0.5N
+                Force_Process_Step = 6;
+              }
+              else if(weight_current>Record_weight)   // ©º”¡¶¥Û”⁄‘§ΩÙ¡¶
+              {
+                if(int_abs(weight_current,Record_weight)>50000) //≥ı º ©º”¡¶¥Û”⁄5N
                 {
-                  weight_read=0;
-                  Process_Step=5;
+                  weight_read = 0;
+                  Force_Process_Step=5;
+                  timecount = 0;
                 }
+                else
+                {
+                  weight_read = 0;
+                }
+              }
+            break;
+            case 5://¡¶≤‚ ‘ ≥÷–¯ ‰≥ˆ
+              if((timecount<=90) && (int_abs(weight_current,Record_weight)>40000))// ©º”¡¶¥Û”⁄4N «“ Œ¥≥¨π˝º∆ ±
+              {
+                timecount++;
+                //≤Â≤π∫Ø ˝ ‰»Î 0.1N
+                HMI_value_setting("force1.inx.val",1);
+                in1=in0+(weight_current-Record_weight-in0)/5;
+                in2=in0+2*(weight_current-Record_weight-in0)/5;
+                in3=in0+3*(weight_current-Record_weight-in0)/5;
+                in4=in0+4*(weight_current-Record_weight-in0)/5;
+                in0=weight_current-Record_weight;
+                HMI_value_setting("force1.in1.val",in1/10000);
+                HMI_value_setting("force1.in2.val",in2/10000);
+                HMI_value_setting("force1.in3.val",in3/10000);
+                HMI_value_setting("force1.in4.val",in4/10000);
+                HMI_value_setting("force1.in0.val",in0/10000);
+                printf("in0*10=%d\n",in0/1000); //0.1N
+
+                Force_Process_Step = 5;
+                HMI_value_setting("force1.net.val",in0/1000);//0.1N
 
               }
+              else
+              {
+                Test_Step++;
+                timecount = 0;
+                //∫Û–¯ÃÊªª≥…”Ô“Ù
+                BEEP_ON;
+                HAL_Delay(1000);
+                BEEP_OFF;
 
+                Force_Process_Step = 4;
+                in0 = in1 = in2 = in3 = 0;
+                HMI_value_setting("force1.inx.val",0);
+                HMI_value_setting("force1.chx.val",Test_Step);
+                printf("≤‚ ‘ %d Ω· ¯\n",Test_Step);
+                HAL_Delay(5000);
+              }
+            break;
+            case 6:  
+              Test_Step = 0;
+              Force_Process_Step = 0;
+              Is_start_stamp = 0;
+              weight_Zero_IsInit=0;
+              //∫Û–¯ÃÊªª≥…”Ô“Ù
+              BEEP_ON;
+              HAL_Delay(100);
+              BEEP_OFF;
+
+              HMI_value_setting("force1.gross.val",0);
+              HMI_value_setting("force1.net.val",0);
+              printf("»˝¥Œ≤‚ ‘Ω· ¯\n");
+            break;
           }
-
-
-
 
         }
       }
+    }
+    if(HMI_RX_flag==2)
+    {
+      HMI_RX_flag=0;    
+      switch(HMI_Rx_buf[1])
+      {
+        //π¶ƒ‹—°‘ÒΩÁ√Ê home
+        case 0x01:
+          printf("µ»≥§º°¡¶≤‚ ‘ΩÁ√Ê\n"); 
+          model_channelx=1;       
+        break;
+        case 0x18:
+          printf("ªÓ∂Ø∑∂Œßπ¶ƒ‹—°‘ÒΩÁ√Ê\n"); 
+          model_channelx=2;       
+        break;
+        
+        //µ»≥§º°¡¶≤‚ ‘ΩÁ√Ê force0
+        case 0x10:
+          printf("π¶ƒ‹—°‘ÒΩÁ√Ê\n");
+          model_channelx=0;        
+        break;
+        case 0x11:
+          printf("«∞«¸1—°‘Ò\n");
+          force_channelx=1;
+          weight_proportion = 2050; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSx_ENABLE();
+          weight_ad7190_conf(force_channelx);       
+        break;
+        case 0x12:
+          printf("∫Û…Ï2—°‘Ò\n");
+          force_channelx=2;
+          weight_proportion = 1760;
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSx_ENABLE();  
+          weight_ad7190_conf(force_channelx);      
+        break;
+        case 0x13:
+          printf("◊Û≤‡«¸3—°‘Ò\n");
+          force_channelx=1; 
+          weight_proportion = 1700; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSy_ENABLE(); 
+          weight_ad7190_conf(force_channelx);     
+        break;
+        case 0x14:
+          printf("”“≤‡«¸4—°‘Ò\n");
+          force_channelx=2;
+          weight_proportion = 1744; 
+          WEIGHT_CSx_DISABLE();
+          WEIGHT_CSy_DISABLE();
+          WEIGHT_CSy_ENABLE();
+          weight_ad7190_conf(force_channelx);       
+        break;
 
+        //¡¶¥´∏–∆˜ºÏ≤‚ΩÁ√Ê force1
+        case 0x30:
+          printf("º°¡¶≤‚ ‘π¶ƒ‹—°‘ÒΩÁ√Ê");
+          force_channelx = 0;
+          weight_Zero_IsInit = 0;//Õ£÷π¥´ ‰ ˝æ›
+          Is_start_stamp = 0;
+          Test_Step = 0;
+          Force_Process_Step = 0;
+        break;
+        case 0x31:
+          printf("¡¶¥´∏–∆˜ %d –£◊º\n",force_channelx);
+        break;
+        case 0x32:
+          printf("«Â¡„\n");
+          Force_Process_Step=0;
+          Is_tare_stamp=0;
+          weight_Zero_IsInit=1;
+          HMI_value_setting("force1.gross.val",0);
+          HMI_value_setting("force1.net.val",0);        
+        break;
+        case 0x33:
+          printf("ø™ º≤‚ ‘\n");
+          Is_start_stamp = 1;
+          Force_Process_Step = 3;       
+        break;
+        case 0x39:         
+          tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
+          Compa_value=tmp[0]*1000;   //0.1N 
+          Is_thres_stamp=1; 
+          if(Compa_value==0)
+          {
+            Is_thres_stamp=0;
+          }            
+          printf("Compa_value*10=%d\n N",Compa_value/1000);
+        break;
 
+        //¡¶¥´∏–∆˜–£◊ºΩÁ√Ê
+        case 0x51:
+          printf("µ⁄“ª≤Ω\n");         
+          tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2];
+          cali_weight= tmp[0]%10000;
+          weight_Zero_Data = weight_ad7190_ReadAvg(4);       
+          weight_Zero_IsInit=0;
+        break;
+        case 0x52:
+        {
+          int32_t temp;
+          int32_t weight_count;
+          weight_count=weight_ad7190_ReadAvg(3);   
+          temp=(weight_count-weight_Zero_Data)*1000;
+          if(temp>0)
+          {
+            int32_t data;              
+            data=temp/cali_weight;  
+            weight_proportion=data;
+          }   
+          Tx_Buffer[0]=weight_proportion/10000;
+          Tx_Buffer[1]=weight_proportion/100%100;
+          Tx_Buffer[2]=weight_proportion%100;          
+          SPI_FLASH_SectorErase(HMI_SECTOR_ADDREE);        
+          SPI_FLASH_BufferWrite(Tx_Buffer,HMI_SECTOR_ADDREE,sizeof(Tx_Buffer));       
+          printf("µ⁄∂˛≤Ω\n"); 
+          printf("weight_proportion=%d\n",weight_proportion);         
+        }
+        break;
+        case 0x53:
+          printf("–£◊ºÕÍ≥…\n");
+          Force_Process_Step=0;
+          weight_Zero_IsInit=1;   
+          HMI_value_setting("page0.gross.val",0);
+          HMI_value_setting("page0.net.val",0);           
+        break;
+
+      }
+    }
+   
   }
 
-
-
-
-
 }
+
+/**
+  * ∫Ø ˝π¶ƒ‹: ¥Æø⁄∆¡÷–∂œ¥¶¿Ì∫Ø ˝
+  *  ‰»Î≤Œ ˝: Œﬁ
+  * ∑µ ªÿ ÷µ: Œﬁ
+  * Àµ    √˜: Œﬁ
+  */
+void HMI_USARTx_IRQHANDLER(void)
+{
+  uint16_t tmp;
+  static uint8_t HUM_Rx_count=0;  
+  
+  if(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_RXNE) != RESET)
+  { 
+    tmp=HMI_USARTx->DR;  
+    if(tmp==0xF1)
+    {
+      HMI_RX_flag=1;
+      HUM_Rx_count=1;
+      HMI_Rx_buf[0]=0xF1;
+      usart_rx_flag=200;
+    }
+    else if((HMI_RX_flag==1)&&(usart_rx_flag))
+    {     
+      HMI_Rx_buf[HUM_Rx_count]=tmp;
+      HUM_Rx_count++;
+      if(HUM_Rx_count>=HMI_RX_BUFFER_SIZE)
+      {
+        HUM_Rx_count=0;
+        HMI_RX_flag=0;        
+      }
+      else if((tmp==0xFF)&&(HMI_Rx_buf[HUM_Rx_count-2]==0xFF)&&(HMI_Rx_buf[HUM_Rx_count-3]==0x00)&&(HMI_Rx_buf[HUM_Rx_count-4]==0xFF)&&(HMI_Rx_buf[HUM_Rx_count-5]==0xFF))
+      {
+        HMI_RX_flag=2;
+        HUM_Rx_count=0;        
+      }
+    }
+    else if(usart_rx_flag==0)
+    {
+      HMI_RX_flag=0;
+      HUM_Rx_count=0;
+    }      
+  }
+}
+
+/**
+  * ∫Ø ˝π¶ƒ‹: œÚ¥Æø⁄∆¡∑¢ÀÕ ˝æ›
+  *  ‰»Î≤Œ ˝: Œﬁ
+  * ∑µ ªÿ ÷µ: Œﬁ
+  * Àµ    √˜: Œﬁ
+  */
+void HMI_value_setting(const char *val_str,uint32_t value)
+{
+  uint8_t tmp_str[30]={0};
+  uint8_t i;
+  
+  sprintf((char *)tmp_str,"%s=%d",val_str,value);
+  for(i=0;i<strlen((char *)tmp_str);++i)
+  {
+    HMI_USARTx->DR=tmp_str[i];
+    while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  }
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+}
+
+/**
+  * ∫Ø ˝π¶ƒ‹: œÚ¥Æø⁄∆¡∑¢ÀÕ∏°µ„ ˝æ›
+  *  ‰»Î≤Œ ˝: Œﬁ
+  * ∑µ ªÿ ÷µ: Œﬁ
+  * Àµ    √˜: Œﬁ
+  */
+void HMI_string_setting(const char *val_str,int32_t value)
+{
+  uint8_t tmp_str[50]={0};
+  uint8_t i;
+  float temp=(float)value;
+  sprintf((char *)tmp_str,"%s=\"%.1f\"",val_str,temp/100);
+  
+  for(i=0;i<strlen((char *)tmp_str);++i)
+  {
+    HMI_USARTx->DR=tmp_str[i];
+    while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  }
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+  HMI_USARTx->DR=0xFF;
+  while(__HAL_UART_GET_FLAG(&husartx_HMI, UART_FLAG_TXE) == RESET);
+}
+
+
+
+
+/*****END OF FILE****/
+
