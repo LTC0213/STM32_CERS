@@ -20,8 +20,10 @@
 #include "spiflash/bsp_spiflash.h"
 #include "beep/bsp_beep.h"
 
-#include "usart/bsp_usartx.h"
+#include "DCMotor/bsp_BDCMotor.h" 
+#include "key/bsp_key.h"
 #include "encoder/bsp_encoder.h"
+#include "usart/bsp_usartx.h"
 
 /* 私有类型定义 --------------------------------------------------------------*/
 /* 私有宏定义 ----------------------------------------------------------------*/
@@ -43,22 +45,26 @@ __IO uint16_t pwm_data=0;
 /* 通道选择变量 ------------------------------------------------------------------*/
 __IO uint8_t  model_channelx=0;         //模式功能选择
 __IO uint8_t  force_channelx=0;         //力传感器选择
-__IO uint8_t  encode_channelx=0;        //编码器选择
+__IO uint8_t  encoder_channelx=0;        //编码器选择
 /* 力检测变量 ------------------------------------------------------------------*/
 __IO uint8_t  weight_Zero_IsInit=0;     // 0：停止数据采集 1:零值未获取  2：已获取零值
 __IO int32_t  weight_Zero_Data=0;       // 无施加力时零值记录值
+
 __IO uint8_t  Is_thres_stamp=0;         //是否有阀值设定
 __IO uint8_t  Is_tare_stamp=0;          //是否记录零值
 __IO uint8_t  Is_start_stamp=0;          //开始测试
+
 __IO int32_t  Record_weight = 0;           //预紧力值
 __IO int32_t  Record_weight1;           //预紧力记录值（用于每次测力前记录零值） 
 __IO int32_t  Record_weight2;           //预紧力记录值（用于每次测力前记录零值 ） 
 __IO int32_t  cali_weight;              //校准使用
 __IO int32_t  weight_proportion = 1950; //换算值记录 比例系数
 __IO int32_t  weight_current;           //换算放大后力数值
+
 __IO int32_t  second_count;             //皮重记录值
 __IO int32_t  third_count;              //皮重记录值
-__IO uint8_t  Force_Process_Step=0;   // 0未检测到物体 1检测到有物品 2有重物 并且达到皮重要求 3测皮重 4皮重基础上 加了重物 5
+__IO uint8_t  Force_Process_Step=0;   // 
+
 __IO uint8_t  Test_Step=0;
 /* 插补函数变量 ------------------------------------------------------------------*/
 __IO int32_t  in0=0;
@@ -70,12 +76,21 @@ __IO int32_t  in4=0;
 __IO int32_t CaptureNumber = 0;     // 输入捕获数
 __IO int32_t LastCapNum = 0;     // 上一次输入捕获数
 __IO int32_t Speed = 0;     // 上一次输入捕获数
+__IO int8_t  Angle = 0;      // 角度
+
+__IO uint8_t  encoder_Zero_IsInit=0;     // 0：停止数据采集 1:零值未获取  2：已获取零值
+__IO int32_t  encoder_Zero_Data=0;       // 无施加力时零值记录值
+__IO uint8_t  Encoder_Process_Step=0;   // 
+__IO int8_t   Record_encoder = 0;        //预紧角度值
+__IO int8_t   Record_encoder1;           //预紧角度记录值（用于每次测角度前记录零值） 
+__IO int8_t   Record_encoder2;           //预紧角度记录值（用于每次测角度前记录零值 ） 
 /* SPI flash变量 ------------------------------------------------------------------*/
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
 uint8_t Tx_Buffer[3] = {0};
 uint8_t Rx_Buffer[3] = {0};
 int32_t Result_data=0;
+
 
 __IO uint32_t timecount = 0;
 /* 扩展变量 ------------------------------------------------------------------*/
@@ -153,6 +168,7 @@ int main(void)
   int32_t weight_first;
   uint32_t tmp[2];
   int32_t Compa_value;//阈值预设值
+  int8_t  Compa_encoder_value;//阈值预设值
 
   /* 复位所有外设，初始化Flash接口和系统滴答定时器 */
   HAL_Init();
@@ -164,16 +180,13 @@ int main(void)
   HMI_USARTx_Init();
   __HAL_UART_ENABLE_IT(&husartx_HMI, UART_IT_RXNE);
   /* 初始化LED */
-  LED_GPIO_Init();
+  //LED_GPIO_Init();
   /* 初始化SPI */
   MX_SPIFlash_Init();
   /* 初始化BEEP */
-  BEEP_GPIO_Init();
-
-  /* 编码器初始化及使能编码器模式 */
-  ENCODER_TIMx_Init();
-  HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
-  printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+  //BEEP_GPIO_Init();
+  /* 按键初始化 */
+  //KEY_GPIO_Init();
 
   /* Get SPI Flash Device ID */
 	DeviceID = SPI_FLASH_ReadDeviceID();
@@ -208,7 +221,7 @@ int main(void)
     //测力模式
     if(model_channelx==1)
     {
-      if(uwTick % 10 == 0)
+      if(uwTick%10==0)
       {
         if(weight_Zero_IsInit == 1) //未获取零值
         {
@@ -385,6 +398,190 @@ int main(void)
         }
       }
     }
+    
+    if(model_channelx==2)
+    {
+      if(uwTick%10==0)
+      {
+        if(encoder_Zero_IsInit==1)//未获取零值
+        {
+          encoder_Zero_Data = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
+          encoder_Zero_IsInit = 2;
+        }
+        else if(encoder_Zero_IsInit==2)//零值已经记录成功
+        {
+          int32_t data_temp,temp;
+          int32_t encoder_read;
+
+          encoder_read = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
+          data_temp = encoder_read -encoder_Zero_Data;
+          temp = data_temp *3600 / ENCODER_RESOLUTION;
+          Angle = temp;
+          printf("Angle=%d\n",Angle/10);
+          printf("Encoder_Process_Step=%d\n",Encoder_Process_Step);
+
+          //插补函数补充
+
+          //超出预警阈值报警
+          if(Is_thres_stamp==1)  //如果有超出预设值，那么蜂鸣器响 后期可以加语音模块
+          {
+            if((Angle-Record_encoder) >= Compa_encoder_value)
+            {
+              HMI_value_setting("encode1.ad0.val",3);
+              HAL_Delay(3000);
+            }        
+          }
+
+           //清零按钮判断 用于异常消除 
+          if(Is_tare_stamp==1)   //如果有清零按钮按下 对应按钮 力通道选择 清零 开始测试 
+          {
+            Record_encoder2=Record_encoder1-Angle;
+            if(Record_encoder2>10)   
+            {
+              Record_encoder1=0; 
+              Record_encoder2=0;
+              Is_tare_stamp=0;
+              Encoder_Process_Step=0;
+              HMI_value_setting("encode1.gross.val",0);
+              HMI_value_setting("encode1.net.val",0); 
+            }           
+          }
+
+          //角度检测流程
+          switch (Encoder_Process_Step)
+          {
+            case 0:
+             if(encoder_read>encoder_Zero_Data)
+             {
+               Encoder_Process_Step = 1;
+               encoder_read = 0;
+             }
+             else
+             {
+              HMI_value_setting("encode1.gross.val",0);
+              Encoder_Process_Step=0;
+             }
+            break;
+            case 1:
+              if(int_abs(encoder_read,encoder_Zero_Data)>2)
+              {
+                Force_Process_Step=2;
+              }
+              else 
+              {
+                HMI_value_setting("encode1.gross.val",0);
+                Force_Process_Step=0;
+              }
+            break;
+            case 2://检测初始角度
+              HAL_Delay(100);
+              second_count = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
+              if(int_abs(second_count,encoder_read)<1000) //根据测试情况更改
+              {
+                HAL_Delay(10);
+                encoder_read = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
+                third_count = encoder_read;
+                data_temp = encoder_read -encoder_Zero_Data;
+                temp = data_temp *3600 / ENCODER_RESOLUTION;
+                Record_encoder1=temp; //每次换皮重时赋值
+                printf("Record_encoder1=%d 度\n",Record_encoder1/10); 
+                Angle=temp;            
+                //Is_tare_stamp=1;
+                HMI_value_setting("encode1.gross.val",Angle/10); 
+                Encoder_Process_Step=3;
+              }
+            break;
+            case 3://开始测试 锁定预紧力
+              if(Is_start_stamp==1)   //开始测试按钮
+              {
+                Record_encoder=Record_encoder1;
+                HMI_value_setting("encode1.gross.val",Record_encoder1/10); 
+                printf("Record_encoder1=%d 度\n",Record_encoder1/10); 
+                Force_Process_Step = 4;
+                HMI_value_setting("force1.ad0.val",0);
+                HAL_Delay(4000);
+              }
+              else
+              {
+                Force_Process_Step = 2;
+              }
+            break;
+            case 4://力测试 开始判断
+              if (Test_Step>=3)
+              {
+                Encoder_Process_Step = 6;
+              }
+              else if(Angle>Record_encoder)   //角度大于预紧角度
+              {
+                if(int_abs(Angle,Record_encoder)>10) //角度大于1°
+                {
+                  encoder_read = 0;
+                  Encoder_Process_Step =5;
+                  timecount = 0;
+                }
+                else
+                {
+                  encoder_read = 0;
+                }
+              }
+            break;
+            case 5://力测试 持续输出
+              if((timecount<=90) && (int_abs(Angle,Record_encoder)>10))//施加力大于4N 且 未超过计时
+              {
+                timecount++;
+                //插补函数输入 
+                HMI_value_setting("encode1.inx.val",1);
+                in1=in0+(Angle-Record_encoder-in0)/5;
+                in2=in0+2*(Angle-Record_encoder-in0)/5;
+                in3=in0+3*(Angle-Record_encoder-in0)/5;
+                in4=in0+4*(Angle-Record_encoder-in0)/5;
+                in0=Angle-Record_encoder;
+                HMI_value_setting("encode1.in1.val",in1/10);
+                HMI_value_setting("encode1.in2.val",in2/10);
+                HMI_value_setting("encode1.in3.val",in3/10);
+                HMI_value_setting("encode1.in4.val",in4/10);
+                HMI_value_setting("encode1.in0.val",in0/10);
+                printf("in0=%d 度\n",in0/10); //0.1N
+
+                Encoder_Process_Step = 5;
+                HMI_value_setting("encode1.net.val",in0/10);
+
+              }
+              else
+              {
+                Test_Step++;
+                timecount = 0;
+                Encoder_Process_Step = 4;
+                in0 = in1 = in2 = in3 = 0;
+                HMI_value_setting("encode1.inx.val",0);
+                HMI_value_setting("encode1.ad0.val",1);
+                HMI_value_setting("encode1.chx.val",Test_Step);
+                printf("测试 %d 结束\n",Test_Step);
+                HAL_Delay(5000);
+              }
+            break;
+            case 6:  
+              Test_Step = 0;
+              Encoder_Process_Step = 0;
+              Is_start_stamp = 0;
+              encoder_Zero_IsInit=0;
+              HMI_value_setting("encode1.ad0.val",2);
+              HAL_Delay(3000);
+
+              HMI_value_setting("encode1.gross.val",0);
+              HMI_value_setting("encode1.net.val",0);
+              printf("三次测试结束\n");
+            break;
+
+
+          }
+
+        }
+
+
+      }
+    }
+
     if(HMI_RX_flag==2)
     {
       HMI_RX_flag=0;    
@@ -395,7 +592,7 @@ int main(void)
           printf("等长肌力测试界面\n"); 
           model_channelx=1;       
         break;
-        case 0x18:
+        case 0x02:
           printf("活动范围功能选择界面\n"); 
           model_channelx=2;       
         break;
@@ -442,6 +639,71 @@ int main(void)
           weight_ad7190_conf(force_channelx);       
         break;
 
+        //活动范围检测 encode0
+        case 0x20:
+          printf("功能选择界面\n");
+          model_channelx=0;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");   
+
+        break;
+        case 0x21:
+          printf("前屈1选择\n");
+          encoder_channelx=1;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+
+        break;
+        case 0x22:
+          printf("后伸2选择\n");
+          encoder_channelx=1;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+           
+        break;
+        case 0x23:
+          printf("左侧屈3选择\n");
+          encoder_channelx=1;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+               
+        break;
+        case 0x24:
+          printf("右侧屈4选择\n");
+          encoder_channelx=1;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+                
+        break;
+        case 0x25:
+          printf("左旋5选择\n");
+          encoder_channelx=2;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+             
+        break;
+        case 0x26:
+          printf("右旋6选择\n");
+          encoder_channelx=2;
+          /* 编码器初始化及使能编码器模式 */
+          ENCODER_TIMx_Init();
+          HAL_TIM_Encoder_Start(&htimx_Encoder, TIM_CHANNEL_ALL);
+          printf("--> 编码器接口4倍频,上下边沿都计数<-- \n");
+               
+        break;
+
         //力传感器检测界面 force1
         case 0x30:
           printf("肌力测试功能选择界面");
@@ -476,6 +738,39 @@ int main(void)
             Is_thres_stamp=0;
           }            
           printf("Compa_value*10=%d\n N",Compa_value/1000);
+        break;
+
+        //活动范围检测界面 encode1
+        case 0x40:
+          printf("活动范围检测功能选择界面");
+          encoder_channelx = 0;
+          encoder_Zero_IsInit = 0;//停止传输数据
+          Is_start_stamp = 0;
+          Test_Step = 0;
+          Encoder_Process_Step = 0;
+        break;
+        case 0x42:
+          printf("清零\n");
+          Encoder_Process_Step=0;
+          Is_tare_stamp=0;
+          encoder_Zero_IsInit=1;
+          HMI_value_setting("encode1.gross.val",0);
+          HMI_value_setting("encode1.net.val",0);        
+        break;
+        case 0x43:
+          printf("开始测试\n");
+          Is_start_stamp = 1;
+          Encoder_Process_Step = 3;       
+        break;
+        case 0x49:         
+          tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
+          Compa_encoder_value=tmp[0]*10;   
+          Is_thres_stamp=1; 
+          if(Compa_encoder_value==0)
+          {
+            Is_thres_stamp=0;
+          }            
+          printf("Compa_value*10=%d\n N",Compa_encoder_value/1000);
         break;
 
         //力传感器校准界面
@@ -517,7 +812,7 @@ int main(void)
 
       }
     }
-   
+    
   }
 
 }
