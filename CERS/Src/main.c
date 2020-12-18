@@ -234,9 +234,8 @@ int main(void)
           {
             if((weight_current-Record_weight)>=Compa_value)
             {
-              BEEP_ON;
-              HAL_Delay(100);
-              BEEP_OFF;
+              HMI_value_setting("force1.ad0.val",3);
+              HAL_Delay(3000);
             }        
           }
 
@@ -307,10 +306,8 @@ int main(void)
                 HMI_value_setting("force1.gross.val",Record_weight/1000); //0.1N
                 printf("Record_weight*10=%d N\n",Record_weight/1000); //0.1N
                 Force_Process_Step = 4;
-                //后续替换成语音
-                BEEP_ON;
-                HAL_Delay(1000);
-                BEEP_OFF;
+                HMI_value_setting("force1.ad0.val",0);
+                HAL_Delay(4000);
               }
               else
               {
@@ -362,14 +359,10 @@ int main(void)
               {
                 Test_Step++;
                 timecount = 0;
-                //后续替换成语音
-                BEEP_ON;
-                HAL_Delay(1000);
-                BEEP_OFF;
-
                 Force_Process_Step = 4;
                 in0 = in1 = in2 = in3 = 0;
                 HMI_value_setting("force1.inx.val",0);
+                HMI_value_setting("force1.ad0.val",1);
                 HMI_value_setting("force1.chx.val",Test_Step);
                 printf("测试 %d 结束\n",Test_Step);
                 HAL_Delay(5000);
@@ -380,10 +373,8 @@ int main(void)
               Force_Process_Step = 0;
               Is_start_stamp = 0;
               weight_Zero_IsInit=0;
-              //后续替换成语音
-              BEEP_ON;
-              HAL_Delay(100);
-              BEEP_OFF;
+              HMI_value_setting("force1.ad0.val",2);
+              HAL_Delay(3000);
 
               HMI_value_setting("force1.gross.val",0);
               HMI_value_setting("force1.net.val",0);
