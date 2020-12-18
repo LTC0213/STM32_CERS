@@ -3664,22 +3664,22 @@ Image Symbol Table
     i.fputc                                  0x080033f8   Section        0  bsp_usartx.o(i.fputc)
     i.int_abs                                0x08003414   Section        0  main.o(i.int_abs)
     i.main                                   0x08003420   Section        0  main.o(i.main)
-    i.weight_ad7190_ReadAvg                  0x08004574   Section        0  bsp_spiweight.o(i.weight_ad7190_ReadAvg)
-    i.weight_ad7190_conf                     0x080045a0   Section        0  bsp_spiweight.o(i.weight_ad7190_conf)
-    .constdata                               0x08004638   Section       16  system_stm32f4xx.o(.constdata)
-    .constdata                               0x08004648   Section        8  system_stm32f4xx.o(.constdata)
-    .data                                    0x20000000   Section      100  main.o(.data)
-    HUM_Rx_count                             0x2000000e   Data           1  main.o(.data)
-    .data                                    0x20000064   Section        4  stm32f4xx_hal.o(.data)
-    .data                                    0x20000068   Section        4  system_stm32f4xx.o(.data)
-    .data                                    0x2000006c   Section        4  stdout.o(.data)
-    .bss                                     0x20000070   Section       30  main.o(.bss)
-    .bss                                     0x20000090   Section       64  bsp_usartx_hmi.o(.bss)
-    .bss                                     0x200000d0   Section       88  bsp_spiweight.o(.bss)
-    .bss                                     0x20000128   Section       88  bsp_spiflash.o(.bss)
-    .bss                                     0x20000180   Section       64  bsp_usartx.o(.bss)
-    .bss                                     0x200001c0   Section       60  bsp_encoder.o(.bss)
-    STACK                                    0x20000200   Section     4096  startup_stm32f407xx.o(STACK)
+    i.weight_ad7190_ReadAvg                  0x080045d0   Section        0  bsp_spiweight.o(i.weight_ad7190_ReadAvg)
+    i.weight_ad7190_conf                     0x080045fc   Section        0  bsp_spiweight.o(i.weight_ad7190_conf)
+    .constdata                               0x08004694   Section       16  system_stm32f4xx.o(.constdata)
+    .constdata                               0x080046a4   Section        8  system_stm32f4xx.o(.constdata)
+    .data                                    0x20000000   Section      136  main.o(.data)
+    HUM_Rx_count                             0x2000000c   Data           1  main.o(.data)
+    .data                                    0x20000088   Section        4  stm32f4xx_hal.o(.data)
+    .data                                    0x2000008c   Section        4  system_stm32f4xx.o(.data)
+    .data                                    0x20000090   Section        4  stdout.o(.data)
+    .bss                                     0x20000094   Section       30  main.o(.bss)
+    .bss                                     0x200000b4   Section       64  bsp_usartx_hmi.o(.bss)
+    .bss                                     0x200000f4   Section       88  bsp_spiweight.o(.bss)
+    .bss                                     0x2000014c   Section       88  bsp_spiflash.o(.bss)
+    .bss                                     0x200001a4   Section       64  bsp_usartx.o(.bss)
+    .bss                                     0x200001e4   Section       60  bsp_encoder.o(.bss)
+    STACK                                    0x20000220   Section     4096  startup_stm32f407xx.o(STACK)
 
     Global Symbols
 
@@ -3935,13 +3935,13 @@ Image Symbol Table
     __scatterload_zeroinit                   0x08002b2d   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
     fputc                                    0x080033f9   Thumb Code    22  bsp_usartx.o(i.fputc)
     int_abs                                  0x08003415   Thumb Code    12  main.o(i.int_abs)
-    main                                     0x08003421   Thumb Code  4338  main.o(i.main)
-    weight_ad7190_ReadAvg                    0x08004575   Thumb Code    42  bsp_spiweight.o(i.weight_ad7190_ReadAvg)
-    weight_ad7190_conf                       0x080045a1   Thumb Code   148  bsp_spiweight.o(i.weight_ad7190_conf)
-    AHBPrescTable                            0x08004638   Data          16  system_stm32f4xx.o(.constdata)
-    APBPrescTable                            0x08004648   Data           8  system_stm32f4xx.o(.constdata)
-    Region$$Table$$Base                      0x08004650   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08004670   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08003421   Thumb Code  4380  main.o(i.main)
+    weight_ad7190_ReadAvg                    0x080045d1   Thumb Code    42  bsp_spiweight.o(i.weight_ad7190_ReadAvg)
+    weight_ad7190_conf                       0x080045fd   Thumb Code   148  bsp_spiweight.o(i.weight_ad7190_conf)
+    AHBPrescTable                            0x08004694   Data          16  system_stm32f4xx.o(.constdata)
+    APBPrescTable                            0x080046a4   Data           8  system_stm32f4xx.o(.constdata)
+    Region$$Table$$Base                      0x080046ac   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x080046cc   Number         0  anon$$obj.o(Region$$Table)
     HMI_RX_flag                              0x20000000   Data           1  main.o(.data)
     model_channelx                           0x20000001   Data           1  main.o(.data)
     force_channelx                           0x20000002   Data           1  main.o(.data)
@@ -3952,44 +3952,47 @@ Image Symbol Table
     Is_start_stamp                           0x20000007   Data           1  main.o(.data)
     Force_Process_Step                       0x20000008   Data           1  main.o(.data)
     Test_Step                                0x20000009   Data           1  main.o(.data)
-    Angle                                    0x2000000a   Data           1  main.o(.data)
-    encoder_Zero_IsInit                      0x2000000b   Data           1  main.o(.data)
-    Encoder_Process_Step                     0x2000000c   Data           1  main.o(.data)
-    Record_encoder                           0x2000000d   Data           1  main.o(.data)
-    usart_rx_flag                            0x2000000f   Data           1  main.o(.data)
-    Record_encoder1                          0x20000010   Data           1  main.o(.data)
-    Record_encoder2                          0x20000011   Data           1  main.o(.data)
-    Tx_Buffer                                0x20000012   Data           3  main.o(.data)
-    Rx_Buffer                                0x20000015   Data           3  main.o(.data)
-    weight_Zero_Data                         0x20000018   Data           4  main.o(.data)
-    Record_weight                            0x2000001c   Data           4  main.o(.data)
-    weight_proportion                        0x20000020   Data           4  main.o(.data)
-    in0                                      0x20000024   Data           4  main.o(.data)
-    in1                                      0x20000028   Data           4  main.o(.data)
-    in2                                      0x2000002c   Data           4  main.o(.data)
-    in3                                      0x20000030   Data           4  main.o(.data)
-    in4                                      0x20000034   Data           4  main.o(.data)
+    encoder_Zero_IsInit                      0x2000000a   Data           1  main.o(.data)
+    Encoder_Process_Step                     0x2000000b   Data           1  main.o(.data)
+    usart_rx_flag                            0x2000000d   Data           1  main.o(.data)
+    Tx_Buffer                                0x2000000e   Data           3  main.o(.data)
+    Rx_Buffer                                0x20000011   Data           3  main.o(.data)
+    weight_Zero_Data                         0x20000014   Data           4  main.o(.data)
+    Record_weight                            0x20000018   Data           4  main.o(.data)
+    weight_proportion                        0x2000001c   Data           4  main.o(.data)
+    in0                                      0x20000020   Data           4  main.o(.data)
+    in1                                      0x20000024   Data           4  main.o(.data)
+    in2                                      0x20000028   Data           4  main.o(.data)
+    in3                                      0x2000002c   Data           4  main.o(.data)
+    in4                                      0x20000030   Data           4  main.o(.data)
+    Angle                                    0x20000034   Data           4  main.o(.data)
     encoder_Zero_Data                        0x20000038   Data           4  main.o(.data)
-    DeviceID                                 0x2000003c   Data           4  main.o(.data)
-    FlashID                                  0x20000040   Data           4  main.o(.data)
-    Result_data                              0x20000044   Data           4  main.o(.data)
-    timecount                                0x20000048   Data           4  main.o(.data)
-    Record_weight1                           0x2000004c   Data           4  main.o(.data)
-    Record_weight2                           0x20000050   Data           4  main.o(.data)
-    cali_weight                              0x20000054   Data           4  main.o(.data)
-    weight_current                           0x20000058   Data           4  main.o(.data)
-    second_count                             0x2000005c   Data           4  main.o(.data)
-    third_count                              0x20000060   Data           4  main.o(.data)
-    uwTick                                   0x20000064   Data           4  stm32f4xx_hal.o(.data)
-    SystemCoreClock                          0x20000068   Data           4  system_stm32f4xx.o(.data)
-    __stdout                                 0x2000006c   Data           4  stdout.o(.data)
-    HMI_Rx_buf                               0x20000070   Data          30  main.o(.bss)
-    husartx_HMI                              0x20000090   Data          64  bsp_usartx_hmi.o(.bss)
-    hspi_weight                              0x200000d0   Data          88  bsp_spiweight.o(.bss)
-    hspiflash                                0x20000128   Data          88  bsp_spiflash.o(.bss)
-    husartx                                  0x20000180   Data          64  bsp_usartx.o(.bss)
-    htimx_Encoder                            0x200001c0   Data          60  bsp_encoder.o(.bss)
-    __initial_sp                             0x20001200   Data           0  startup_stm32f407xx.o(STACK)
+    Record_encoder                           0x2000003c   Data           4  main.o(.data)
+    DeviceID                                 0x20000040   Data           4  main.o(.data)
+    FlashID                                  0x20000044   Data           4  main.o(.data)
+    Result_data                              0x20000048   Data           4  main.o(.data)
+    timecount                                0x2000004c   Data           4  main.o(.data)
+    Record_weight1                           0x20000050   Data           4  main.o(.data)
+    Record_weight2                           0x20000054   Data           4  main.o(.data)
+    cali_weight                              0x20000058   Data           4  main.o(.data)
+    weight_current                           0x2000005c   Data           4  main.o(.data)
+    second_count                             0x20000060   Data           4  main.o(.data)
+    third_count                              0x20000064   Data           4  main.o(.data)
+    Record_encoder1                          0x20000068   Data           4  main.o(.data)
+    Record_encoder2                          0x2000006c   Data           4  main.o(.data)
+    encoder_read                             0x20000070   Data           4  main.o(.data)
+    data_temp                                0x20000078   Data           8  main.o(.data)
+    temp                                     0x20000080   Data           8  main.o(.data)
+    uwTick                                   0x20000088   Data           4  stm32f4xx_hal.o(.data)
+    SystemCoreClock                          0x2000008c   Data           4  system_stm32f4xx.o(.data)
+    __stdout                                 0x20000090   Data           4  stdout.o(.data)
+    HMI_Rx_buf                               0x20000094   Data          30  main.o(.bss)
+    husartx_HMI                              0x200000b4   Data          64  bsp_usartx_hmi.o(.bss)
+    hspi_weight                              0x200000f4   Data          88  bsp_spiweight.o(.bss)
+    hspiflash                                0x2000014c   Data          88  bsp_spiflash.o(.bss)
+    husartx                                  0x200001a4   Data          64  bsp_usartx.o(.bss)
+    htimx_Encoder                            0x200001e4   Data          60  bsp_encoder.o(.bss)
+    __initial_sp                             0x20001220   Data           0  startup_stm32f407xx.o(STACK)
 
 
 
@@ -3999,9 +4002,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000046e0, Max: 0x00100000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00004760, Max: 0x00100000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00004670, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000046cc, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -4131,32 +4134,31 @@ Memory Map of the image
     0x080033ee   0x080033ee   0x0000000a   Code   RO         9544    i._sputc            mc_w.l(printfa.o)
     0x080033f8   0x080033f8   0x0000001c   Code   RO         9095    i.fputc             bsp_usartx.o
     0x08003414   0x08003414   0x0000000c   Code   RO           17    i.int_abs           main.o
-    0x08003420   0x08003420   0x00001154   Code   RO           18    i.main              main.o
-    0x08004574   0x08004574   0x0000002a   Code   RO         8829    i.weight_ad7190_ReadAvg  bsp_spiweight.o
-    0x0800459e   0x0800459e   0x00000002   PAD
-    0x080045a0   0x080045a0   0x00000098   Code   RO         8830    i.weight_ad7190_conf  bsp_spiweight.o
-    0x08004638   0x08004638   0x00000010   Data   RO         8714    .constdata          system_stm32f4xx.o
-    0x08004648   0x08004648   0x00000008   Data   RO         8715    .constdata          system_stm32f4xx.o
-    0x08004650   0x08004650   0x00000020   Data   RO         9602    Region$$Table       anon$$obj.o
+    0x08003420   0x08003420   0x000011b0   Code   RO           18    i.main              main.o
+    0x080045d0   0x080045d0   0x0000002a   Code   RO         8829    i.weight_ad7190_ReadAvg  bsp_spiweight.o
+    0x080045fa   0x080045fa   0x00000002   PAD
+    0x080045fc   0x080045fc   0x00000098   Code   RO         8830    i.weight_ad7190_conf  bsp_spiweight.o
+    0x08004694   0x08004694   0x00000010   Data   RO         8714    .constdata          system_stm32f4xx.o
+    0x080046a4   0x080046a4   0x00000008   Data   RO         8715    .constdata          system_stm32f4xx.o
+    0x080046ac   0x080046ac   0x00000020   Data   RO         9602    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08004670, Size: 0x00001200, Max: 0x00020000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080046cc, Size: 0x00001220, Max: 0x00020000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08004670   0x00000064   Data   RW           20    .data               main.o
-    0x20000064   0x080046d4   0x00000004   Data   RW         1299    .data               stm32f4xx_hal.o
-    0x20000068   0x080046d8   0x00000004   Data   RW         8716    .data               system_stm32f4xx.o
-    0x2000006c   0x080046dc   0x00000004   Data   RW         9576    .data               mc_w.l(stdout.o)
-    0x20000070        -       0x0000001e   Zero   RW           19    .bss                main.o
-    0x2000008e   0x080046e0   0x00000002   PAD
-    0x20000090        -       0x00000040   Zero   RW         8782    .bss                bsp_usartx_hmi.o
-    0x200000d0        -       0x00000058   Zero   RW         8831    .bss                bsp_spiweight.o
-    0x20000128        -       0x00000058   Zero   RW         8951    .bss                bsp_spiflash.o
-    0x20000180        -       0x00000040   Zero   RW         9096    .bss                bsp_usartx.o
-    0x200001c0        -       0x0000003c   Zero   RW         9153    .bss                bsp_encoder.o
-    0x200001fc   0x080046e0   0x00000004   PAD
-    0x20000200        -       0x00001000   Zero   RW            1    STACK               startup_stm32f407xx.o
+    0x20000000   0x080046cc   0x00000088   Data   RW           20    .data               main.o
+    0x20000088   0x08004754   0x00000004   Data   RW         1299    .data               stm32f4xx_hal.o
+    0x2000008c   0x08004758   0x00000004   Data   RW         8716    .data               system_stm32f4xx.o
+    0x20000090   0x0800475c   0x00000004   Data   RW         9576    .data               mc_w.l(stdout.o)
+    0x20000094        -       0x0000001e   Zero   RW           19    .bss                main.o
+    0x200000b2   0x08004760   0x00000002   PAD
+    0x200000b4        -       0x00000040   Zero   RW         8782    .bss                bsp_usartx_hmi.o
+    0x200000f4        -       0x00000058   Zero   RW         8831    .bss                bsp_spiweight.o
+    0x2000014c        -       0x00000058   Zero   RW         8951    .bss                bsp_spiflash.o
+    0x200001a4        -       0x00000040   Zero   RW         9096    .bss                bsp_usartx.o
+    0x200001e4        -       0x0000003c   Zero   RW         9153    .bss                bsp_encoder.o
+    0x20000220        -       0x00001000   Zero   RW            1    STACK               startup_stm32f407xx.o
 
 
 ==============================================================================
@@ -4171,7 +4173,7 @@ Image component sizes
        854         60          0          0         88       8513   bsp_spiweight.o
        194         30          0          0         64       2766   bsp_usartx.o
        184         20          0          0         64       1708   bsp_usartx_hmi.o
-      4916       1168          0        100         30     688479   main.o
+      5008       1158          0        136         30     688335   main.o
         36          8        392          0       4096        832   startup_stm32f407xx.o
        150         22          0          4          0       4391   stm32f4xx_hal.o
        242         16          0          0          0      31821   stm32f4xx_hal_cortex.o
@@ -4185,9 +4187,9 @@ Image component sizes
         88         24         24          4          0       1147   system_stm32f4xx.o
 
     ----------------------------------------------------------------------
-     13768       1588        448        108       4496     779439   Object Totals
+     13860       1578        448        144       4492     779295   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        20          0          0          0          6          0   (incl. Padding)
+        20          0          0          0          2          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -4241,15 +4243,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     17584       1700        448        112       4496     772963   Grand Totals
-     17584       1700        448        112       4496     772963   ELF Image Totals
-     17584       1700        448        112          0          0   ROM Totals
+     17676       1690        448        148       4492     772819   Grand Totals
+     17676       1690        448        148       4492     772819   ELF Image Totals
+     17676       1690        448        148          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                18032 (  17.61kB)
-    Total RW  Size (RW Data + ZI Data)              4608 (   4.50kB)
-    Total ROM Size (Code + RO Data + RW Data)      18144 (  17.72kB)
+    Total RO  Size (Code + RO Data)                18124 (  17.70kB)
+    Total RW  Size (RW Data + ZI Data)              4640 (   4.53kB)
+    Total ROM Size (Code + RO Data + RW Data)      18272 (  17.84kB)
 
 ==============================================================================
 

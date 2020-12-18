@@ -195,6 +195,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>model_channelx</ItemText>
         </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>encoder_read</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>temp</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

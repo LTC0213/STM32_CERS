@@ -76,14 +76,16 @@ __IO int32_t  in4=0;
 __IO int32_t CaptureNumber = 0;     // 输入捕获数
 __IO int32_t LastCapNum = 0;     // 上一次输入捕获数
 __IO int32_t Speed = 0;     // 上一次输入捕获数
-__IO int8_t  Angle = 0;      // 角度
+__IO int32_t Angle = 0;      // 角度
 
 __IO uint8_t  encoder_Zero_IsInit=0;     // 0：停止数据采集 1:零值未获取  2：已获取零值
 __IO int32_t  encoder_Zero_Data=0;       // 无施加力时零值记录值
 __IO uint8_t  Encoder_Process_Step=0;   // 
-__IO int8_t   Record_encoder = 0;        //预紧角度值
-__IO int8_t   Record_encoder1;           //预紧角度记录值（用于每次测角度前记录零值） 
-__IO int8_t   Record_encoder2;           //预紧角度记录值（用于每次测角度前记录零值 ） 
+__IO int32_t   Record_encoder = 0;        //预紧角度值
+__IO int32_t   Record_encoder1;           //预紧角度记录值（用于每次测角度前记录零值） 
+__IO int32_t   Record_encoder2;           //预紧角度记录值（用于每次测角度前记录零值 ）
+__IO int64_t data_temp,temp;
+__IO int32_t encoder_read;
 /* SPI flash变量 ------------------------------------------------------------------*/
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
@@ -230,7 +232,7 @@ int main(void)
         }
         else if(weight_Zero_IsInit == 2) //零值已经记录成功
         {
-          int64_t data_temp,temp;
+          //int64_t data_temp,temp;
           int64_t weight_read;
 
           weight_read = weight_ad7190_ReadAvg(1);
@@ -410,8 +412,7 @@ int main(void)
         }
         else if(encoder_Zero_IsInit==2)//零值已经记录成功
         {
-          int32_t data_temp,temp;
-          int32_t encoder_read;
+          
 
           encoder_read = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
           data_temp = encoder_read -encoder_Zero_Data;
