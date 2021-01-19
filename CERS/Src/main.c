@@ -167,6 +167,7 @@ int32_t int_abs(int32_t value1,int32_t value2)
   */
 int main(void)
 {
+
   int32_t weight_first;
   uint32_t tmp[2];
   int32_t Compa_value;//阈值预设值
@@ -401,6 +402,7 @@ int main(void)
       }
     }
     
+    //测角度模式
     if(model_channelx==2)
     {
       if(uwTick%10==0)

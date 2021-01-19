@@ -78,3 +78,4 @@ ys-f4pro\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spdif
 ys-f4pro\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dfsdm.h
 ys-f4pro\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_lptim.h
 ys-f4pro\stm32f4xx_it.o: ../Inc/stm32f4xx_it.h
+ys-f4pro\stm32f4xx_it.o: ..\Inc\bsp\encoder/bsp_encoder.h

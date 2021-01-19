@@ -37,7 +37,7 @@
 
 
 /* USER CODE BEGIN 0 */
-
+#include "encoder/bsp_encoder.h" 
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -54,6 +54,7 @@ void NMI_Handler(void)
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
+  HAL_RCC_NMI_IRQHandler();
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
   /* USER CODE END NonMaskableInt_IRQn 1 */
@@ -203,5 +204,9 @@ void RCC_IRQHandler(void)
 
 
 /* USER CODE BEGIN 1 */
+void ENCODER_TIM_IRQHANDLER(void)
+{
+  HAL_TIM_IRQHandler(&htimx_Encoder);
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
