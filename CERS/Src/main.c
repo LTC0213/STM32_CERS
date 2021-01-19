@@ -419,7 +419,7 @@ int main(void)
           encoder_read = (OverflowCount*CNT_MAX) + __HAL_TIM_GET_COUNTER(&htimx_Encoder);
           data_temp = encoder_read -encoder_Zero_Data;
           temp = data_temp *3600 / ENCODER_RESOLUTION;
-          Angle = temp;
+          Angle = temp;//角度*10
           printf("Angle=%d\n",Angle/10);
           printf("Encoder_Process_Step=%d\n",Encoder_Process_Step);
 
@@ -466,14 +466,14 @@ int main(void)
              }
             break;
             case 1:
-              if(int_abs(encoder_read,encoder_Zero_Data)>2)
+              if(int_abs(encoder_read,encoder_Zero_Data)>5)
               {
-                Force_Process_Step=2;
+                Encoder_Process_Step=2;
               }
               else 
               {
                 HMI_value_setting("encode1.gross.val",0);
-                Force_Process_Step=0;
+                Encoder_Process_Step=0;
               }
             break;
             case 2://检测初始角度
@@ -490,33 +490,33 @@ int main(void)
                 printf("Record_encoder1=%d 度\n",Record_encoder1/10); 
                 Angle=temp;            
                 //Is_tare_stamp=1;
-                HMI_value_setting("encode1.gross.val",Angle/10); 
+                HMI_value_setting("encode1.gross.val",Angle); 
                 Encoder_Process_Step=3;
               }
             break;
-            case 3://开始测试 锁定预紧力
+            case 3://开始测试 锁定预紧角度
               if(Is_start_stamp==1)   //开始测试按钮
               {
                 Record_encoder=Record_encoder1;
-                HMI_value_setting("encode1.gross.val",Record_encoder1/10); 
-                printf("Record_encoder1=%d 度\n",Record_encoder1/10); 
-                Force_Process_Step = 4;
-                HMI_value_setting("force1.ad0.val",0);
+                HMI_value_setting("encode1.gross.val",Record_encoder1); 
+                printf("Record_encoder1=%d 度\n",Record_encoder1); 
+                Encoder_Process_Step = 4;
+                HMI_value_setting("encode1.ad0.val",0);
                 HAL_Delay(4000);
               }
               else
               {
-                Force_Process_Step = 2;
+                Encoder_Process_Step = 2;
               }
             break;
-            case 4://力测试 开始判断
+            case 4://角度测试 开始判断
               if (Test_Step>=3)
               {
                 Encoder_Process_Step = 6;
               }
               else if(Angle>Record_encoder)   //角度大于预紧角度
               {
-                if(int_abs(Angle,Record_encoder)>10) //角度大于1°
+                if(int_abs(Angle,Record_encoder)>1) //角度大于1°
                 {
                   encoder_read = 0;
                   Encoder_Process_Step =5;
@@ -529,7 +529,7 @@ int main(void)
               }
             break;
             case 5://力测试 持续输出
-              if((timecount<=90) && (int_abs(Angle,Record_encoder)>10))//施加力大于4N 且 未超过计时
+              if((timecount<=90) && (int_abs(Angle,Record_encoder)>1))//施加力大于1° 且 未超过计时
               {
                 timecount++;
                 //插补函数输入 
@@ -544,10 +544,10 @@ int main(void)
                 HMI_value_setting("encode1.in3.val",in3/10);
                 HMI_value_setting("encode1.in4.val",in4/10);
                 HMI_value_setting("encode1.in0.val",in0/10);
-                printf("in0=%d 度\n",in0/10); //0.1N
+                printf("in0=%d 度\n",in0/100); 
 
                 Encoder_Process_Step = 5;
-                HMI_value_setting("encode1.net.val",in0/10);
+                HMI_value_setting("encode1.net.val",in0);
 
               }
               else
