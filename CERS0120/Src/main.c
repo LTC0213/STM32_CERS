@@ -72,21 +72,27 @@ __IO int32_t  in1=0;
 __IO int32_t  in2=0;
 __IO int32_t  in3=0;
 __IO int32_t  in4=0;
+
+/* 插补函数变量 ------------------------------------------------------------------*/
+__IO int32_t  average=0;
+__IO int32_t  maximum=0;
+__IO int16_t  record_count=0;
+
 /* 角度检测变量 ------------------------------------------------------------------*/
-__IO int32_t CaptureNumber = 0;     // 输入捕获数
-__IO int32_t LastCapNum = 0;     // 上一次输入捕获数
-__IO int32_t Speed = 0;     // 上一次输入捕获数
+// __IO int32_t CaptureNumber = 0;     // 输入捕获数
+// __IO int32_t LastCapNum = 0;     // 上一次输入捕获数
+// __IO int32_t Speed = 0;     // 上一次输入捕获数
 __IO int32_t Angle = 0;      // 角度
 __IO int32_t ENCODER_RESOLUTION = 0;
 
 __IO uint8_t  encoder_Zero_IsInit=0;     // 0：停止数据采集 1:零值未获取  2：已获取零值
 __IO int32_t  encoder_Zero_Data=0;       // 无施加力时零值记录值
 __IO uint8_t  Encoder_Process_Step=0;   // 
-__IO int32_t   Record_encoder = 0;        //预紧角度值
-__IO int32_t   Record_encoder1;           //预紧角度记录值（用于每次测角度前记录零值） 
-__IO int32_t   Record_encoder2;           //预紧角度记录值（用于每次测角度前记录零值 ）
-__IO int64_t data_temp,temp;
-__IO int32_t encoder_read;
+__IO int32_t  Record_encoder = 0;        //预紧角度值
+__IO int32_t  Record_encoder1;           //预紧角度记录值（用于每次测角度前记录零值） 
+__IO int32_t  Record_encoder2;           //预紧角度记录值（用于每次测角度前记录零值 ）
+__IO int64_t  data_temp,temp;
+__IO int32_t  encoder_read;
 /* SPI flash变量 ------------------------------------------------------------------*/
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
@@ -95,7 +101,7 @@ uint8_t Rx_Buffer[3] = {0};
 int32_t Result_data=0;
 
 
-__IO uint32_t timecount = 0;
+__IO int32_t timecount = 0;
 /* 扩展变量 ------------------------------------------------------------------*/
 extern __IO uint32_t uwTick;  //时钟计数
 extern int32_t XOverflowCount ;//定时器溢出次数 
@@ -372,6 +378,12 @@ int main(void)
 
                 Force_Process_Step = 5;
                 HMI_value_setting("force1.net.val",in0/1000);//0.1N
+                average += (in0/1000 - average)/timecount;//0.1N
+                printf("average=%d\n",in0/10000); //1N
+                if(in0/1000>maximum)//0.1N
+                {
+                  maximum=in0/1000;
+                }
 
               }
               else
@@ -384,6 +396,24 @@ int main(void)
                 HMI_value_setting("force1.ad0.val",1);
                 HMI_value_setting("force1.chx.val",Test_Step);
                 printf("测试 %d 结束\n",Test_Step);
+                switch(Test_Step)
+                {
+                  case 1: 
+                    HMI_value_setting("force1.avg1.val",average);
+                    HMI_value_setting("force1.max1.val",maximum);
+                    average = maximum =0;
+                  break;
+                  case 2:
+                    HMI_value_setting("force1.avg2.val",average);
+                    HMI_value_setting("force1.max2.val",maximum);
+                    average = maximum =0;
+                  break;
+                  case 3:
+                    HMI_value_setting("force1.avg3.val",average);
+                    HMI_value_setting("force1.max3.val",maximum);
+                    average = maximum =0;
+                  break;
+                }
                 HAL_Delay(5000);
               }
             break;
@@ -519,7 +549,7 @@ int main(void)
               }
               else if(Angle>Record_encoder)   //角度大于预紧角度
               {
-                if(int_abs(Angle,Record_encoder)>1) //角度大于1°
+                if(int_abs(Angle,Record_encoder)>10) //角度大于1°
                 {
                   encoder_read = 0;
                   Encoder_Process_Step =5;
@@ -532,7 +562,7 @@ int main(void)
               }
             break;
             case 5://角度测试 持续输出
-              if((timecount<=90) && (int_abs(Angle,Record_encoder)>1))//施加大于1° 且 未超过计时
+              if((timecount<=90) && (int_abs(Angle,Record_encoder)>10) && (int_abs(Angle,Record_encoder))<1000)//施加大于1° 且 未超过计时
               {
                 timecount++;
                 //插补函数输入 
@@ -547,11 +577,16 @@ int main(void)
                 HMI_value_setting("encode1.in3.val",in3/10);
                 HMI_value_setting("encode1.in4.val",in4/10);
                 HMI_value_setting("encode1.in0.val",in0/10);
-                printf("in0=%d 度\n",in0/100); 
+                printf("in0=%d 度\n",in0/10); 
 
                 Encoder_Process_Step = 5;
-                HMI_value_setting("encode1.net.val",in0);
-
+                HMI_value_setting("encode1.net.val",in0);//0.1°
+                average +=(in0 - average)/timecount;//0.1°
+                printf("average=%d 度\n",average/10); 
+                if(in0>maximum)//0.1°
+                {
+                  maximum=in0;
+                }
               }
               else
               {
@@ -563,6 +598,24 @@ int main(void)
                 HMI_value_setting("encode1.ad0.val",1);
                 HMI_value_setting("encode1.chx.val",Test_Step);
                 printf("测试 %d 结束\n",Test_Step);
+                switch(Test_Step)
+                {
+                  case 1: 
+                    HMI_value_setting("encode1.avg1.val",average);
+                    HMI_value_setting("encode1.max1.val",maximum);
+                    average = maximum =0;
+                  break;
+                  case 2:
+                    HMI_value_setting("encode1.avg2.val",average);
+                    HMI_value_setting("encode1.max2.val",maximum);
+                    average = maximum =0;
+                  break;
+                  case 3:
+                    HMI_value_setting("encode1.avg3.val",average);
+                    HMI_value_setting("encode1.max3.val",maximum);
+                    average = maximum =0;
+                  break;
+                }
                 HAL_Delay(5000);
               }
             break;
@@ -723,6 +776,12 @@ int main(void)
           Is_start_stamp = 0;
           Test_Step = 0;
           Force_Process_Step = 0;
+          HMI_value_setting("force1.avg1.val",0); 
+          HMI_value_setting("force1.avg2.val",0);
+          HMI_value_setting("force1.avg3.val",0);      
+          HMI_value_setting("force1.max1.val",0);
+          HMI_value_setting("force1.max2.val",0);
+          HMI_value_setting("force1.max3.val",0);
         break;
         case 0x31:
           printf("力传感器 %d 校准\n",force_channelx);
@@ -733,7 +792,13 @@ int main(void)
           Is_tare_stamp=0;
           weight_Zero_IsInit=1;
           HMI_value_setting("force1.gross.val",0);
-          HMI_value_setting("force1.net.val",0);        
+          HMI_value_setting("force1.net.val",0); 
+          HMI_value_setting("force1.avg1.val",0); 
+          HMI_value_setting("force1.avg2.val",0);
+          HMI_value_setting("force1.avg3.val",0);      
+          HMI_value_setting("force1.max1.val",0);
+          HMI_value_setting("force1.max2.val",0);
+          HMI_value_setting("force1.max3.val",0);       
         break;
         case 0x33:
           printf("开始测试\n");
@@ -759,6 +824,12 @@ int main(void)
           Is_start_stamp = 0;
           Test_Step = 0;
           Encoder_Process_Step = 0;
+          HMI_value_setting("encode1.avg1.val",0); 
+          HMI_value_setting("encode1.avg2.val",0);
+          HMI_value_setting("encode1.avg3.val",0);      
+          HMI_value_setting("encode1.max1.val",0);
+          HMI_value_setting("encode1.max2.val",0);
+          HMI_value_setting("encode1.max3.val",0);
         break;
         case 0x42:
           printf("清零\n");
@@ -766,7 +837,13 @@ int main(void)
           Is_tare_stamp=0;
           encoder_Zero_IsInit=1;
           HMI_value_setting("encode1.gross.val",0);
-          HMI_value_setting("encode1.net.val",0);        
+          HMI_value_setting("encode1.net.val",0); 
+          HMI_value_setting("encode1.avg1.val",0); 
+          HMI_value_setting("encode1.avg2.val",0);
+          HMI_value_setting("encode1.avg3.val",0);      
+          HMI_value_setting("encode1.max1.val",0);
+          HMI_value_setting("encode1.max2.val",0);
+          HMI_value_setting("encode1.max3.val",0);
         break;
         case 0x43:
           printf("开始测试\n");
