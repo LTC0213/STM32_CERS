@@ -219,7 +219,7 @@ int main(void)
       weight_Zero_IsInit=1; //开始接收零值
     }      
   }  	  
-  if(AD7190_Init())
+  if(AD7190_Init())                       
   {
     printf("检测到  AD7190 !\n");
     // weight_ad7190_conf(channelx);
