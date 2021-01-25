@@ -766,10 +766,7 @@ int main(void)
           weight_Zero_IsInit = 0;//停止传输数据
           Is_start_stamp = 0;
           Test_Step = 0;
-          Force_Process_Step = 0;
-          HMI_value_setting("force1.avg1.val",0); 
-          HMI_value_setting("force1.avg2.val",0);
-          HMI_value_setting("force1.avg3.val",0);      
+          Force_Process_Step = 0;      
           HMI_value_setting("force1.max1.val",0);
           HMI_value_setting("force1.max2.val",0);
           HMI_value_setting("force1.max3.val",0);
@@ -783,10 +780,7 @@ int main(void)
           Is_tare_stamp=0;
           weight_Zero_IsInit=1;
           HMI_value_setting("force1.gross.val",0);
-          HMI_value_setting("force1.net.val",0); 
-          HMI_value_setting("force1.avg1.val",0); 
-          HMI_value_setting("force1.avg2.val",0);
-          HMI_value_setting("force1.avg3.val",0);      
+          HMI_value_setting("force1.net.val",0);     
           HMI_value_setting("force1.max1.val",0);
           HMI_value_setting("force1.max2.val",0);
           HMI_value_setting("force1.max3.val",0);       
@@ -814,10 +808,7 @@ int main(void)
           encoder_Zero_IsInit = 0;//停止传输数据
           Is_start_stamp = 0;
           Test_Step = 0;
-          Encoder_Process_Step = 0;
-          HMI_value_setting("encode1.avg1.val",0); 
-          HMI_value_setting("encode1.avg2.val",0);
-          HMI_value_setting("encode1.avg3.val",0);      
+          Encoder_Process_Step = 0;     
           HMI_value_setting("encode1.max1.val",0);
           HMI_value_setting("encode1.max2.val",0);
           HMI_value_setting("encode1.max3.val",0);
@@ -828,10 +819,7 @@ int main(void)
           Is_tare_stamp=0;
           encoder_Zero_IsInit=1;
           HMI_value_setting("encode1.gross.val",0);
-          HMI_value_setting("encode1.net.val",0); 
-          HMI_value_setting("encode1.avg1.val",0); 
-          HMI_value_setting("encode1.avg2.val",0);
-          HMI_value_setting("encode1.avg3.val",0);      
+          HMI_value_setting("encode1.net.val",0);     
           HMI_value_setting("encode1.max1.val",0);
           HMI_value_setting("encode1.max2.val",0);
           HMI_value_setting("encode1.max3.val",0);
