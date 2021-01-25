@@ -513,6 +513,7 @@ int main(void)
               HAL_Delay(100);
               second_count = ENCODER_read_channelx(encoder_channelx);
               if(int_abs(second_count,encoder_read)<1000) //根据测试情况更改
+								
               {
                 HAL_Delay(10);
                 encoder_read = ENCODER_read_channelx(encoder_channelx);
