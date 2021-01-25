@@ -1422,7 +1422,7 @@
       <GroupNumber>5</GroupNumber>
       <FileNumber>96</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Src\bsp\HMI\bsp_usartx_HMI.c</PathWithFileName>
@@ -1482,7 +1482,7 @@
       <GroupNumber>5</GroupNumber>
       <FileNumber>101</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Src\bsp\encoder\bsp_encoder.c</PathWithFileName>

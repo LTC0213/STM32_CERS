@@ -7,7 +7,7 @@
 /* 类型定义 ------------------------------------------------------------------*/
 /* 宏定义 --------------------------------------------------------------------*/
 #define HMI_USARTx                                 USART2
-#define HMI_USARTx_BAUDRATE                        115200
+#define HMI_USARTx_BAUDRATE                        9600
 #define HMI_USART_RCC_CLK_ENABLE()                 __HAL_RCC_USART2_CLK_ENABLE()
 #define HMI_USART_RCC_CLK_DISABLE()                __HAL_RCC_USART2_CLK_DISABLE()
 
