@@ -1,0 +1,36 @@
+//以下例程：PA0与DO相连，PA1与CLK相连，PA2与CS引脚相连
+//使用时请根不同单片机类型进行端口初始化、及其他修改；
+
+#define CS_H  GPIOA->ODR|=(1<<2);
+#define CS_L  GPIOA->ODR&=~(1<<2);
+#define CLK_H  GPIOA->ODR|=(1<<1);
+#define CLK_L  GPIOA->ODR&=~(1<<1);
+
+
+
+void Delay_SPI(__IO uint32_t nCount)
+{
+  for(; nCount != 0; nCount--);
+}
+
+int SPI_RW()
+{
+	int i=0;
+	int	wdata=0;
+	CS_H;
+	Delay_SPI(0xF);//例程为72M时钟，请根据单片机实际时钟进行相应延时修改
+	
+	CS_L;
+	Delay_SPI(0xF);
+	for(i=0; i<16; i++)
+	{
+		CLK_H;
+		Delay_SPI(0xF);
+		if((GPIOA->IDR&0x00000001)>0)wdata|=1;  //请根据与DO相连引脚进行相应修改
+		wdata<<=1;
+		CLK_L;
+		Delay_SPI(0xF);//
+	}
+	
+	return(wdata>>7);           	//返回编码器绝对位置值
+}

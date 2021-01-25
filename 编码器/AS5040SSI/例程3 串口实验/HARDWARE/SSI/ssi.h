@@ -1,0 +1,17 @@
+#ifndef __SSI_H
+#define __SSI_H
+#include "sys.h"
+
+//////////////////////////////////////////////////////////////////////////////////	 
+//STM32F4工程模板-库函数版本
+//淘宝店铺：http://mcudev.taobao.com									  
+////////////////////////////////////////////////////////////////////////////////// 	
+
+
+//LED端口定义
+#define LED0 PAout(1)	// D2
+#define LED1 PAout(2)	// D3	 
+
+int SPI_RW(void);
+void LED_Init(void);//初始化		 				    
+#endif

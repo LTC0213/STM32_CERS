@@ -378,8 +378,6 @@ int main(void)
 
                 Force_Process_Step = 5;
                 HMI_value_setting("force1.net.val",in0/1000);//0.1N
-                average += (in0/1000 - average)/timecount;//0.1N
-                printf("average=%d\n",in0/10000); //1N
                 if(in0/1000>maximum)//0.1N
                 {
                   maximum=in0/1000;
@@ -399,19 +397,16 @@ int main(void)
                 switch(Test_Step)
                 {
                   case 1: 
-                    HMI_value_setting("force1.avg1.val",average);
                     HMI_value_setting("force1.max1.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                   case 2:
-                    HMI_value_setting("force1.avg2.val",average);
                     HMI_value_setting("force1.max2.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                   case 3:
-                    HMI_value_setting("force1.avg3.val",average);
                     HMI_value_setting("force1.max3.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                 }
                 HAL_Delay(5000);
@@ -582,8 +577,6 @@ int main(void)
 
                 Encoder_Process_Step = 5;
                 HMI_value_setting("encode1.net.val",in0);//0.1бу
-                average +=(in0 - average)/timecount;//0.1бу
-                printf("average=%d ╢╚\n",average/10); 
                 if(in0>maximum)//0.1бу
                 {
                   maximum=in0;
@@ -602,19 +595,16 @@ int main(void)
                 switch(Test_Step)
                 {
                   case 1: 
-                    HMI_value_setting("encode1.avg1.val",average);
                     HMI_value_setting("encode1.max1.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                   case 2:
-                    HMI_value_setting("encode1.avg2.val",average);
                     HMI_value_setting("encode1.max2.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                   case 3:
-                    HMI_value_setting("encode1.avg3.val",average);
                     HMI_value_setting("encode1.max3.val",maximum);
-                    average = maximum =0;
+                    maximum =0;
                   break;
                 }
                 HAL_Delay(5000);
