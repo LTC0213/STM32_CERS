@@ -13,6 +13,7 @@
 /* 包含头文件 ----------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "string.h"
+#include "math.h"
 // #include "usart/bsp_debug_usart.h"
 #include "led/bsp_led.h"
 #include "HMI/bsp_usartx_HMI.h"
@@ -46,6 +47,8 @@ __IO uint16_t pwm_data=0;
 __IO uint8_t  model_channelx=0;         //模式功能选择
 __IO uint8_t  force_channelx=0;         //力传感器选择
 __IO uint8_t  encoder_channelx=0;        //编码器选择
+__IO uint8_t  force_modelx=0;         //动作选择
+__IO uint8_t  encoder_modelx=0;        //动作选择
 /* 力检测变量 ------------------------------------------------------------------*/
 __IO uint8_t  weight_Zero_IsInit=0;     // 0：停止数据采集 1:零值未获取  2：已获取零值
 __IO int32_t  weight_Zero_Data=0;       // 无施加力时零值记录值
@@ -76,6 +79,11 @@ __IO int32_t  in4=0;
 /* 插补函数变量 ------------------------------------------------------------------*/
 __IO int32_t  average=0;
 __IO int32_t  maximum=0;
+__IO int32_t  standard_deviation=0;//标准差
+__IO int16_t  coefficient_variation=0;
+__IO int32_t  maximum_record1=0;
+__IO int32_t  maximum_record2=0;
+__IO int32_t  maximum_record3=0;
 __IO int16_t  record_count=0;
 
 /* 角度检测变量 ------------------------------------------------------------------*/
@@ -180,6 +188,8 @@ int main(void)
   int32_t weight_first;
   uint32_t tmp[2];
   int32_t Compa_value;//阈值预设值
+  int8_t Pain_value=0;
+  int8_t Pain_stamp= 0;
   int8_t  Compa_encoder_value;//阈值预设值
 
   /* 复位所有外设，初始化Flash接口和系统滴答定时器 */
@@ -397,32 +407,124 @@ int main(void)
                 switch(Test_Step)
                 {
                   case 1: 
-                    HMI_value_setting("force1.max1.val",maximum);
+                    HMI_value_setting("force1.max1.val",maximum);//0.1N
+                    maximum_record1=maximum;
                     maximum =0;
                   break;
                   case 2:
                     HMI_value_setting("force1.max2.val",maximum);
+                    maximum_record2=maximum;
                     maximum =0;
                   break;
                   case 3:
                     HMI_value_setting("force1.max3.val",maximum);
+                    maximum_record3=maximum;
                     maximum =0;
+                    average = (maximum_record1+maximum_record2+maximum_record3)/3;
+                    printf("average=%d N\n",average); //0.1N
+                    standard_deviation=sqrt((pow(maximum_record1-average,2)+pow(maximum_record2-average,2)+pow(maximum_record3-average,2))/3);
+                    printf("standard_deviation=%d N\n",standard_deviation);
+                    coefficient_variation = standard_deviation*100/average;
+                    printf("coefficient_variation=%d \n",coefficient_variation);
                   break;
                 }
                 HAL_Delay(5000);
               }
             break;
             case 6:  
-              Test_Step = 0;
-              Force_Process_Step = 0;
-              Is_start_stamp = 0;
-              weight_Zero_IsInit=0;
-              HMI_value_setting("force1.ad0.val",2);
-              HAL_Delay(3000);
+              if(Pain_stamp==1)
+              {
+                switch(force_modelx)
+                {
+                  case 1://前屈
+                    HMI_value_setting("report5.x0.val",average);//平均值
+                    HMI_value_setting("report5.x1.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report5.x2.val",average*100/113);//正常值比
+                    HMI_value_setting("report5.x3.val",Pain_value*10);//疼痛值
+                    if(average<3000)//300
+                    {
+                      HMI_value_setting("report5.j1.val",average/30);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report5.j1.val",100);
+                    } 
+                    if(Pain_value>0)
+                    {
+                      HMI_value_setting("report0.va0.val",1);
+                    }
+                  break;
+                  case 2://后伸
+                    HMI_value_setting("report5.x5.val",average);//平均值
+                    HMI_value_setting("report5.x6.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report5.x7.val",average*100/158);//正常值比
+                    HMI_value_setting("report5.x8.val",Pain_value*10);//疼痛值
+                    if(average<3000)//300
+                    {
+                      HMI_value_setting("report5.j0.val",average/30);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report5.j0.val",100);
+                    } 
+                    if(Pain_value>0)
+                    {
+                      HMI_value_setting("report0.va1.val",1);
+                    }
+                  break;
+                  case 3://左侧屈
+                    HMI_value_setting("report4.x0.val",average);//平均值
+                    HMI_value_setting("report4.x1.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report4.x2.val",average*100/113);//正常值比
+                    HMI_value_setting("report4.x3.val",Pain_value*10);//疼痛值
+                    if(average<2000)//200
+                    {
+                      HMI_value_setting("report4.j1.val",average/20);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report4.j1.val",100);
+                    } 
+                    if(Pain_value>0)
+                    {
+                      HMI_value_setting("report0.va2.val",1);
+                    }
+                  break;
+                  case 4://右侧屈
+                    HMI_value_setting("report4.x5.val",average);//平均值
+                    HMI_value_setting("report4.x6.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report4.x7.val",average*100/113);//正常值比
+                    HMI_value_setting("report4.x8.val",Pain_value*10);//疼痛值
+                    if(average<2000)//200
+                    {
+                      HMI_value_setting("report4.j0.val",average/20);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report4.j0.val",100);
+                    } 
+                    if(Pain_value>0)
+                    {
+                      HMI_value_setting("report0.va2.val",1);
+                    }
+                  break;
+                }
+                Test_Step = 0;
+                Force_Process_Step = 0;
+                Is_start_stamp = 0;
+                weight_Zero_IsInit=0;
+                Pain_stamp = 0;
+                HMI_value_setting("force1.ad0.val",2);//语音
+                HAL_Delay(3000);
 
-              HMI_value_setting("force1.gross.val",0);
-              HMI_value_setting("force1.net.val",0);
-              printf("三次测试结束\n");
+                HMI_value_setting("force1.gross.val",0);
+                HMI_value_setting("force1.net.val",0);
+                printf("三次测试结束\n");
+              }
+              else
+              {
+                Force_Process_Step=6;
+              }
             break;
           }
 
@@ -596,33 +698,136 @@ int main(void)
                 {
                   case 1: 
                     HMI_value_setting("encode1.max1.val",maximum);
+                    maximum_record1=maximum;
                     maximum =0;
                   break;
                   case 2:
                     HMI_value_setting("encode1.max2.val",maximum);
+                    maximum_record2=maximum;
                     maximum =0;
                   break;
                   case 3:
                     HMI_value_setting("encode1.max3.val",maximum);
+                    maximum_record3=maximum;
                     maximum =0;
+                    average = (maximum_record1+maximum_record2+maximum_record3)/3;
+                    printf("average=%d 度\n",in0/10); 
+                    standard_deviation=sqrt((pow(maximum_record1-average,2)+pow(maximum_record2-average,2)+pow(maximum_record3-average,2))/3);
+                    printf("standard_deviation=%d N\n",standard_deviation);
+                    coefficient_variation = standard_deviation*100/average;
+                    printf("coefficient_variation=%d \n",coefficient_variation);
                   break;
                 }
                 HAL_Delay(5000);
               }
             break;
-            case 6:  
-              Test_Step = 0;
-              Encoder_Process_Step = 0;
-              Is_start_stamp = 0;
-              encoder_Zero_IsInit=0;
-              HMI_value_setting("encode1.ad0.val",2);
-              HAL_Delay(3000);
+            case 6:
+              if(Pain_stamp==1)
+              {
+                switch(encoder_modelx)
+                {
+                  case 1://前屈
+                    HMI_value_setting("report2.x0.val",average);//平均值
+                    HMI_value_setting("report2.x1.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report2.x2.val",average*100/60);//正常值比
+                    HMI_value_setting("report2.x3.val",Pain_value*10);//疼痛值
+                    if(average<900)//90
+                    {
+                      HMI_value_setting("report2.j1.val",average/9);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report2.j1.val",100);
+                    } 
+                  break;
+                  case 2://后伸
+                    HMI_value_setting("report2.x5.val",average);//平均值
+                    HMI_value_setting("report2.x6.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report2.x7.val",average*100/60);//正常值比
+                    HMI_value_setting("report2.x8.val",Pain_value*10);//疼痛值
+                    if(average<900)//90
+                    {
+                      HMI_value_setting("report2.j0.val",average/9);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report2.j0.val",100);
+                    } 
+                  break;
+                  case 3://左侧屈
+                    HMI_value_setting("report1.x0.val",average);//平均值
+                    HMI_value_setting("report1.x1.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report1.x2.val",average*100/45);//正常值比
+                    HMI_value_setting("report1.x3.val",Pain_value*10);//疼痛值
+                    if(average<900)//90
+                    {
+                      HMI_value_setting("report1.j1.val",average/9);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report1.j1.val",100);
+                    } 
+                  break;
+                  case 4://右侧屈
+                    HMI_value_setting("report1.x5.val",average);//平均值
+                    HMI_value_setting("report1.x6.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report1.x7.val",average*100/45);//正常值比
+                    HMI_value_setting("report1.x8.val",Pain_value*10);//疼痛值
+                    if(average<900)//90
+                    {
+                      HMI_value_setting("report1.j0.val",average/9);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report1.j0.val",100);
+                    } 
+                  break;
+                  case 5://左旋
+                    HMI_value_setting("report3.x0.val",average);//平均值
+                    HMI_value_setting("report3.x1.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report3.x2.val",average*100/80);//正常值比
+                    HMI_value_setting("report3.x3.val",Pain_value*10);//疼痛值
+                    if(average<1000)//100
+                    {
+                      HMI_value_setting("report3.j1.val",average/10);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report3.j1.val",100);
+                    } 
+                  break;
+                  case 6://右旋
+                    HMI_value_setting("report3.x5.val",average);//平均值
+                    HMI_value_setting("report3.x6.val",coefficient_variation*10);//变异系数
+                    HMI_value_setting("report3.x7.val",average*100/80);//正常值比
+                    HMI_value_setting("report3.x8.val",Pain_value*10);//疼痛值
+                    if(average<1000)//100
+                    {
+                      HMI_value_setting("report3.j0.val",average/10);
+                    }
+                    else
+                    {
+                      HMI_value_setting("report3.j0.val",100);
+                    }
+                  break;
+                }
+                Test_Step = 0;
+                Encoder_Process_Step = 0;
+                Is_start_stamp = 0;
+                encoder_Zero_IsInit=0;
+                Pain_stamp =0;
+                HMI_value_setting("encode1.ad0.val",2);
+                HAL_Delay(3000);
 
-              HMI_value_setting("encode1.gross.val",0);
-              HMI_value_setting("encode1.net.val",0);
-              printf("三次测试结束\n");
+                HMI_value_setting("encode1.gross.val",0);
+                HMI_value_setting("encode1.net.val",0);
+                printf("三次测试结束\n");
+              }
+              else
+              {
+                Encoder_Process_Step=6;
+              }
             break;
-
 
           }
 
@@ -655,6 +860,7 @@ int main(void)
         case 0x11:
           printf("前屈1选择\n");
           force_channelx=1;
+          force_modelx=1;
           weight_proportion = 2050; 
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
@@ -664,6 +870,7 @@ int main(void)
         case 0x12:
           printf("后伸2选择\n");
           force_channelx=2;
+          force_modelx=2;
           weight_proportion = 1760;
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
@@ -673,6 +880,7 @@ int main(void)
         case 0x13:
           printf("左侧屈3选择\n");
           force_channelx=1; 
+          force_modelx=3;
           weight_proportion = 1700; 
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
@@ -682,6 +890,7 @@ int main(void)
         case 0x14:
           printf("右侧屈4选择\n");
           force_channelx=2;
+          force_modelx=4;
           weight_proportion = 1744; 
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
@@ -701,6 +910,7 @@ int main(void)
         case 0x21:
           printf("前屈1选择\n");
           encoder_channelx=1;
+          encoder_modelx=1;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           XENCODER_TIMx_Init();
@@ -711,6 +921,7 @@ int main(void)
         case 0x22:
           printf("后伸2选择\n");
           encoder_channelx=1;
+          encoder_modelx=2;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           XENCODER_TIMx_Init();
@@ -721,6 +932,7 @@ int main(void)
         case 0x23:
           printf("左侧屈3选择\n");
           encoder_channelx=1;
+          encoder_modelx=3;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           XENCODER_TIMx_Init();
@@ -731,6 +943,7 @@ int main(void)
         case 0x24:
           printf("右侧屈4选择\n");
           encoder_channelx=1;
+          encoder_modelx=4;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           XENCODER_TIMx_Init();
@@ -741,6 +954,7 @@ int main(void)
         case 0x25:
           printf("左旋5选择\n");
           encoder_channelx=2;
+          encoder_modelx=5;
           ENCODER_RESOLUTION = YENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           YENCODER_TIMx_Init();
@@ -751,6 +965,7 @@ int main(void)
         case 0x26:
           printf("右旋6选择\n");
           encoder_channelx=2;
+          encoder_modelx=6;
           ENCODER_RESOLUTION = YENCODER_RESOLUTION;
           /* 编码器初始化及使能编码器模式 */
           YENCODER_TIMx_Init();
@@ -763,6 +978,7 @@ int main(void)
         case 0x30:
           printf("肌力测试功能选择界面");
           force_channelx = 0;
+          force_modelx=0;
           weight_Zero_IsInit = 0;//停止传输数据
           Is_start_stamp = 0;
           Test_Step = 0;
@@ -790,7 +1006,7 @@ int main(void)
           Is_start_stamp = 1;
           Force_Process_Step = 3;       
         break;
-        case 0x39:         
+        case 0x34: //安全值输入        
           tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
           Compa_value=tmp[0]*1000;   //0.1N 
           Is_thres_stamp=1; 
@@ -800,11 +1016,18 @@ int main(void)
           }            
           printf("Compa_value*10=%d\n N",Compa_value/1000);
         break;
+        case 0x35: //疼痛指数输入        
+          tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
+          Pain_value=tmp[0];
+          Pain_stamp=1;
+          printf("Pain_value=%d\n",Pain_value);
+        break;
 
         //活动范围检测界面 encode1
         case 0x40:
           printf("活动范围检测功能选择界面");
           encoder_channelx = 0;
+          encoder_modelx=0;
           encoder_Zero_IsInit = 0;//停止传输数据
           Is_start_stamp = 0;
           Test_Step = 0;
@@ -829,7 +1052,7 @@ int main(void)
           Is_start_stamp = 1;
           Encoder_Process_Step = 3;       
         break;
-        case 0x49:         
+        case 0x44: //安全角输入        
           tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
           Compa_encoder_value=tmp[0]*10;   
           Is_thres_stamp=1; 
@@ -837,7 +1060,12 @@ int main(void)
           {
             Is_thres_stamp=0;
           }            
-          printf("Compa_value*10=%d\n N",Compa_encoder_value/1000);
+          printf("Compa_encoder_value*10=%d\n N",Compa_encoder_value);
+        break;
+        case 0x45: //疼痛指数输入        
+          tmp[0]=(HMI_Rx_buf[4]<<16)|(HMI_Rx_buf[3]<<8)|HMI_Rx_buf[2]; 
+          Pain_value=tmp[0];
+          Pain_stamp=1;
         break;
 
         //力传感器校准界面
@@ -999,4 +1227,5 @@ unsigned int ENCODER_read_channelx(int8_t channelx)
 
 
 /*****END OF FILE****/
+
 
