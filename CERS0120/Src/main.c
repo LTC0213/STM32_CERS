@@ -101,6 +101,7 @@ __IO int32_t  Record_encoder1;           //Ô¤½ô½Ç¶È¼ÇÂ¼Öµ£¨ÓÃÓÚÃ¿´Î²â½Ç¶ÈÇ°¼ÇÂ¼Á
 __IO int32_t  Record_encoder2;           //Ô¤½ô½Ç¶È¼ÇÂ¼Öµ£¨ÓÃÓÚÃ¿´Î²â½Ç¶ÈÇ°¼ÇÂ¼ÁãÖµ £©
 __IO int64_t  data_temp,temp;
 __IO int32_t  encoder_read;
+__IO int32_t  encoder_read_before;
 /* SPI flash±äÁ¿ ------------------------------------------------------------------*/
 uint32_t DeviceID = 0;
 uint32_t FlashID = 0;
@@ -544,9 +545,9 @@ int main(void)
         }
         else if(encoder_Zero_IsInit==2)//ÁãÖµÒÑ¾­¼ÇÂ¼³É¹¦
         {
-          
-
-          encoder_read = ENCODER_read_channelx(encoder_channelx);
+          // encoder_read_before=ENCODER_read_channelx(encoder_channelx);
+          // encoder_read = encoder_read_before%65535;
+          encoder_read=ENCODER_read_channelx(encoder_channelx);
           data_temp = encoder_read -encoder_Zero_Data;
           temp = data_temp *3600 / ENCODER_RESOLUTION;
           Angle = temp;//½Ç¶È*10
@@ -913,6 +914,7 @@ int main(void)
           encoder_modelx=1;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          YENCODER_TIM_RCC_CLK_DISABLE();
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚX<-- \n");
@@ -924,6 +926,7 @@ int main(void)
           encoder_modelx=2;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          YENCODER_TIM_RCC_CLK_DISABLE();
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚX<-- \n");
@@ -935,6 +938,7 @@ int main(void)
           encoder_modelx=3;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          YENCODER_TIM_RCC_CLK_DISABLE();
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚX<-- \n");
@@ -946,6 +950,7 @@ int main(void)
           encoder_modelx=4;
           ENCODER_RESOLUTION = XENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          YENCODER_TIM_RCC_CLK_DISABLE();
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚX<-- \n");
@@ -957,6 +962,7 @@ int main(void)
           encoder_modelx=5;
           ENCODER_RESOLUTION = YENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          XENCODER_TIM_RCC_CLK_DISABLE();
           YENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&yhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚY<-- \n");
@@ -968,6 +974,7 @@ int main(void)
           encoder_modelx=6;
           ENCODER_RESOLUTION = YENCODER_RESOLUTION;
           /* ±àÂëÆ÷³õÊ¼»¯¼°Ê¹ÄÜ±àÂëÆ÷Ä£Ê½ */
+          XENCODER_TIM_RCC_CLK_DISABLE();
           YENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&yhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> ±àÂëÆ÷½Ó¿ÚY<-- \n");
@@ -1227,5 +1234,3 @@ unsigned int ENCODER_read_channelx(int8_t channelx)
 
 
 /*****END OF FILE****/
-
-

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [YS-F4Pro\YS-F4Pro.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image YS-F4Pro\YS-F4Pro.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue Jan 26 21:07:12 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Jan 28 22:30:48 2021
 <BR><P>
 <H3>Maximum Stack Usage =        352 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -716,8 +716,8 @@ Global Symbols
 <P><STRONG><a name="[81]"></a>HAL_Init</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, stm32f4xx_hal.o(i.HAL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = HAL_Init &rArr; HAL_MspInit &rArr; HAL_NVIC_SetPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
+<BR>[Calls]<UL><LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -752,18 +752,18 @@ Global Symbols
 <P><STRONG><a name="[86]"></a>HAL_NVIC_SetPriority</STRONG> (Thumb, 98 bytes, Stack size 4 bytes, stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriority))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = HAL_NVIC_SetPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;YENCODER_TIMx_Init
+<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;YENCODER_TIMx_Init
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;XENCODER_TIMx_Init
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMI_USARTx_Init
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_NVIC_USARTx_Init
 </UL>
 
 <P><STRONG><a name="[82]"></a>HAL_NVIC_SetPriorityGrouping</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping))
-<BR><BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
+<BR><BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
 </UL>
 
 <P><STRONG><a name="[8d]"></a>HAL_RCC_CSSCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_rcc.o(i.HAL_RCC_CSSCallback))
@@ -1400,7 +1400,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[5c]"></a>main</STRONG> (Thumb, 7858 bytes, Stack size 48 bytes, main.o(i.main))
+<P><STRONG><a name="[5c]"></a>main</STRONG> (Thumb, 7860 bytes, Stack size 48 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = main &rArr; __hardfp_pow &rArr; __kernel_poly &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;weight_ad7190_conf
