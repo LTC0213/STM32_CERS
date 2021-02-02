@@ -1,0 +1,15 @@
+"F:\arm\bin\armproc.dll" 
+
+"F:\arm\bin\armstlink2.dll" 
+
+"H:\常用F4与F1程序资料\3. STM32F4程序资料\1. 软件设计之基本裸机例程\YSF4_HAL-071. SPI-基于串行Flash的FatFs功能使用\EWARM\YS-F4Pro\Exe\YS-F4Pro.out" 
+
+--plugin "F:\arm\bin\armbat.dll" 
+
+--device_macro "F:\arm\config\debugger\ST\STM32F4xx.dmac" 
+
+--flash_loader "F:\arm\config\flashloader\ST\FlashSTM32F4xxx.board" 
+
+
+
+
