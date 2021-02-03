@@ -59,7 +59,7 @@
 
 #define XENCODER_LINE                        1024
 
-#define YENCODER_LINE                        1000
+#define YENCODER_LINE                        500
 
 #if (XTIM_ENCODERMODE_TIx==TIM_ENCODERMODE_TI12)
   #define XENCODER_RESOLUTION                (4*XENCODER_LINE)//4倍频,同时使用CH1,CH2

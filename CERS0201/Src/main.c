@@ -1364,6 +1364,7 @@ void HMI_string_setting(const char *val_str,int32_t value)
 unsigned int ENCODER_read_channelx(int8_t channelx)
 {
   int32_t  encoder_read_channelx=0;
+  int32_t  encoder_read_motion=0;
   switch(encoder_channelx)
   {
     case 0:
@@ -1376,7 +1377,15 @@ unsigned int ENCODER_read_channelx(int8_t channelx)
       encoder_read_channelx = (YOverflowCount*YCNT_MAX) + __HAL_TIM_GET_COUNTER(&yhtimx_Encoder);
     break;
   }
-  return encoder_read_channelx;
+  if(encoder_modelx==2||encoder_modelx==3||encoder_modelx==5)
+  {
+    encoder_read_motion=(-1)*encoder_read_channelx;
+  }
+  else
+  {
+    encoder_read_motion=encoder_read_channelx;
+  }
+  return encoder_read_motion;
 }
 
 /**
@@ -1572,6 +1581,7 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
       break; 
   }
 }
+
 
 /**
   * 函数功能: FatFS文件系统操作结果信息处理.
