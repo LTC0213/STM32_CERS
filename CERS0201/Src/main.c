@@ -59,7 +59,7 @@ UINT fnum;            					  /* 文件成功读写数量 */
 char scan_path[255] = "0:";      /* 递归扫描文件时使用的路径 */
 
 BYTE ReadBuffer[1024]={0};       /* 读缓冲区 */
-BYTE WriteBuffer[]= "硬石STM32F4开发板测试，在U盘内新建文件系统测试文件\n";/* 写缓冲区*/  
+BYTE WriteBuffer[]= "在U盘内新建文件系统测试文件\n";/* 写缓冲区*/  
 BYTE WriteBuffer_test[4]={0};
 
 __IO uint8_t key1_temp=0;
@@ -1476,66 +1476,6 @@ static FRESULT scan_files (char* path)
   return res; 
 }
 
-/**
-  * 函数功能: 文件系统读写测试
-  * 输入参数: 无
-  * 返 回 值: 无
-  * 说    明: 无
-  */
-static void read_write_flie(void)
-{	
-
-/*----------------------- 文件系统测试：写测试 -----------------------------*/
-  /* 打开文件，如果文件不存在则创建它 */
-  printf("\r\n****** 即将进行文件写入测试... ******\r\n");	
-  f_res = f_open(&file, "FatFs读写测试文件.txt",FA_CREATE_ALWAYS | FA_WRITE );
-  printf_fatfs_error(f_res);
-  if ( f_res == FR_OK )
-  {
-    printf("》打开/创建FatFs读写测试文件.txt文件成功，向文件写入数据。\r\n");
-    /* 将指定存储区内容写入到文件内 */
-		f_res=f_write(&file,WriteBuffer,sizeof(WriteBuffer),&fnum);
-    if(f_res==FR_OK)
-    {
-      // printf("》文件写入成功，写入字节数据：%d\n",fnum);
-      // printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer);
-    }
-    else
-    {
-      printf("！！文件写入失败：(%d)\n",f_res);
-    }    
-		/* 不再读写，关闭文件 */
-    f_close(&file);
-  }
-  else
-  {	
-          printf("！！打开/创建文件失败。\r\n");
-  }
-	
-/*------------------- 文件系统测试：读测试 ------------------------------------*/
-  printf("****** 即将进行文件读取测试... ******\r\n");
-  f_res = f_open(&file, "FatFs读写测试文件.txt", FA_OPEN_EXISTING | FA_READ); 	 
-  if(f_res == FR_OK)
-  {
-    printf("》打开文件成功。\r\n");
-    f_res = f_read(&file, ReadBuffer, sizeof(ReadBuffer), &fnum); 
-    if(f_res==FR_OK)
-    {
-      printf("》文件读取成功,读到字节数据：%d\r\n",fnum);
-      printf("》读取得的文件数据为：\r\n%s \r\n", ReadBuffer);	
-    }
-    else
-    {
-      printf("！！文件读取失败：(%d)\n",f_res);
-    }		
-  }
-  else
-  {
-          printf("！！打开文件失败。\r\n");
-  }
-  /* 不再读写，关闭文件 */
-  f_close(&file);	
-}
 
 /**
   * 函数功能: 文件系统写文件

@@ -28,19 +28,41 @@ Project File Date:  02/01/2021
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\ZYAPP\Keil_v5\ARM\ARMCC\Bin'
 Build target 'YS-F4Pro'
 compiling main.c...
-../Src/main.c(207): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+../Src/main.c(219): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
         sprintf(WriteBuffer_test, "%d", counts);
-../Src/main.c(212): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+../Src/main.c(224): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
         sprintf(WriteBuffer_test, "%d", 0000);
-../Src/main.c(325): warning:  #177-D: function "read_write_flie"  was declared but never referenced
+../Src/main.c(239): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf(WriteBuffer_test, "\r\n"); 
+../Src/main.c(248): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf(WriteBuffer_dir,"%s","文件夹测试文件夹");
+../Src/main.c(249): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "const TCHAR *"
+        f_res=f_mkdir(WriteBuffer_dir);
+../Src/main.c(256): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf( WriteBuffer_csv,"/%s/%s.csv",WriteBuffer_dir,"文件夹测试文件");
+../Src/main.c(258): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "const TCHAR *"
+        f_res =f_open(&file, WriteBuffer_csv,FA_CREATE_ALWAYS | FA_WRITE );
+../Src/main.c(261): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf(WriteBuffer_test, "%d,", counts);
+../Src/main.c(266): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf(WriteBuffer_test, "%d", 0000);
+../Src/main.c(271): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+        sprintf(WriteBuffer_test, "%d,", counts);
+../Src/main.c(126): warning:  #177-D: variable "total"  was declared but never referenced
+    uint32_t total,free;
+../Src/main.c(126): warning:  #177-D: variable "free"  was declared but never referenced
+    uint32_t total,free;
+../Src/main.c(127): warning:  #177-D: variable "res"  was declared but never referenced
+  	uint8_t res=0,counts=0;
+../Src/main.c(385): warning:  #177-D: function "read_write_flie"  was declared but never referenced
   static void read_write_flie(void)
-../Src/main.c(387): warning:  #177-D: function "write_flie"  was declared but never referenced
+../Src/main.c(447): warning:  #177-D: function "write_flie"  was declared but never referenced
   static void write_flie(void)
-../Src/main.c: 4 warnings, 0 errors
+../Src/main.c: 15 warnings, 0 errors
 linking...
-Program Size: Code=30508 RO-data=175836 RW-data=328 ZI-data=9504  
+Program Size: Code=31024 RO-data=175836 RW-data=328 ZI-data=10632  
 FromELF: creating hex file...
-"YS-F4Pro\YS-F4Pro.axf" - 0 Error(s), 4 Warning(s).
+"YS-F4Pro\YS-F4Pro.axf" - 0 Error(s), 15 Warning(s).
 
 <h2>Software Packages used:</h2>
 

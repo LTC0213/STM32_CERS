@@ -42,12 +42,16 @@ FATFS fs;													/* FatFs文件系统对象 */
 FIL file;													/* 文件对象 */
 FRESULT f_res;                    /* 文件操作结果 */
 UINT fnum;            					  /* 文件成功读写数量 */
+DIR fdir;
 
 char scan_path[255] = "0:";      /* 递归扫描文件时使用的路径 */
 
 BYTE ReadBuffer[1024]={0};       /* 读缓冲区 */
 BYTE WriteBuffer[]= "硬石STM32F4开发板测试，在U盘内新建文件系统测试文件\n";/* 写缓冲区*/  
-BYTE WriteBuffer_test[1024]={0}; 
+BYTE WriteBuffer_test[100]; 
+BYTE WriteBuffer_dir[1024];
+BYTE WriteBuffer_dir_next[1024];
+BYTE WriteBuffer_csv[1024];
 
 __IO uint8_t key1_temp=0;
 
@@ -179,6 +183,14 @@ int main(void)
     if(KEY3_StateRead()==KEY_DOWN)
     {
       key1_temp=3;
+    }
+    if(KEY4_StateRead()==KEY_DOWN)
+    {
+      key1_temp=4;
+    }
+    if(KEY5_StateRead()==KEY_DOWN)
+    {
+      key1_temp=5;
     }      
     if(key1_temp==1)
     {
@@ -215,15 +227,63 @@ int main(void)
       // read_write_flie();
       key1_temp=0;
     } 
+    if(key1_temp==5)
+    {
+      // f_close(&file);
+      // f_res=exf_getfree("0:",&total,&free);
+      // if(f_res==0)
+      // {
+      //   printf("total=%dMB free=%dMB\n",total>>10,free>>10);
+      //   key1_temp=0;
+      // }   
+      sprintf(WriteBuffer_test, "\r\n"); 
+      f_write(&file,WriteBuffer_test,sizeof(WriteBuffer_test),&fnum);
+      f_sync(&file);
+      printf("》文件写入成功，写入字节数据：%d\n",fnum);
+      printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer_test); 
+      key1_temp=0;
+    }
     if(key1_temp==3)
     {
-      f_close(&file);
-      res=exf_getfree("0:",&total,&free);
-      if(res==0)
-      {
-        printf("total=%dMB free=%dMB\n",total>>10,free>>10);
-        key1_temp=0;
-      }    
+      sprintf(WriteBuffer_dir,"%s","文件夹测试文件夹");
+      f_res=f_mkdir(WriteBuffer_dir);
+      printf_fatfs_error(f_res);
+
+      // sprintf(WriteBuffer_dir_next,"/文件夹测试文件夹");
+      // f_res=f_chdir(WriteBuffer_dir_next);
+      // printf_fatfs_error(f_res);
+
+      sprintf( WriteBuffer_csv,"/%s/%s.csv",WriteBuffer_dir,"文件夹测试文件");
+      // f_res = f_open(&file, "FatFs读写测试文件.txt",FA_CREATE_ALWAYS | FA_WRITE );
+      f_res =f_open(&file, WriteBuffer_csv,FA_CREATE_ALWAYS | FA_WRITE );
+      printf_fatfs_error(f_res);
+
+      sprintf(WriteBuffer_test, "%d,", counts);
+      f_write(&file,WriteBuffer_test,sizeof(WriteBuffer_test),&fnum);
+      f_sync(&file);
+      printf("》文件写入成功，写入字节数据：%d\n",fnum);
+      printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer_test);
+      sprintf(WriteBuffer_test, "%d", 0000);
+      key1_temp=0;
+    }
+    if(key1_temp==4)
+    {
+      sprintf(WriteBuffer_test, "%d,", counts);
+      f_write(&file,WriteBuffer_test,sizeof(WriteBuffer_test),&fnum);
+      f_sync(&file);
+      printf("》文件写入成功，写入字节数据：%d\n",fnum);
+      printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer_test);
+      key1_temp=0;
+    //  f_res =f_mkdir("0:/2017110223");
+    //  printf_fatfs_error(f_res);
+
+    //  f_res =f_open(&file, "/2017110223/201711011.txt", FA_CREATE_ALWAYS | FA_WRITE);
+    //  printf_fatfs_error(f_res);
+
+    //  f_res = f_close(&file);
+    //  printf_fatfs_error(f_res);
+    //  key1_temp=0;
+
     }      
   }
 }
