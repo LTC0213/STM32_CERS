@@ -60,8 +60,18 @@ char scan_path[255] = "0:";      /* 递归扫描文件时使用的路径 */
 
 BYTE ReadBuffer[1024]={0};       /* 读缓冲区 */
 BYTE WriteBuffer[]= "在U盘内新建文件系统测试文件\n";/* 写缓冲区*/  
-BYTE WriteBuffer_test[4]={0};
+BYTE WriteBuffer_test[1024];
+BYTE WriteBuffer_name[100];
+BYTE WriteBuffer_number[100];
+BYTE WriteBuffer_high[100];
+BYTE WriteBuffer_weight[100];
+BYTE WriteBuffer_age[100];
+BYTE WriteBuffer_male[100];
+BYTE WriteBuffer_sick[100];
+BYTE WriteBuffer_title[1024];
+BYTE WriteBuffer_date[1024];
 BYTE WriteBuffer_dir[100];
+BYTE WriteBuffer_csv[100];
 
 __IO uint8_t key1_temp=0;
 /* HMI串口变量 ------------------------------------------------------------------*/
@@ -1017,7 +1027,8 @@ int main(void)
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
           WEIGHT_CSx_ENABLE();
-          weight_ad7190_conf(force_channelx);       
+          weight_ad7190_conf(force_channelx); 
+          HMI_value_setting("force1.file.val",0);      
         break;
         case 0x12:
           printf("后伸2选择\n");
@@ -1027,7 +1038,8 @@ int main(void)
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
           WEIGHT_CSx_ENABLE();  
-          weight_ad7190_conf(force_channelx);      
+          weight_ad7190_conf(force_channelx);
+          HMI_value_setting("force1.file.val",0);      
         break;
         case 0x13:
           printf("左侧屈3选择\n");
@@ -1037,7 +1049,8 @@ int main(void)
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
           WEIGHT_CSy_ENABLE(); 
-          weight_ad7190_conf(force_channelx);     
+          weight_ad7190_conf(force_channelx); 
+          HMI_value_setting("force1.file.val",0);    
         break;
         case 0x14:
           printf("右侧屈4选择\n");
@@ -1047,7 +1060,8 @@ int main(void)
           WEIGHT_CSx_DISABLE();
           WEIGHT_CSy_DISABLE();
           WEIGHT_CSy_ENABLE();
-          weight_ad7190_conf(force_channelx);       
+          weight_ad7190_conf(force_channelx);
+          HMI_value_setting("force1.file.val",0);       
         break;
 
         //活动范围检测 encode0
@@ -1069,6 +1083,7 @@ int main(void)
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口X<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
 
         break;
         case 0x22:
@@ -1081,6 +1096,7 @@ int main(void)
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口X<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
            
         break;
         case 0x23:
@@ -1093,6 +1109,7 @@ int main(void)
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口X<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
                
         break;
         case 0x24:
@@ -1105,6 +1122,7 @@ int main(void)
           XENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&xhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口X<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
                 
         break;
         case 0x25:
@@ -1117,6 +1135,7 @@ int main(void)
           YENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&yhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口Y<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
              
         break;
         case 0x26:
@@ -1129,6 +1148,7 @@ int main(void)
           YENCODER_TIMx_Init();
           HAL_TIM_Encoder_Start(&yhtimx_Encoder, TIM_CHANNEL_ALL);
           printf("--> 编码器接口Y<-- \n");
+          HMI_value_setting("encode1.file.val",0); 
                
         break;
 
@@ -1264,18 +1284,66 @@ int main(void)
         break;
 
         case 0x60:
-          printf("收到字符串\n");
-          HMI_string_temp=HMI_USARTx_GetString();
+          HMI_USARTx_GetString();
           printf("姓名是 %s\n",HMI_str);
           sprintf(WriteBuffer_dir,"%s",HMI_str);
-          // sprintf(WriteBuffer_dir,"%s","LTC");
+          sprintf(WriteBuffer_name,"%s",HMI_str);
+        break;
+        case 0x61: 
+          HMI_USARTx_GetString();
+          printf("实验编号是 %s\n",HMI_str);
+          sprintf(WriteBuffer_dir,"%s_%s",WriteBuffer_dir,HMI_str);
+          sprintf(WriteBuffer_number,"%s",HMI_str);
+        break;
+        case 0x62: 
+          HMI_USARTx_GetString();
+          printf("身高是 %s\n",HMI_str);
+          sprintf(WriteBuffer_high,"%s",HMI_str);
+        break;
+        case 0x63: 
+          HMI_USARTx_GetString();
+          printf("体重是 %s\n",HMI_str);
+          sprintf(WriteBuffer_weight,"%s",HMI_str);
+        break;
+        case 0x64: 
+          HMI_USARTx_GetString();
+          printf("年龄是 %s\n",HMI_str);
+          sprintf(WriteBuffer_age,"%s",HMI_str);
+        break;
+        case 0x65: 
+          HMI_USARTx_GetString();
+          printf("性别是 %s\n",HMI_str);
+          sprintf(WriteBuffer_male,"%s",HMI_str);
+        break;
+        case 0x66: 
+          HMI_USARTx_GetString();
+          printf("有无患病史是 %s\n",HMI_str);
+          sprintf(WriteBuffer_sick,"%s",HMI_str);
+        break;
+        case 0x69:
+          printf("档案名是 %s\n",WriteBuffer_dir);
           f_res = f_mount(&fs,"0:",1);	/* 在串行FLASH挂载文件系统，文件系统挂载时会对串行FLASH初始化 */
           printf_fatfs_error(f_res);
+
           f_res=f_mkdir(WriteBuffer_dir);
-          // f_res=f_mkdir(HMI_str);
           printf_fatfs_error(f_res);
 
-          // sprintf(HMI_dir，)
+          sprintf( WriteBuffer_csv,"/%s/%s.csv",WriteBuffer_dir,"用户档案信息");
+          f_res =f_open(&file, WriteBuffer_csv,FA_CREATE_ALWAYS | FA_WRITE );
+          printf_fatfs_error(f_res);
+
+          sprintf(WriteBuffer_title, "%s\r\n", "姓名,实验编号,身高,体重,年龄,性别,有无患病史");
+          f_write(&file,WriteBuffer_title,sizeof(WriteBuffer_title),&fnum);
+          f_sync(&file);
+          printf("》文件写入成功，写入字节数据：%d\n",fnum);
+          printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer_title);
+
+          sprintf(WriteBuffer_test, "%s,%s,%s,%s,%s,%s,%s\r\n", WriteBuffer_name,WriteBuffer_number,WriteBuffer_high,WriteBuffer_weight,WriteBuffer_age,WriteBuffer_male,WriteBuffer_sick);
+          f_write(&file,WriteBuffer_test,sizeof(WriteBuffer_test),&fnum);
+          f_sync(&file);
+          printf("》文件写入成功，写入字节数据：%d\n",fnum);
+          printf("》向文件写入的数据为：\r\n%s\r\n",WriteBuffer_test);
+        break;
 
       }
     }
@@ -1578,6 +1646,75 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 /**
   * 函数功能: FatFS文件系统操作结果信息处理.
   * 输入参数: FatFS文件系统操作结果：FRESULT
+  * 返 回 值: 无
+  * 说    明: 无
+  */
+static void printf_fatfs_error(FRESULT fresult)
+{
+  switch(fresult)
+  {
+    case FR_OK:                   //(0)
+      printf("》操作成功。\n");
+    break;
+    case FR_DISK_ERR:             //(1)
+      printf("！！硬件输入输出驱动出错。\n");
+    break;
+    case FR_INT_ERR:              //(2)
+      printf("！！断言错误。\n");
+    break;
+    case FR_NOT_READY:            //(3)
+      printf("！！物理设备无法工作。\n");
+    break;
+    case FR_NO_FILE:              //(4)
+      printf("！！无法找到文件。\n");
+    break;
+    case FR_NO_PATH:              //(5)
+      printf("！！无法找到路径。\n");
+    break;
+    case FR_INVALID_NAME:         //(6)
+      printf("！！无效的路径名。\n");
+    break;
+    case FR_DENIED:               //(7)
+    case FR_EXIST:                //(8)
+      printf("！！拒绝访问。\n");
+    break;
+    case FR_INVALID_OBJECT:       //(9)
+      printf("！！无效的文件或路径。\n");
+    break;
+    case FR_WRITE_PROTECTED:      //(10)
+      printf("！！逻辑设备写保护。\n");
+    break;
+    case FR_INVALID_DRIVE:        //(11)
+      printf("！！无效的逻辑设备。\n");
+    break;
+    case FR_NOT_ENABLED:          //(12)
+      printf("！！无效的工作区。\n");
+    break;
+    case FR_NO_FILESYSTEM:        //(13)
+      printf("！！无效的文件系统。\n");
+    break;
+    case FR_MKFS_ABORTED:         //(14)
+      printf("！！因函数参数问题导致f_mkfs函数操作失败。\n");
+    break;
+    case FR_TIMEOUT:              //(15)
+      printf("！！操作超时。\n");
+    break;
+    case FR_LOCKED:               //(16)
+      printf("！！文件被保护。\n");
+    break;
+    case FR_NOT_ENOUGH_CORE:      //(17)
+      printf("！！长文件名支持获取堆空间失败。\n");
+    break;
+    case FR_TOO_MANY_OPEN_FILES:  //(18)
+      printf("！！打开太多文件。\n");
+    break;
+    case FR_INVALID_PARAMETER:    // 19)
+      printf("！！参数无效。\n");
+    break;
+  }
+}
+
+/*****END OF FILE****/  * 输入参数: FatFS文件系统操作结果：FRESULT
   * 返 回 值: 无
   * 说    明: 无
   */
