@@ -3,9 +3,9 @@
 <title>Static Call Graph - [YS-F4Pro\YS-F4Pro.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image YS-F4Pro\YS-F4Pro.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Feb 04 22:40:09 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Feb 05 11:54:53 2021
 <BR><P>
-<H3>Maximum Stack Usage =       1400 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =       1424 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; scan_files &rArr;  scan_files (Cycle)
 <P>
@@ -737,11 +737,11 @@ Global Symbols
 <LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;KEY1_StateRead
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AD7190_Init
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_ResetPort
-<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_LL_DriverVBUS
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_Delay
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
+<LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_ResetPort
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 </UL>
 
 <P><STRONG><a name="[af]"></a>HAL_GPIO_Init</STRONG> (Thumb, 518 bytes, Stack size 40 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init))
@@ -749,11 +749,11 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;KEY_GPIO_Init
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_MspInit
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_MspInit
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_WEIGHT_SPI_Init
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMI_GPIO_Init
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Encoder_MspInit
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
+<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_MspInit
 </UL>
 
 <P><STRONG><a name="[e9]"></a>HAL_GPIO_ReadPin</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_ReadPin))
@@ -767,10 +767,10 @@ Global Symbols
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_FLASH_ReadDeviceID
 <LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_FLASH_BufferRead
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_MspInit
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_FLASH_WriteEnable
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_FLASH_WaitForWriteEnd
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_FLASH_PageWrite
+<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_MspInit
 </UL>
 
 <P><STRONG><a name="[90]"></a>HAL_GetTick</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_hal.o(i.HAL_GetTick))
@@ -855,16 +855,16 @@ Global Symbols
 <P><STRONG><a name="[9f]"></a>HAL_HCD_IRQHandler</STRONG> (Thumb, 326 bytes, Stack size 24 bytes, stm32f4xx_hal_hcd.o(i.HAL_HCD_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = HAL_HCD_IRQHandler &rArr; HAL_HCD_Disconnect_Callback &rArr; USBH_LL_Disconnect &rArr; USBH_LL_Stop &rArr; HAL_HCD_Stop &rArr; USB_StopHost
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_ReadInterrupts
-<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_InitFSLSPClkSel
-<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_ReadInterrupt
-<LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_GetMode
+<BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_GetMode
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HCD_RXQLVL_IRQHandler
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HCD_Port_IRQHandler
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HCD_HC_OUT_IRQHandler
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HCD_HC_IN_IRQHandler
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_SOF_Callback
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_Disconnect_Callback
+<LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_ReadInterrupts
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_InitFSLSPClkSel
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_ReadInterrupt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OTG_FS_IRQHandler
 </UL>
@@ -872,11 +872,11 @@ Global Symbols
 <P><STRONG><a name="[a9]"></a>HAL_HCD_Init</STRONG> (Thumb, 150 bytes, Stack size 64 bytes, stm32f4xx_hal_hcd.o(i.HAL_HCD_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = HAL_HCD_Init &rArr; HAL_HCD_MspInit &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
-<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DisableGlobalInt
+<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DisableGlobalInt
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_CoreInit
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_MspInit
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBH_LL_Init
 </UL>
@@ -2003,8 +2003,8 @@ Global Symbols
 <P><STRONG><a name="[b7]"></a>USB_DriveVbus</STRONG> (Thumb, 64 bytes, Stack size 4 bytes, stm32f4xx_ll_usb.o(i.USB_DriveVbus))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = USB_DriveVbus
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
-<LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_Start
+<BR>[Called By]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_Start
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 </UL>
 
 <P><STRONG><a name="[b6]"></a>USB_EnableGlobalInt</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32f4xx_ll_usb.o(i.USB_EnableGlobalInt))
@@ -2013,13 +2013,13 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[149]"></a>USB_FlushRxFifo</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, stm32f4xx_ll_usb.o(i.USB_FlushRxFifo))
-<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_StopHost
+<BR><BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_StopHost
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 </UL>
 
 <P><STRONG><a name="[148]"></a>USB_FlushTxFifo</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, stm32f4xx_ll_usb.o(i.USB_FlushTxFifo))
-<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_StopHost
+<BR><BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_StopHost
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HostInit
 </UL>
 
 <P><STRONG><a name="[96]"></a>USB_GetCurrentFrame</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32f4xx_ll_usb.o(i.USB_GetCurrentFrame))
@@ -2445,6 +2445,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[17c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_close
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_file
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[193]"></a>f_write</STRONG> (Thumb, 536 bytes, Stack size 40 bytes, ff.o(i.f_write))
@@ -2459,6 +2460,7 @@ Global Symbols
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;disk_read
 </UL>
 <BR>[Called By]<UL><LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_file
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[155]"></a>fabs</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, fabs.o(i.fabs))
@@ -2514,11 +2516,13 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[61]"></a>main</STRONG> (Thumb, 8768 bytes, Stack size 56 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1400<LI>Call Chain = main &rArr; scan_files &rArr;  scan_files (Cycle)
+<P><STRONG><a name="[61]"></a>main</STRONG> (Thumb, 9082 bytes, Stack size 80 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 1424<LI>Call Chain = main &rArr; scan_files &rArr;  scan_files (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;weight_ad7190_conf
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;weight_ad7190_ReadAvg
+<LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_write
+<LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_sync
 <LI><a href="#[18a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 <LI><a href="#[187]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mount
 <LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mkdir
@@ -2613,7 +2617,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[19c]"></a>write_file</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, main.o(i.write_file))
+<P><STRONG><a name="[19c]"></a>write_file</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, main.o(i.write_file))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = write_file &rArr; f_write &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_write
@@ -2672,8 +2676,8 @@ Local Symbols
 <P><STRONG><a name="[a6]"></a>HCD_HC_IN_IRQHandler</STRONG> (Thumb, 590 bytes, Stack size 40 bytes, stm32f4xx_hal_hcd.o(i.HCD_HC_IN_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HCD_HC_IN_IRQHandler
 </UL>
-<BR>[Calls]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_Halt
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_HC_NotifyURBChange_Callback
+<BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_HC_NotifyURBChange_Callback
+<LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_Halt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_IRQHandler
 </UL>
@@ -2681,8 +2685,8 @@ Local Symbols
 <P><STRONG><a name="[a7]"></a>HCD_HC_OUT_IRQHandler</STRONG> (Thumb, 578 bytes, Stack size 32 bytes, stm32f4xx_hal_hcd.o(i.HCD_HC_OUT_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HCD_HC_OUT_IRQHandler
 </UL>
-<BR>[Calls]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_Halt
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_HC_NotifyURBChange_Callback
+<BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_HC_NotifyURBChange_Callback
+<LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_HC_Halt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_IRQHandler
 </UL>
@@ -2690,8 +2694,8 @@ Local Symbols
 <P><STRONG><a name="[a3]"></a>HCD_Port_IRQHandler</STRONG> (Thumb, 200 bytes, Stack size 24 bytes, stm32f4xx_hal_hcd.o(i.HCD_Port_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HCD_Port_IRQHandler &rArr; HAL_HCD_Connect_Callback &rArr; USBH_LL_Connect
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_InitFSLSPClkSel
-<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_Connect_Callback
+<BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_Connect_Callback
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_InitFSLSPClkSel
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HCD_IRQHandler
 </UL>

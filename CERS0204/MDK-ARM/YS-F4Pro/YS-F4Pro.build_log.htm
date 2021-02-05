@@ -28,33 +28,57 @@ Project File Date:  02/01/2021
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\ZYAPP\Keil_v5\ARM\ARMCC\Bin'
 Build target 'YS-F4Pro'
 compiling main.c...
-../Src/main.c(1270): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+../Src/main.c(1278): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
             sprintf(WriteBuffer_dir,"%s",HMI_str);
-../Src/main.c(1274): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "const TCHAR *"
+../Src/main.c(1279): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_name,"%s",HMI_str);
+../Src/main.c(1284): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_dir,"%s_%s",WriteBuffer_dir,HMI_str);
+../Src/main.c(1285): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_number,"%s",HMI_str);
+../Src/main.c(1290): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_high,"%s",HMI_str);
+../Src/main.c(1295): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_weight,"%s",HMI_str);
+../Src/main.c(1300): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_age,"%s",HMI_str);
+../Src/main.c(1305): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_male,"%s",HMI_str);
+../Src/main.c(1310): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_sick,"%s",HMI_str);
+../Src/main.c(1317): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "const TCHAR *"
             f_res=f_mkdir(WriteBuffer_dir);
-../Src/main.c(235): warning:  #177-D: variable "weight_first"  was declared but never referenced
+../Src/main.c(1320): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf( WriteBuffer_csv,"/%s/%s.csv",WriteBuffer_dir,"用户档案信息");
+../Src/main.c(1321): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "const TCHAR *"
+            f_res =f_open(&file, WriteBuffer_csv,FA_CREATE_ALWAYS | FA_WRITE );
+../Src/main.c(1324): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_title, "%s\r\n", "姓名,实验编号,身高,体重,年龄,性别,有无患病史");
+../Src/main.c(1330): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+            sprintf(WriteBuffer_test, "%s,%s,%s,%s,%s,%s,%s\r\n", WriteBuffer_name,WriteBuffer_number,WriteBuffer_high,WriteBuffer_weight,WriteBuffer_age,WriteBuffer_male,WriteBuffer_sick);
+../Src/main.c(244): warning:  #177-D: variable "weight_first"  was declared but never referenced
     int32_t weight_first;
-../Src/main.c(241): warning:  #550-D: variable "HMI_string_temp"  was set but never used
+../Src/main.c(250): warning:  #177-D: variable "HMI_string_temp"  was declared but never referenced
     char* HMI_string_temp=NULL;
-../Src/main.c(244): warning:  #177-D: variable "counts"  was declared but never referenced
+../Src/main.c(253): warning:  #177-D: variable "counts"  was declared but never referenced
   	uint8_t res=0,counts=0;
-../Src/main.c(1355): warning:  #120-D: return value type does not match the function type
+../Src/main.c(1414): warning:  #120-D: return value type does not match the function type
   	return HMI_str;
-../Src/main.c(1540): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+../Src/main.c(1599): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
     sprintf(WriteBuffer_test, "%d", date);
-../Src/main.c(1543): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
+../Src/main.c(1602): warning:  #167-D: argument of type "BYTE *" is incompatible with parameter of type "char *restrict"
     sprintf(WriteBuffer_test, "%d", 0x0000);
-../Src/main.c(1545): warning:  #940-D: missing return statement at end of non-void function "write_file" 
+../Src/main.c(1604): warning:  #940-D: missing return statement at end of non-void function "write_file" 
   }
-../Src/main.c(1649): warning:  #1-D: last line of file ends without a newline
+../Src/main.c(1708): warning:  #1-D: last line of file ends without a newline
   /*****END OF FILE****/
-../Src/main.c(163): warning:  #177-D: function "read_write_flie"  was declared but never referenced
+../Src/main.c(172): warning:  #177-D: function "read_write_flie"  was declared but never referenced
   static void read_write_flie(void);
-../Src/main.c: 11 warnings, 0 errors
+../Src/main.c: 23 warnings, 0 errors
 linking...
-Program Size: Code=51404 RO-data=175984 RW-data=512 ZI-data=9040  
+Program Size: Code=52104 RO-data=175980 RW-data=512 ZI-data=11888  
 FromELF: creating hex file...
-"YS-F4Pro\YS-F4Pro.axf" - 0 Error(s), 11 Warning(s).
+"YS-F4Pro\YS-F4Pro.axf" - 0 Error(s), 23 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -68,7 +92,7 @@ Package Vendor: Keil
   E:\ZYAPP\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:10
+Build Time Elapsed:  00:00:07
 </pre>
 </body>
 </html>
